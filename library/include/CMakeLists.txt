@@ -1,0 +1,38 @@
+
+
+set(SOURCES
+	lvgl/Button.hpp
+	lvgl/Bar.hpp
+	lvgl/ColorPicker.hpp
+	lvgl/Label.hpp
+	lvgl/MessageBox.hpp
+	lvgl/Spinbox.hpp
+	lvgl/TileView.hpp
+	lvgl/ButtonMatrix.hpp
+	lvgl/DropDownList.hpp
+	lvgl/Line.hpp
+	lvgl/Object.hpp
+	lvgl/Spinner.hpp
+	lvgl/Window.hpp
+	lvgl/Calendar.hpp
+	lvgl/Gauge.hpp
+	lvgl/LineMeter.hpp
+	lvgl/Page.hpp
+	lvgl/Switch.hpp
+	lvgl/macros.hpp
+	lvgl/Canvas.hpp
+	lvgl/Image.hpp
+	lvgl/List.hpp
+	lvgl/TabView.hpp
+	lvgl/Chart.hpp
+	lvgl/ImageButton.hpp
+	lvgl/Roller.hpp
+	lvgl/Table.hpp
+	lvgl/Checkbox.hpp
+	lvgl/Keyboard.hpp
+	lvgl/Mask.hpp
+	lvgl/Slider.hpp
+	lvgl/TextArea.hpp
+	lvgl.hpp
+	PARENT_SCOPE
+	)

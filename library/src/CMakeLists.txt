@@ -1,0 +1,36 @@
+
+
+set(SOURCES
+	Button.cpp
+	Bar.cpp
+	ColorPicker.cpp
+	Label.cpp
+	MessageBox.cpp
+	SpinBox.cpp
+	TileView.cpp
+	ButtonMatrix.cpp
+	DropDownList.cpp
+	Line.cpp
+	Object.cpp
+	Spinner.cpp
+	Window.cpp
+	Calendar.cpp
+	Gauge.cpp
+	LineMeter.cpp
+	Page.cpp
+	Switch.cpp
+	Canvas.cpp
+	Image.cpp
+	List.cpp
+	TabView.cpp
+	Chart.cpp
+	ImageButton.cpp
+	Roller.cpp
+	Table.cpp
+	Checkbox.cpp
+	Keyboard.cpp
+	Mask.cpp
+	Slider.cpp
+	TextArea.cpp
+	PARENT_SCOPE
+	)
