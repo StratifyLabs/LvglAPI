@@ -1,4 +1,6 @@
-#include "Bar.hpp"
+#include "lvgl/Bar.hpp"
+
+using namespace lv;
 
 Bar::Bar()
 {

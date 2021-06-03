@@ -12,6 +12,7 @@ if(NOT DEFINED API_IS_SDK)
 	include(API)
 endif()
 
+option(IS_BOOTSTRAP OFF)
 project(LvglAPI CXX)
 include(CTest)
 

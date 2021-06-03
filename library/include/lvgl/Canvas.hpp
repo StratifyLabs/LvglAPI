@@ -7,22 +7,12 @@ namespace lv {
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
-  Canvas(Object &parent, const Canvas *copy = nullptr) {
+  Canvas(Object &parent) {
     m_object =
-        lv_canvas_create(parent.object(), copy ? copy->object() : nullptr);
+        lv_canvas_create(parent.object());
   }
 
-  Canvas& set_pixel(const Point & point, lv_color_t color){
-    lv_canvas_set_px(object(), point.x(), point.y(), color);
-    return *this;
-  }
 
-  Canvas& draw_rectangle();
-  Canvas& draw_text();
-  Canvas& draw_image();
-  Canvas& draw_line();
-  Canvas& draw_polygon();
-  Canvas& draw_arc();
 
 };
 

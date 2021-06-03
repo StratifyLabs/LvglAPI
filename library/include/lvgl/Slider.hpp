@@ -8,27 +8,22 @@ namespace lv {
 class Slider : public BarAccess<Slider> {
 public:
 
-  class Part {
-  public:
-    static auto constexpr background = lv::Part(LV_SLIDER_PART_BG);
-    static auto constexpr indicator = lv::Part(LV_SLIDER_PART_INDIC);
-    static auto constexpr knob = lv::Part(LV_SLIDER_PART_KNOB);
-  };
 
-  enum class Type {
-    normal = LV_SLIDER_TYPE_NORMAL,
-    symmetrical = LV_SLIDER_TYPE_SYMMETRICAL,
-    range = LV_SLIDER_TYPE_RANGE
+
+  enum class Mode {
+    normal = LV_SLIDER_MODE_NORMAL,
+    symmetrical = LV_SLIDER_MODE_SYMMETRICAL,
+    range = LV_SLIDER_MODE_RANGE
   };
 
 
   Slider();
-  Slider(Object & parent, const Slider * copy = nullptr){
-    m_object = lv_slider_create(parent.object(), copy ? copy->object() : nullptr);
+  Slider(Object & parent){
+    m_object = lv_slider_create(parent.object());
   }
 
-  Slider & set_type(Type value){
-    lv_slider_set_type(m_object, static_cast<lv_slider_type_t>(value));
+  Slider & set_mode(Mode value){
+    lv_slider_set_mode(m_object, static_cast<lv_slider_mode_t>(value));
     return *this;
   }
 

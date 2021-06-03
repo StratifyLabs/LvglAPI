@@ -36,22 +36,17 @@ class Bar : public BarAccess<Bar> {
 public:
   Bar();
 
-  enum class Type {
-    normal = LV_BAR_TYPE_NORMAL,
-    symmetrical = LV_BAR_TYPE_SYMMETRICAL,
-    custom = LV_BAR_TYPE_CUSTOM
+  enum class Mode {
+    normal = LV_BAR_MODE_NORMAL,
+    symmetrical = LV_BAR_MODE_SYMMETRICAL,
+    range = LV_BAR_MODE_RANGE
   };
 
-  class Part {
-  public:
-    static auto constexpr background = lv::Part(LV_BAR_PART_BG);
-    static auto constexpr indicator = lv::Part(LV_BAR_PART_INDIC);
-  };
-
-  Bar &set_type(Type value) {
-    lv_bar_set_type(m_object, static_cast<lv_bar_type_t>(value));
+  Bar &set_mode(Mode value) {
+    lv_bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
     return *this;
   }
+
 };
 
 } // namespace lv
