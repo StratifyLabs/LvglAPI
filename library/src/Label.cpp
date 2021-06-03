@@ -2,7 +2,6 @@
 
 using namespace lv;
 
-Label::Label()
-{
-
+Label::Label(Object & parent){
+  m_object = api()->label_create(parent.object());
 }

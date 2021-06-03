@@ -233,8 +233,15 @@ public:
   }
 
   lv_coord_t x() const { return m_position.x; }
-
   lv_coord_t y() const { return m_position.y; }
+
+  lv_point_t * position(){
+    return &m_position;
+  }
+
+  const lv_point_t * position() const {
+    return &m_position;
+  }
 
 private:
   lv_point_t m_position{};
@@ -700,13 +707,13 @@ public:
   }
 
   Derived &add_style(const Style &style, lv_style_selector_t style_selector) {
-    api()->obj_add_style(m_object, &style.m_style, style_selector);
+    api()->obj_add_style(m_object, style.style(), style_selector);
     return static_cast<Derived &>(*this);
   }
 
   Derived &remove_style(const Style &style,
                         lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, &style.m_style, style_selector);
+    api()->obj_remove_style(m_object, style.style(), style_selector);
     return static_cast<Derived &>(*this);
   }
 
