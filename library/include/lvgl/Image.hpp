@@ -27,7 +27,7 @@ public:
     return *this;
   }
 
-  Image &set_offset(const Position &position) {
+  Image &set_offset(const Point &position) {
     return set_offset_x(position.x()).set_offset_y(position.y());
   }
 
@@ -37,7 +37,7 @@ public:
     return *this;
   }
 
-  Image &set_pivot(const Position &position) {
+  Image &set_pivot(const Point &position) {
     api()->img_set_pivot(m_object, position.x(), position.y());
     return *this;
   }
@@ -64,17 +64,17 @@ public:
     return api()->img_get_offset_y(m_object);
   }
 
-  Position get_offset() const {
-    return Position(get_offset_x(), get_offset_y());
+  Point get_offset() const {
+    return Point(get_offset_x(), get_offset_y());
   }
 
   u16 get_angle() const {
     return api()->img_get_angle(m_object);
   }
 
-  Position get_pivot() const {
-    Position result;
-    api()->img_get_pivot(m_object, result.position());
+  Point get_pivot() const {
+    Point result;
+    api()->img_get_pivot(m_object, result.point());
     return result;
   }
 

@@ -6,12 +6,10 @@
 namespace lv {
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
-  ButtonMatrix(lv_obj_t * obj){
+  explicit ButtonMatrix(lv_obj_t * obj){
     m_object = obj;
   }
-  ButtonMatrix(Object & parent);
-
-
+  ButtonMatrix(Object parent);
 };
 
 } // namespace lv

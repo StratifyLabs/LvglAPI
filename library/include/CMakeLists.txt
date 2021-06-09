@@ -19,6 +19,7 @@ set(SOURCES
 	lvgl/LineMeter.hpp
 	lvgl/Page.hpp
 	lvgl/Switch.hpp
+	lvgl/Style.hpp
 	lvgl/macros.hpp
 	lvgl/Canvas.hpp
 	lvgl/Image.hpp

@@ -2,13 +2,9 @@
 
 using namespace lv;
 
-TabView::TabView(Object & parent, Direction direction, u32 size){
-  m_is_created = true;
-
-  printf("create tab %p\n", api()->tabview_create);
-
+TabView::TabView(Direction direction, u32 size, Object parent){
   m_object = api()->tabview_create(
-      parent.object(),
+      lv_scr_act(),
       static_cast<lv_dir_t>(direction),
       size
       );

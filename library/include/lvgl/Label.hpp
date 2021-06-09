@@ -7,7 +7,7 @@ namespace lv {
 
 class Label : public ObjectAccess<Label> {
 public:
-  Label(Object & parent);
+  Label(Object parent = Object());
 
   enum class LongMode {
     wrap = LV_LABEL_LONG_WRAP,
@@ -59,20 +59,20 @@ public:
     return api()->label_get_recolor(m_object);
   }
 
-  Position get_letter_position(u32 value)const{
-    Position position;
-    api()->label_get_letter_pos(m_object, value, position.position());
+  Point get_letter_position(u32 value)const{
+    Point position;
+    api()->label_get_letter_pos(m_object, value, position.point());
     return position;
   }
 
-  u32 get_letter_on(const Position & position)const{
-    Position tmp(position);
-    return api()->label_get_letter_on(m_object, tmp.position());
+  u32 get_letter_on(const Point & position)const{
+    Point tmp(position);
+    return api()->label_get_letter_on(m_object, tmp.point());
   }
 
-  bool is_character_under_position(Position & position)const{
-    Position tmp(position);
-    return api()->label_is_char_under_pos(m_object, tmp.position());
+  bool is_character_under_position(Point & position)const{
+    Point tmp(position);
+    return api()->label_is_char_under_pos(m_object, tmp.point());
   }
 
   u32 get_text_selection_start() const {

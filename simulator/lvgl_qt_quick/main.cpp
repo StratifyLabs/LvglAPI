@@ -7,13 +7,14 @@
 
 #include <font/lv_font.h>
 
+#include "lvgl/Label.hpp"
+#include "lvgl/Slider.hpp"
 #include "lvgl/TabView.hpp"
 
 // Local
 #include "LvglImageProvider.hpp"
 #include "LvglRenderer.hpp"
 
-static lv_style_t style_title;
 static const lv_font_t *font_large;
 
 int main(int argc, char *argv[]) {
@@ -30,27 +31,40 @@ int main(int argc, char *argv[]) {
 
   font_large = &lv_font_montserrat_12;
 
-  lv::Object screen(lv_scr_act());
+  lv::Style style = lv::Style().set_text_font(font_large);
+
+  lv::Object(lv_scr_act())
+      .add(lv::TabView(lv::Direction::top, 70)
+               .add_tab(
+                   "Profile",
+                   lv::Container()
+                       .set_content_height(lv_pct(50))
+                       .set_content_width(lv_pct(50))
+
+                       .add(lv::Slider(lv::Object())
+                                .set_width(400)
+                                .set_height(12)
+                                .set_x(200))
+                       .add(lv::Label().set_text("Hello2").add_style(style).set_y(100)))
+               .add_tab("Analytics",
+                        lv::Label().set_text("Hello2").add_style(style))
+               .add_tab("Shopping",
+                        lv::Label().set_text("Hello3").add_style(style)));
+
+#if 0
   lv::TabView tv(screen, lv::Direction::top, 70);
 
   // auto *tv = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 70);
-  lv_obj_t *tab_btns = lv_tabview_get_tab_btns(tv.object());
+  lv::ButtonMatrix tab_buttons = tv.get_tab_buttons();
 
   tv.add_tab("Profile").add_tab("Analytics").add_tab("Shop");
 
-#if 0
-  lv_obj_t *t1 = lv_tabview_add_tab(tv.object(), "Profile");
-  lv_obj_t *t2 = lv_tabview_add_tab(tv.object(), "Analytics");
-  lv_obj_t *t3 = lv_tabview_add_tab(tv.object(), "Shop");
+  lv::Object tab0 = tv.get_tab(0);
+
+  lv::Style style = lv::Style().set_text_font(font_large);
+  lv::Label panel_title =
+      lv::Label(tab0).set_text("Hello World").add_style(style);
 #endif
-
-  lv_style_init(&style_title);
-  lv_style_set_text_font(&style_title, font_large);
-
-  //lv_obj_t *panel2_title = lv_label_create(t1);
-  //lv_label_set_text(panel2_title, "Your profile");
-  //lv_obj_add_style(panel2_title, &style_title, 0);
-
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   engine.load(url);
   auto *window =

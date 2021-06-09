@@ -7,9 +7,8 @@ namespace lv {
 
 class Button : public ObjectAccess<Button> {
 public:
-  Button(Object & parent){
+  Button(Object parent){
     m_object = lv_btn_create(parent.object());
-    m_is_created = true;
   }
 
 };

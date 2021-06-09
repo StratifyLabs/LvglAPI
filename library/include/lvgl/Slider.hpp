@@ -8,8 +8,6 @@ namespace lv {
 class Slider : public BarAccess<Slider> {
 public:
 
-
-
   enum class Mode {
     normal = LV_SLIDER_MODE_NORMAL,
     symmetrical = LV_SLIDER_MODE_SYMMETRICAL,
@@ -18,8 +16,8 @@ public:
 
 
   Slider();
-  Slider(Object & parent){
-    m_object = lv_slider_create(parent.object());
+  Slider(Object parent){
+    m_object = lv_slider_create(lv_scr_act());
   }
 
   Slider & set_mode(Mode value){

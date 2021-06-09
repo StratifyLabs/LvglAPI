@@ -1,22 +1,10 @@
 #ifndef LVGLAPI_LVGL_OBJECT_HPP
 #define LVGLAPI_LVGL_OBJECT_HPP
 
-#include <api/api.hpp>
-#include <lvgl.h>
+#include "Style.hpp"
 
-#include "lvgl/lvgl_api.h"
 
 namespace lv {
-
-using LvglApi = api::Api<lvgl_api_t, LVGL_API_REQUEST>;
-
-class Api : public api::ExecutionContext {
-public:
-  static LvglApi &api() { return m_api; }
-
-private:
-  static LvglApi m_api;
-};
 
 enum class State {
   default_ = LV_STATE_DEFAULT,
@@ -48,119 +36,6 @@ enum class ScrollSnap {
   start = LV_SCROLL_SNAP_START,
   end = LV_SCROLL_SNAP_END,
   center = LV_SCROLL_SNAP_CENTER
-};
-
-enum class Direction {
-  none = LV_DIR_NONE,
-  left = LV_DIR_LEFT,
-  right = LV_DIR_RIGHT,
-  top = LV_DIR_TOP,
-  bottom = LV_DIR_BOTTOM,
-  horizontal = LV_DIR_HOR,
-  vertical = LV_DIR_VER,
-  all = LV_DIR_ALL
-};
-
-enum class Property {
-  invalid = LV_STYLE_PROP_INV,
-  width = LV_STYLE_WIDTH,
-  minimum_width = LV_STYLE_MIN_WIDTH,
-  maximum_width = LV_STYLE_MAX_WIDTH,
-  height = LV_STYLE_HEIGHT,
-  minimum_height = LV_STYLE_MIN_HEIGHT,
-  maximum_height = LV_STYLE_MAX_HEIGHT,
-  x = LV_STYLE_X,
-  y = LV_STYLE_Y,
-  align = LV_STYLE_ALIGN,
-  transform_width = LV_STYLE_TRANSFORM_WIDTH,
-  transform_height = LV_STYLE_TRANSFORM_HEIGHT,
-  translate_x = LV_STYLE_TRANSLATE_X,
-  translate_y = LV_STYLE_TRANSLATE_Y,
-  transform_zoom = LV_STYLE_TRANSFORM_ZOOM,
-  transform_angle = LV_STYLE_TRANSFORM_ANGLE,
-  pad_top = LV_STYLE_PAD_TOP,
-  pad_bottom = LV_STYLE_PAD_BOTTOM,
-  pad_left = LV_STYLE_PAD_LEFT,
-  pad_right = LV_STYLE_PAD_RIGHT,
-  pad_row = LV_STYLE_PAD_ROW,
-  pad_column = LV_STYLE_PAD_COLUMN,
-  background_color = LV_STYLE_BG_COLOR,
-  background_color_filtered = LV_STYLE_BG_COLOR_FILTERED,
-  background_opa = LV_STYLE_BG_OPA,
-  background_gradient_color = LV_STYLE_BG_GRAD_COLOR,
-  background_gradient_color_filtered = LV_STYLE_BG_GRAD_COLOR_FILTERED,
-  background_gradient_direction = LV_STYLE_BG_GRAD_DIR,
-  background_main_stop = LV_STYLE_BG_MAIN_STOP,
-  background_gradient_stop = LV_STYLE_BG_GRAD_STOP,
-  background_image_source = LV_STYLE_BG_IMG_SRC,
-  background_image_opa = LV_STYLE_BG_IMG_OPA,
-  background_image_recolor = LV_STYLE_BG_IMG_RECOLOR,
-  background_image_recolor_filtered = LV_STYLE_BG_IMG_RECOLOR_FILTERED,
-  background_image_recolor_opa = LV_STYLE_BG_IMG_RECOLOR_OPA,
-  background_image_tiled = LV_STYLE_BG_IMG_TILED,
-  border_color = LV_STYLE_BORDER_COLOR,
-  border_color_filtered = LV_STYLE_BORDER_COLOR_FILTERED,
-  border_opa = LV_STYLE_BORDER_OPA,
-  border_width = LV_STYLE_BORDER_WIDTH,
-  border_side = LV_STYLE_BORDER_SIDE,
-  border_post = LV_STYLE_BORDER_POST,
-  outline_width = LV_STYLE_OUTLINE_WIDTH,
-  outline_color = LV_STYLE_OUTLINE_COLOR,
-  outline_color_filtered = LV_STYLE_OUTLINE_COLOR_FILTERED,
-  outline_opa = LV_STYLE_OUTLINE_OPA,
-  outline_pad = LV_STYLE_OUTLINE_PAD,
-
-  shadow_width = LV_STYLE_SHADOW_WIDTH,
-  shadow_ofs_x = LV_STYLE_SHADOW_OFS_X,
-  shadow_ofs_y = LV_STYLE_SHADOW_OFS_Y,
-  shadow_spread = LV_STYLE_SHADOW_SPREAD,
-  shadow_color = LV_STYLE_SHADOW_COLOR,
-  shadow_color_filtered = LV_STYLE_SHADOW_COLOR_FILTERED,
-  shadow_opa = LV_STYLE_SHADOW_OPA,
-
-  img_opa = LV_STYLE_IMG_OPA,
-  img_recolor = LV_STYLE_IMG_RECOLOR,
-  img_recolor_filtered = LV_STYLE_IMG_RECOLOR_FILTERED,
-  img_recolor_opa = LV_STYLE_IMG_RECOLOR_OPA,
-
-  line_width = LV_STYLE_LINE_WIDTH,
-  line_dash_width = LV_STYLE_LINE_DASH_WIDTH,
-  line_dash_gap = LV_STYLE_LINE_DASH_GAP,
-  line_rounded = LV_STYLE_LINE_ROUNDED,
-  line_color = LV_STYLE_LINE_COLOR,
-  line_color_filtered = LV_STYLE_LINE_COLOR_FILTERED,
-  line_opa = LV_STYLE_LINE_OPA,
-
-  arc_width = LV_STYLE_ARC_WIDTH,
-  arc_rounded = LV_STYLE_ARC_ROUNDED,
-  arc_color = LV_STYLE_ARC_COLOR,
-  arc_color_filtered = LV_STYLE_ARC_COLOR_FILTERED,
-  arc_opa = LV_STYLE_ARC_OPA,
-  arc_img_src = LV_STYLE_ARC_IMG_SRC,
-
-  text_color = LV_STYLE_TEXT_COLOR,
-  text_color_filtered = LV_STYLE_TEXT_COLOR_FILTERED,
-  text_opa = LV_STYLE_TEXT_OPA,
-  text_font = LV_STYLE_TEXT_FONT,
-  text_letter_space = LV_STYLE_TEXT_LETTER_SPACE,
-  text_line_space = LV_STYLE_TEXT_LINE_SPACE,
-  text_decor = LV_STYLE_TEXT_DECOR,
-  text_align = LV_STYLE_TEXT_ALIGN,
-
-  radius = LV_STYLE_RADIUS,
-  clip_corner = LV_STYLE_CLIP_CORNER,
-  opa = LV_STYLE_OPA,
-  color_filter_dsc = LV_STYLE_COLOR_FILTER_DSC,
-  color_filter_opa = LV_STYLE_COLOR_FILTER_OPA,
-  animation_time = LV_STYLE_ANIM_TIME,
-  animation_speed = LV_STYLE_ANIM_SPEED,
-  transition = LV_STYLE_TRANSITION,
-  blend_mode = LV_STYLE_BLEND_MODE,
-  layout = LV_STYLE_LAYOUT,
-  base_dir = LV_STYLE_BASE_DIR,
-
-  any = LV_STYLE_PROP_ANY
-
 };
 
 enum class IsAnimate {
@@ -204,100 +79,6 @@ enum class Part {
   any = LV_PART_ANY
 };
 
-class Style {
-public:
-  lv_style_t *style() { return &m_style; }
-
-  const lv_style_t *style() const { return &m_style; }
-
-private:
-  friend class Object;
-  lv_style_t m_style;
-};
-
-class Position {
-public:
-  Position() = default;
-  Position(lv_coord_t x, lv_coord_t y) : m_position{x, y} {}
-
-  Position operator+(const Position &a) const {
-    return Position(m_position.x + a.m_position.x,
-                    m_position.y + a.m_position.y);
-  }
-
-  Position &operator+(const Position &a) {
-    m_position.x += a.m_position.x;
-    m_position.y += a.m_position.y;
-    return *this;
-  }
-
-  lv_coord_t x() const { return m_position.x; }
-  lv_coord_t y() const { return m_position.y; }
-
-  lv_point_t *position() { return &m_position; }
-
-  const lv_point_t *position() const { return &m_position; }
-
-private:
-  lv_point_t m_position{};
-};
-
-class Size {
-public:
-  Size(lv_coord_t w, lv_coord_t h) : m_width(w), m_height(h) {}
-
-  lv_coord_t width() const { return m_width; }
-  lv_coord_t height() const { return m_height; }
-
-private:
-  lv_coord_t m_width;
-  lv_coord_t m_height;
-};
-
-class Area {
-public:
-  Area() = default;
-  Area(const Position &position, const Size &size) {
-    m_area.x1 = position.x();
-    m_area.y1 = position.y();
-    m_area.x2 = position.x() + size.width();
-    m_area.y2 = position.y() + size.height();
-  }
-
-  lv_area_t *area() { return &m_area; }
-
-  const lv_area_t *area() const { return &m_area; }
-
-private:
-  friend class Object;
-  lv_area_t m_area{};
-};
-
-enum class Alignment {
-  default_ = LV_ALIGN_DEFAULT,
-  top_left = LV_ALIGN_TOP_LEFT,
-  top_middle = LV_ALIGN_TOP_MID,
-  top_right = LV_ALIGN_TOP_RIGHT,
-  bottom_left = LV_ALIGN_BOTTOM_LEFT,
-  bottom_middle = LV_ALIGN_BOTTOM_MID,
-  bottom_right = LV_ALIGN_BOTTOM_RIGHT,
-  left_middle = LV_ALIGN_LEFT_MID,
-  right_middle = LV_ALIGN_RIGHT_MID,
-  center = LV_ALIGN_CENTER,
-
-  out_top_left = LV_ALIGN_OUT_TOP_LEFT,
-  out_top_mid = LV_ALIGN_OUT_TOP_MID,
-  out_top_right = LV_ALIGN_OUT_TOP_RIGHT,
-  out_bottom_left = LV_ALIGN_OUT_BOTTOM_LEFT,
-  out_bottom_middle = LV_ALIGN_OUT_BOTTOM_MID,
-  out_bottom_right = LV_ALIGN_OUT_BOTTOM_RIGHT,
-  out_left_top = LV_ALIGN_OUT_LEFT_TOP,
-  out_left_middle = LV_ALIGN_OUT_LEFT_MID,
-  out_left_bottom = LV_ALIGN_OUT_LEFT_BOTTOM,
-  out_right_top = LV_ALIGN_OUT_RIGHT_TOP,
-  out_right_middle = LV_ALIGN_OUT_RIGHT_MID,
-  out_right_bottom = LV_ALIGN_OUT_RIGHT_BOTTOM
-};
 
 enum class ObjectFlags {
   hidden = LV_OBJ_FLAG_HIDDEN,
@@ -342,6 +123,8 @@ enum class Key {
   end = LV_KEY_END
 };
 
+
+
 class Object : public Api {
 public:
   using Flags = ObjectFlags;
@@ -355,15 +138,15 @@ public:
 
   Object() = default;
   explicit Object(lv_obj_t *obj) : m_object(obj) {}
-  explicit Object(Object &parent) {
-    m_object = lv_obj_create(parent.m_object);
-    m_is_created = true;
+
+  template <class ChildClass, typename... Args>
+  ChildClass add_child(Args... args) {
+    return ChildClass(*this, args...);
   }
 
-  ~Object() {
-    if (m_is_created) {
-      lv_obj_del(m_object);
-    }
+  Object &add(Object object) {
+    api()->obj_set_parent(object.m_object, m_object);
+    return *this;
   }
 
   static void initialize() { lv_init(); }
@@ -482,39 +265,29 @@ public:
     return api()->obj_get_scroll_right(m_object);
   }
 
-  Position get_scroll_end() const {
-    Position result;
-    api()->obj_get_scroll_end(m_object, result.position());
+  Point get_scroll_end() const {
+    Point result;
+    api()->obj_get_scroll_end(m_object, result.point());
     return result;
   }
 
-  u32 get_child_count() const {
-    return api()->obj_get_child_cnt(m_object);
-  }
+  u32 get_child_count() const { return api()->obj_get_child_cnt(m_object); }
 
-  u32 get_child_id() const {
-    return api()->obj_get_child_id(m_object);
-  }
+  u32 get_child_id() const { return api()->obj_get_child_id(m_object); }
 
-  Object get_parent() const {
-    return Object(api()->obj_get_parent(m_object));
-  }
+  Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
 
   Object get_child(s32 id) const {
     return Object(api()->obj_get_child(m_object, id));
   }
 
-  bool is_editable() const {
-    return api()->obj_is_editable(m_object);
-  }
-
+  bool is_editable() const { return api()->obj_is_editable(m_object); }
 
   lv_obj_t *object() { return m_object; }
   const lv_obj_t *object() const { return m_object; }
 
 protected:
   lv_obj_t *m_object = nullptr;
-  bool m_is_created = false;
 };
 
 template <class Derived> class ObjectAccess : public Object {
@@ -544,7 +317,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_position(const Position &position) {
+  Derived &set_position(const Point &position) {
     api()->obj_set_pos(m_object, position.x(), position.y());
     return static_cast<Derived &>(*this);
   }
@@ -613,14 +386,14 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &align(Alignment alignment, const Position &offset) {
+  Derived &align(Alignment alignment, const Point &offset) {
     api()->obj_align(m_object, static_cast<lv_align_t>(alignment), offset.x(),
                      offset.y());
     return static_cast<Derived &>(*this);
   }
 
   Derived &align(const Object &object, Alignment alignment,
-                 const Position &offset) {
+                 const Point &offset) {
     api()->obj_align_to(m_object, object.object(),
                         static_cast<lv_align_t>(alignment), offset.x(),
                         offset.y());
@@ -637,12 +410,12 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &move_to(const Position &position) {
+  Derived &move_to(const Point &position) {
     api()->obj_refr_pos(m_object, position.x(), position.y());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &move_children_by(const Position &difference,
+  Derived &move_children_by(const Point &difference,
                             IsIgnoreFloating is_ignore_floating) {
     api()->obj_move_children_by(
         m_object, difference.x(), difference.y(),
@@ -688,13 +461,13 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &scroll_by(const Position &position, IsAnimate is_animate) {
+  Derived &scroll_by(const Point &position, IsAnimate is_animate) {
     api()->obj_scroll_by(m_object, position.x(), position.y(),
                          is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
-  Derived &scroll_to(const Position &position, IsAnimate is_animate) {
+  Derived &scroll_to(const Point &position, IsAnimate is_animate) {
     api()->obj_scroll_to(m_object, position.x(), position.y(),
                          is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
@@ -735,7 +508,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add_style(const Style &style, lv_style_selector_t style_selector) {
+  Derived &add_style(Style &style, lv_style_selector_t style_selector = 0) {
     api()->obj_add_style(m_object, style.style(), style_selector);
     return static_cast<Derived &>(*this);
   }
@@ -771,6 +544,13 @@ public:
     api()->obj_move_background(m_object);
     return static_cast<Derived &>(*this);
   }
+};
+
+class Container : public ObjectAccess<Container> {
+public:
+  Container() { m_object = api()->obj_create(lv_scr_act()); }
+
+private:
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)

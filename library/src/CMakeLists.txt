@@ -13,6 +13,7 @@ set(SOURCES
 	Line.cpp
 	Object.cpp
 	Spinner.cpp
+	Style.cpp
 	Window.cpp
 	Calendar.cpp
 	Gauge.cpp
