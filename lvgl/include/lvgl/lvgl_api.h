@@ -784,9 +784,9 @@ typedef struct {
 extern const lvgl_api_t lvgl_api;
 
 #if defined __link
-#define LVGL_API_REQUEST &lvgl_api;
+#define LVGL_API_REQUEST (&lvgl_api)
 #else
-enum { LVGL_API_REQUEST = MCU_API_REQUEST_CODE('l', 'v', 'g', 'l') };
+enum { LVGL_API_REQUEST = MCU_API_REQUEST_CODE('l', 'v', 'g', 'l') }
 #endif
 
 #ifdef __cplusplus

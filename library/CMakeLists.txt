@@ -11,14 +11,12 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 	macro(add_lvgl_include ARCH)
 		target_include_directories(LvglAPI_debug_${ARCH}
 			PUBLIC
-			PRIVATE
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
 			)
 
 		target_include_directories(LvglAPI_release_${ARCH}
 			PUBLIC
-			PRIVATE
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
 			)

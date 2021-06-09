@@ -110,57 +110,56 @@ enum class Property {
   outline_opa = LV_STYLE_OUTLINE_OPA,
   outline_pad = LV_STYLE_OUTLINE_PAD,
 
-  shadow_width            =  LV_STYLE_SHADOW_WIDTH,
-  shadow_ofs_x            =  LV_STYLE_SHADOW_OFS_X,
-  shadow_ofs_y            =  LV_STYLE_SHADOW_OFS_Y,
-  shadow_spread           =  LV_STYLE_SHADOW_SPREAD,
-  shadow_color            = LV_STYLE_SHADOW_COLOR,
-  shadow_color_filtered   =  LV_STYLE_SHADOW_COLOR_FILTERED,
-  shadow_opa              =  LV_STYLE_SHADOW_OPA,
+  shadow_width = LV_STYLE_SHADOW_WIDTH,
+  shadow_ofs_x = LV_STYLE_SHADOW_OFS_X,
+  shadow_ofs_y = LV_STYLE_SHADOW_OFS_Y,
+  shadow_spread = LV_STYLE_SHADOW_SPREAD,
+  shadow_color = LV_STYLE_SHADOW_COLOR,
+  shadow_color_filtered = LV_STYLE_SHADOW_COLOR_FILTERED,
+  shadow_opa = LV_STYLE_SHADOW_OPA,
 
-  img_opa                 = LV_STYLE_IMG_OPA,
-  img_recolor             = LV_STYLE_IMG_RECOLOR,
-  img_recolor_filtered    =  LV_STYLE_IMG_RECOLOR_FILTERED,
-  img_recolor_opa         = LV_STYLE_IMG_RECOLOR_OPA,
+  img_opa = LV_STYLE_IMG_OPA,
+  img_recolor = LV_STYLE_IMG_RECOLOR,
+  img_recolor_filtered = LV_STYLE_IMG_RECOLOR_FILTERED,
+  img_recolor_opa = LV_STYLE_IMG_RECOLOR_OPA,
 
-  line_width              =  LV_STYLE_LINE_WIDTH,
-  line_dash_width         = LV_STYLE_LINE_DASH_WIDTH,
-  line_dash_gap           = LV_STYLE_LINE_DASH_GAP,
-  line_rounded            = LV_STYLE_LINE_ROUNDED,
-  line_color              = LV_STYLE_LINE_COLOR,
-  line_color_filtered     = LV_STYLE_LINE_COLOR_FILTERED,
-  line_opa                = LV_STYLE_LINE_OPA,
+  line_width = LV_STYLE_LINE_WIDTH,
+  line_dash_width = LV_STYLE_LINE_DASH_WIDTH,
+  line_dash_gap = LV_STYLE_LINE_DASH_GAP,
+  line_rounded = LV_STYLE_LINE_ROUNDED,
+  line_color = LV_STYLE_LINE_COLOR,
+  line_color_filtered = LV_STYLE_LINE_COLOR_FILTERED,
+  line_opa = LV_STYLE_LINE_OPA,
 
-  arc_width               =LV_STYLE_ARC_WIDTH,
-  arc_rounded             = LV_STYLE_ARC_ROUNDED,
-  arc_color               = LV_STYLE_ARC_COLOR,
-  arc_color_filtered      = LV_STYLE_ARC_COLOR_FILTERED,
-  arc_opa                 = LV_STYLE_ARC_OPA,
-  arc_img_src             = LV_STYLE_ARC_IMG_SRC,
+  arc_width = LV_STYLE_ARC_WIDTH,
+  arc_rounded = LV_STYLE_ARC_ROUNDED,
+  arc_color = LV_STYLE_ARC_COLOR,
+  arc_color_filtered = LV_STYLE_ARC_COLOR_FILTERED,
+  arc_opa = LV_STYLE_ARC_OPA,
+  arc_img_src = LV_STYLE_ARC_IMG_SRC,
 
-  text_color              = LV_STYLE_TEXT_COLOR,
-  text_color_filtered     = LV_STYLE_TEXT_COLOR_FILTERED,
-  text_opa                = LV_STYLE_TEXT_OPA,
-  text_font               = LV_STYLE_TEXT_FONT,
-  text_letter_space       = LV_STYLE_TEXT_LETTER_SPACE,
-  text_line_space         = LV_STYLE_TEXT_LINE_SPACE,
-  text_decor              = LV_STYLE_TEXT_DECOR,
-  text_align              = LV_STYLE_TEXT_ALIGN,
+  text_color = LV_STYLE_TEXT_COLOR,
+  text_color_filtered = LV_STYLE_TEXT_COLOR_FILTERED,
+  text_opa = LV_STYLE_TEXT_OPA,
+  text_font = LV_STYLE_TEXT_FONT,
+  text_letter_space = LV_STYLE_TEXT_LETTER_SPACE,
+  text_line_space = LV_STYLE_TEXT_LINE_SPACE,
+  text_decor = LV_STYLE_TEXT_DECOR,
+  text_align = LV_STYLE_TEXT_ALIGN,
 
-  radius                  = LV_STYLE_RADIUS,
-  clip_corner             = LV_STYLE_CLIP_CORNER,
-  opa                     = LV_STYLE_OPA,
-  color_filter_dsc        = LV_STYLE_COLOR_FILTER_DSC,
-  color_filter_opa        = LV_STYLE_COLOR_FILTER_OPA,
-  animation_time               = LV_STYLE_ANIM_TIME,
-  animation_speed              = LV_STYLE_ANIM_SPEED,
-  transition              = LV_STYLE_TRANSITION,
-  blend_mode              = LV_STYLE_BLEND_MODE,
-  layout                  = LV_STYLE_LAYOUT,
-  base_dir                = LV_STYLE_BASE_DIR,
+  radius = LV_STYLE_RADIUS,
+  clip_corner = LV_STYLE_CLIP_CORNER,
+  opa = LV_STYLE_OPA,
+  color_filter_dsc = LV_STYLE_COLOR_FILTER_DSC,
+  color_filter_opa = LV_STYLE_COLOR_FILTER_OPA,
+  animation_time = LV_STYLE_ANIM_TIME,
+  animation_speed = LV_STYLE_ANIM_SPEED,
+  transition = LV_STYLE_TRANSITION,
+  blend_mode = LV_STYLE_BLEND_MODE,
+  layout = LV_STYLE_LAYOUT,
+  base_dir = LV_STYLE_BASE_DIR,
 
-
-  any   =  LV_STYLE_PROP_ANY
+  any = LV_STYLE_PROP_ANY
 
 };
 
@@ -235,13 +234,9 @@ public:
   lv_coord_t x() const { return m_position.x; }
   lv_coord_t y() const { return m_position.y; }
 
-  lv_point_t * position(){
-    return &m_position;
-  }
+  lv_point_t *position() { return &m_position; }
 
-  const lv_point_t * position() const {
-    return &m_position;
-  }
+  const lv_point_t *position() const { return &m_position; }
 
 private:
   lv_point_t m_position{};
@@ -358,13 +353,25 @@ public:
     lv_obj_class_t m_class;
   };
 
-  Object();
-  Object(Object &parent) { m_object = lv_obj_create(parent.m_object); }
+  Object() = default;
+  explicit Object(lv_obj_t *obj) : m_object(obj) {}
+  explicit Object(Object &parent) {
+    m_object = lv_obj_create(parent.m_object);
+    m_is_created = true;
+  }
 
-  ~Object() { lv_obj_del(m_object); }
+  ~Object() {
+    if (m_is_created) {
+      lv_obj_del(m_object);
+    }
+  }
 
   static void initialize() { lv_init(); }
-  static void finalize() { lv_deinit(); }
+  static void finalize() {
+#if LV_ENABLE_GC || !LV_MEM_CUSTOM
+    lv_deinit();
+#endif
+  }
 
   enum class IsRecursive { no, yes };
 
@@ -404,17 +411,11 @@ public:
   }
 
   lv_coord_t get_x() const { return api()->obj_get_x(m_object); }
-
   lv_coord_t get_x2() const { return api()->obj_get_x2(m_object); }
-
   lv_coord_t get_y() const { return api()->obj_get_y(m_object); }
-
   lv_coord_t get_y2() const { return api()->obj_get_y2(m_object); }
-
   lv_coord_t get_width() const { return api()->obj_get_width(m_object); }
-
   lv_coord_t get_height() const { return api()->obj_get_height(m_object); }
-
   Size get_size() const { return Size(get_width(), get_height()); }
 
   Area get_content_area() const {
@@ -481,11 +482,39 @@ public:
     return api()->obj_get_scroll_right(m_object);
   }
 
+  Position get_scroll_end() const {
+    Position result;
+    api()->obj_get_scroll_end(m_object, result.position());
+    return result;
+  }
+
+  u32 get_child_count() const {
+    return api()->obj_get_child_cnt(m_object);
+  }
+
+  u32 get_child_id() const {
+    return api()->obj_get_child_id(m_object);
+  }
+
+  Object get_parent() const {
+    return Object(api()->obj_get_parent(m_object));
+  }
+
+  Object get_child(s32 id) const {
+    return Object(api()->obj_get_child(m_object, id));
+  }
+
+  bool is_editable() const {
+    return api()->obj_is_editable(m_object);
+  }
+
+
   lv_obj_t *object() { return m_object; }
   const lv_obj_t *object() const { return m_object; }
 
 protected:
   lv_obj_t *m_object = nullptr;
+  bool m_is_created = false;
 };
 
 template <class Derived> class ObjectAccess : public Object {
@@ -718,7 +747,8 @@ public:
   }
 
   Derived &refresh_style(Part part, lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, static_cast<lv_part_t>(part), style_selector);
+    api()->obj_remove_style(m_object, static_cast<lv_part_t>(part),
+                            style_selector);
     return static_cast<Derived &>(*this);
   }
 

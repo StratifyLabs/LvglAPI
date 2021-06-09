@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-ButtonMatrix::ButtonMatrix()
-{
-
+ButtonMatrix::ButtonMatrix(Object & parent){
+  m_object = api()->btnmatrix_create(parent.object());
+  m_is_created = true;
 }

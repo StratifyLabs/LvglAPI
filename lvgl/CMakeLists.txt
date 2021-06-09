@@ -25,6 +25,7 @@ set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
 
 set(PRIVATE_SOURCELIST
 	${CMAKE_CURRENT_SOURCE_DIR}/lvgl_api.c
+	${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
 	${SOURCES_PREFIX}/lv_api_map.h
 	${SOURCES_PREFIX}/misc/lv_printf.h
@@ -291,6 +292,7 @@ target_include_directories(${RELEASE_TARGET}
 	PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:lvgl>
 	PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src
 	)
