@@ -33,23 +33,29 @@ int main(int argc, char *argv[]) {
 
   lv::Style style = lv::Style().set_text_font(font_large);
 
+  const auto tab_view = "tabview";
+  const auto brightness_slider = "brightness";
+
   lv::Object(lv_scr_act())
-      .add(lv::TabView(lv::Direction::top, 70)
+      .add(lv::TabView(tab_view, lv::Direction::top, 70)
                .add_tab(
                    "Profile",
                    lv::Container()
                        .set_content_height(lv_pct(50))
                        .set_content_width(lv_pct(50))
 
-                       .add(lv::Slider(lv::Object())
+                       .add(lv::Slider(brightness_slider)
                                 .set_width(400)
                                 .set_height(12)
                                 .set_x(200))
-                       .add(lv::Label().set_text("Hello2").add_style(style).set_y(100)))
+                       .add(lv::Label("Hello1").set_text("Hello2").add_style(style).set_y(100)))
                .add_tab("Analytics",
-                        lv::Label().set_text("Hello2").add_style(style))
+                        lv::Label("Hello2").set_text("Hello2").add_style(style))
                .add_tab("Shopping",
-                        lv::Label().set_text("Hello3").add_style(style)));
+                        lv::Label("Hello3").set_text("Hello3").add_style(style)));
+
+  printf("tab is at %p\n", lv::Object(lv_scr_act()).find_child(tab_view).object());
+  printf("hello is at %p\n", lv::Object(lv_scr_act()).find_child("Hello1").object());
 
 #if 0
   lv::TabView tv(screen, lv::Direction::top, 70);

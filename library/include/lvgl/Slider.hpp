@@ -16,8 +16,9 @@ public:
 
 
   Slider();
-  Slider(Object parent){
+  Slider(const char * name){
     m_object = lv_slider_create(lv_scr_act());
+    set_name(name);
   }
 
   Slider & set_mode(Mode value){

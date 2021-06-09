@@ -5,6 +5,7 @@ set(SOURCES
 	Bar.cpp
 	ColorPicker.cpp
 	Label.cpp
+	Event.cpp
 	MessageBox.cpp
 	SpinBox.cpp
 	TileView.cpp

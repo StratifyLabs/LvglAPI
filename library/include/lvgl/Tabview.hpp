@@ -10,7 +10,7 @@ namespace lv {
 class TabView : public ObjectAccess<TabView> {
 public:
 
-  TabView(Direction direction, u32 size, Object parent = Object());
+  TabView(const char * name, Direction direction, u32 size);
 
   TabView& add_tab(const char *name, Object content = Object()){
     auto * obj = api()->tabview_add_tab(m_object, name);

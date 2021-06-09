@@ -1,6 +1,8 @@
 #ifndef LVGLAPI_LVGL_OBJECT_HPP
 #define LVGLAPI_LVGL_OBJECT_HPP
 
+#include <var/StringView.hpp>
+
 #include "Style.hpp"
 
 
@@ -46,26 +48,6 @@ enum class IsAnimate {
 
 enum class IsIgnoreFloating { no, yes };
 
-enum class Event {
-  pressed = LV_EVENT_PRESSED,
-  pressing = LV_EVENT_PRESSING,
-  press_lost = LV_EVENT_PRESS_LOST,
-  short_clicked = LV_EVENT_SHORT_CLICKED,
-  long_pressed = LV_EVENT_LONG_PRESSED,
-  long_pressed_repeat = LV_EVENT_LONG_PRESSED_REPEAT,
-  clicked = LV_EVENT_CLICKED,
-  released = LV_EVENT_RELEASED,
-  gesture = LV_EVENT_GESTURE,
-  key = LV_EVENT_KEY,
-  focused = LV_EVENT_FOCUSED,
-  defocused = LV_EVENT_DEFOCUSED,
-  leave = LV_EVENT_LEAVE,
-  value_changed = LV_EVENT_VALUE_CHANGED,
-  insert = LV_EVENT_INSERT,
-  refresh = LV_EVENT_REFRESH,
-  cancel = LV_EVENT_CANCEL,
-  delete_ = LV_EVENT_DELETE
-};
 
 enum class Part {
   main = LV_PART_MAIN,
@@ -281,13 +263,64 @@ public:
     return Object(api()->obj_get_child(m_object, id));
   }
 
+
+  Object get_child(const char * name) const {
+    const auto count  = get_child_count();
+    for(u32 i = 0; i < count; i++){
+      auto child = get_child(i);
+      if( is_name_matched(child, name) ){
+        return child;
+      }
+    }
+    return Object();
+  }
+
+  Object find_child(const char * name) const {
+    //recursively find the child
+    auto get = get_child(name);
+    if( get.object() != nullptr ){
+      return get;
+    }
+    const auto count = get_child_count();
+    for(u32 i = 0; i < count; i++){
+      const auto child = get_child(i);
+      auto result = child.find_child(name);
+      if( result.m_object != nullptr ){
+        return result;
+      }
+    }
+    return Object();
+  }
+
+  template<class ReinterpretedClass> ReinterpretedClass * reinterpret(){
+    return reinterpret_cast<ReinterpretedClass*>(this);
+  }
+
   bool is_editable() const { return api()->obj_is_editable(m_object); }
 
   lv_obj_t *object() { return m_object; }
   const lv_obj_t *object() const { return m_object; }
 
+  const char * name() const {
+    API_ASSERT(m_object != nullptr);
+    return reinterpret_cast<const char*>(m_object->user_data);
+  }
+
 protected:
   lv_obj_t *m_object = nullptr;
+
+  void set_name(const char * name){
+    API_ASSERT(m_object != nullptr);
+    m_object->user_data = (void*)name;
+  }
+
+  static bool is_name_matched(const Object & child, const char * name){
+    const auto child_name = child.name();
+    if( child_name != nullptr && var::StringView(child.name()) == name ){
+      return true;
+    }
+    return false;
+  }
 };
 
 template <class Derived> class ObjectAccess : public Object {

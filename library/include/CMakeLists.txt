@@ -6,6 +6,7 @@ set(SOURCES
 	lvgl/ColorPicker.hpp
 	lvgl/Label.hpp
 	lvgl/MessageBox.hpp
+	lvgl/Event.hpp
 	lvgl/Spinbox.hpp
 	lvgl/TileView.hpp
 	lvgl/ButtonMatrix.hpp
