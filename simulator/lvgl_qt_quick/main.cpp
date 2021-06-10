@@ -17,6 +17,8 @@
 #include "LvglImageProvider.hpp"
 #include "LvglRenderer.hpp"
 
+using namespace lv;
+
 static const lv_font_t *font_large;
 
 int main(int argc, char *argv[]) {
@@ -25,8 +27,9 @@ int main(int argc, char *argv[]) {
   LvglRenderer lvgl;
   auto *lvgl_image_provider = new LvglImageProvider(lvgl);
 
-  engine.addImageProvider("LvglImageProvider",
-                          lvgl_image_provider); // engine takes ownership
+  engine.addImageProvider(
+    "LvglImageProvider",
+    lvgl_image_provider); // engine takes ownership
 
   /// lvgl_sim_qt_example
   // lv_demo_widgets();
@@ -38,46 +41,32 @@ int main(int argc, char *argv[]) {
   const auto tab_view = "tabview";
   static const auto brightness_slider = "brightness";
 
-  lv::Object(lv_scr_act())
-      .add(lv::TabView(tab_view, lv::Direction::top, 70)
-               .add_tab("Profile",
-                        lv::Container()
-                            .set_content_height(lv_pct(50))
-                            .set_content_width(lv_pct(50))
+  lv::Object::active_screen().add(
+    lv::TabView(tab_view, lv::Direction::top, 70)
+      .add_tab(
+        "Profile",
+        lv::Container()
+          .set_content_size(lv::Size(100_percent, 100_percent))
 
-                            .add(lv::Slider(brightness_slider)
-                                     .set_width(400)
-                                     .set_height(12)
-                                     .set_x(200)
-                                     .add_event_callback(
-                                         lv::EventCode::value_changed, nullptr,
-                                         [](lv_event_t *event) {
-                                           const auto value =
-                                               lv::Event(event)
-                                                   .target()
-                                                   .reinterpret<lv::Slider>()
-                                                   ->get_value();
-                                           printf("slider value changed %d\n",
-                                                  value);
-                                           lv::Object::active_screen()
-                                               .find_child("Hello1")
-                                               .reinterpret<lv::Label>()
-                                               ->set_text(var::NumberString(value).cstring());
-                                         }))
-                            .add(lv::Label("Hello1")
-                                     .set_text("Hello2")
-                                     .add_style(style)
-                                     .set_y(100)))
-               .add_tab("Analytics",
-                        lv::Label("Hello2").set_text("Hello2").add_style(style))
-               .add_tab(
-                   "Shopping",
-                   lv::Label("Hello3").set_text("Hello3").add_style(style)));
+          .add(lv::Slider(brightness_slider)
+                 .set_width(400)
+                 .set_height(12)
+                 .set_position(Point(10_percent, 10_percent))
+                 .add_event_callback(
+                   lv::EventCode::value_changed, nullptr,
+                   [](lv_event_t *event) {
+                     const auto value =
+                       lv::Event(event).target().reinterpret<lv::Slider>()->get_value();
+                     printf("slider value changed %d\n", value);
 
-  printf("tab is at %p\n",
-         lv::Object(lv_scr_act()).find_child(tab_view).object());
-  printf("hello is at %p\n",
-         lv::Object(lv_scr_act()).find_child("Hello1").object());
+                     lv::Object::active_screen()
+                       .find_child("Hello1")
+                       .reinterpret<lv::Label>()
+                       ->set_text(var::NumberString(value).cstring());
+                   }))
+          .add(lv::Label("Hello1").set_text("Hello2").add_style(style).set_y(50_percent)))
+      .add_tab("Analytics", lv::Label("Hello2").set_text("Hello2").add_style(style))
+      .add_tab("Shopping", lv::Label("Hello3").set_text("Hello3").add_style(style)));
 
 #if 0
   lv::TabView tv(screen, lv::Direction::top, 70);
@@ -95,8 +84,7 @@ int main(int argc, char *argv[]) {
 #endif
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   engine.load(url);
-  auto *window =
-      qobject_cast<QQuickWindow *>(engine.rootObjects().value(0, nullptr));
+  auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0, nullptr));
   if (window == nullptr) {
     EXIT_FAILURE;
   }

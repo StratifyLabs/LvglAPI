@@ -800,6 +800,10 @@ private:
   lv_style_t m_style;
 };
 
+inline lv_coord_t operator"" _percent(unsigned long long value) {
+  return static_cast<lv_coord_t>(lv_pct(value));
+}
+
 } // namespace lv
 
 #endif // LVGLAPI_LVGL_STYLE_HPP
