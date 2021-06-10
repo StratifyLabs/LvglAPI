@@ -14,6 +14,29 @@ extern "C" {
 typedef struct {
   api_t sos_api;
 
+  //events
+  lv_res_t (*event_send)(struct _lv_obj_t * obj, lv_event_code_t event_code, void * param);
+  lv_res_t (*obj_event_base)(const lv_obj_class_t * class_p, lv_event_t * e);
+  struct _lv_obj_t * (*event_get_target)(lv_event_t * e);
+  struct _lv_obj_t * (*event_get_current_target)(lv_event_t * e);
+  lv_event_code_t (*event_get_code)(lv_event_t * e);
+  void * (*event_get_param)(lv_event_t * e);
+  void * (*event_get_user_data)(lv_event_t * e);
+  uint32_t (*event_register_id)(void);
+  struct _lv_event_dsc_t * (*obj_add_event_cb)(struct _lv_obj_t * obj, lv_event_cb_t event_cb, lv_event_code_t filter, void * user_data);
+  bool (*obj_remove_event_cb)(struct _lv_obj_t * obj, lv_event_cb_t event_cb);
+  bool (*obj_remove_event_dsc)(struct _lv_obj_t * obj, struct _lv_event_dsc_t * event_dsc);
+  lv_indev_t * (*event_get_indev)(lv_event_t * e);
+  lv_obj_draw_part_dsc_t * (*event_get_draw_part_dsc)(lv_event_t * e);
+  const lv_area_t * (*event_get_clip_area)(lv_event_t * e);
+  const lv_area_t * (*event_get_old_size)(lv_event_t * e);
+  uint32_t (*event_get_key)(lv_event_t * e);
+  void (*event_set_ext_draw_size)(lv_event_t * e, lv_coord_t size);
+  lv_point_t * (*event_get_self_size_info)(lv_event_t * e);
+  lv_hit_test_info_t * (*event_get_hit_test_info)(lv_event_t * e);
+  const lv_area_t * (*event_get_cover_area)(lv_event_t * e);
+  void (*event_set_cover_res)(lv_event_t * e, lv_cover_res_t res);
+
   // object
   lv_obj_t *(*obj_create)(lv_obj_t *parent);
   void (*obj_add_flag)(lv_obj_t *obj, lv_obj_flag_t f);

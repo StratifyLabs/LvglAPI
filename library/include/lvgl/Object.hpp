@@ -3,8 +3,8 @@
 
 #include <var/StringView.hpp>
 
+#include "Event.hpp"
 #include "Style.hpp"
-
 
 namespace lv {
 
@@ -48,7 +48,6 @@ enum class IsAnimate {
 
 enum class IsIgnoreFloating { no, yes };
 
-
 enum class Part {
   main = LV_PART_MAIN,
   scrollbar = LV_PART_SCROLLBAR,
@@ -60,7 +59,6 @@ enum class Part {
   cursor = LV_PART_CURSOR,
   any = LV_PART_ANY
 };
-
 
 enum class ObjectFlags {
   hidden = LV_OBJ_FLAG_HIDDEN,
@@ -105,8 +103,6 @@ enum class Key {
   end = LV_KEY_END
 };
 
-
-
 class Object : public Api {
 public:
   using Flags = ObjectFlags;
@@ -129,6 +125,10 @@ public:
   Object &add(Object object) {
     api()->obj_set_parent(object.m_object, m_object);
     return *this;
+  }
+
+  static Object active_screen(){
+    return Object(lv_scr_act());
   }
 
   static void initialize() { lv_init(); }
@@ -263,37 +263,36 @@ public:
     return Object(api()->obj_get_child(m_object, id));
   }
 
-
-  Object get_child(const char * name) const {
-    const auto count  = get_child_count();
-    for(u32 i = 0; i < count; i++){
+  Object get_child(const char *name) const {
+    const auto count = get_child_count();
+    for (u32 i = 0; i < count; i++) {
       auto child = get_child(i);
-      if( is_name_matched(child, name) ){
+      if (is_name_matched(child, name)) {
         return child;
       }
     }
     return Object();
   }
 
-  Object find_child(const char * name) const {
-    //recursively find the child
+  Object find_child(const char *name) const {
+    // recursively find the child
     auto get = get_child(name);
-    if( get.object() != nullptr ){
+    if (get.object() != nullptr) {
       return get;
     }
     const auto count = get_child_count();
-    for(u32 i = 0; i < count; i++){
+    for (u32 i = 0; i < count; i++) {
       const auto child = get_child(i);
       auto result = child.find_child(name);
-      if( result.m_object != nullptr ){
+      if (result.m_object != nullptr) {
         return result;
       }
     }
     return Object();
   }
 
-  template<class ReinterpretedClass> ReinterpretedClass * reinterpret(){
-    return reinterpret_cast<ReinterpretedClass*>(this);
+  template <class ReinterpretedClass> ReinterpretedClass *reinterpret() {
+    return reinterpret_cast<ReinterpretedClass *>(this);
   }
 
   bool is_editable() const { return api()->obj_is_editable(m_object); }
@@ -301,22 +300,22 @@ public:
   lv_obj_t *object() { return m_object; }
   const lv_obj_t *object() const { return m_object; }
 
-  const char * name() const {
+  const char *name() const {
     API_ASSERT(m_object != nullptr);
-    return reinterpret_cast<const char*>(m_object->user_data);
+    return reinterpret_cast<const char *>(m_object->user_data);
   }
 
 protected:
   lv_obj_t *m_object = nullptr;
 
-  void set_name(const char * name){
+  void set_name(const char *name) {
     API_ASSERT(m_object != nullptr);
-    m_object->user_data = (void*)name;
+    m_object->user_data = (void *)name;
   }
 
-  static bool is_name_matched(const Object & child, const char * name){
+  static bool is_name_matched(const Object &child, const char *name) {
     const auto child_name = child.name();
-    if( child_name != nullptr && var::StringView(child.name()) == name ){
+    if (child_name != nullptr && var::StringView(child.name()) == name) {
       return true;
     }
     return false;
@@ -575,6 +574,13 @@ public:
 
   Derived &move_to_background() {
     api()->obj_move_background(m_object);
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &add_event_callback(EventCode event_code, void *context,
+                              void (*event_callback)(lv_event_t *)) {
+    api()->obj_add_event_cb(m_object, event_callback,
+                            static_cast<lv_event_code_t>(event_code), context);
     return static_cast<Derived &>(*this);
   }
 };

@@ -1,9 +1,11 @@
 #ifndef LVGLAPI_LVGL_EVENT_HPP
 #define LVGLAPI_LVGL_EVENT_HPP
 
-#include "Object.hpp"
+#include "Style.hpp"
 
 namespace lv {
+
+class Object;
 
 enum class EventCode {
   all = LV_EVENT_ALL,
@@ -59,13 +61,8 @@ public:
     return EventCode(m_event->code);
   }
 
-  Object target() const {
-    return Object(m_event->target);
-  }
-
-  Object current_target() const {
-    return Object(m_event->current_target);
-  }
+  Object target() const;
+  Object current_target() const;
 
   Event previous_event() const {
     return Event(m_event->prev);
