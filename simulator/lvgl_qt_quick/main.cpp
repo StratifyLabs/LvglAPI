@@ -9,6 +9,7 @@
 
 #include <font/lv_font.h>
 
+#include "lvgl/Bar.hpp"
 #include "lvgl/Button.hpp"
 #include "lvgl/Label.hpp"
 #include "lvgl/Slider.hpp"
@@ -35,69 +36,70 @@ int main(int argc, char *argv[]) {
   /// lvgl_sim_qt_example
   // lv_demo_widgets();
 
-  font_large = &lv_font_montserrat_12;
+  font_large = &lv_font_montserrat_28;
 
   lv::Style style = lv::Style().set_text_font(font_large);
 
   const auto tab_view = "tabview";
-  static const auto brightness_slider = "brightness";
 
-  API_PRINTF_TRACE_LINE();
-  Container::active_screen().add(
-      lv::TabView(tab_view, lv::Direction::top, 70)
-        .add_tab(
-          "Profile",
-          lv::Container("ProfileContainer")
-            .set_content_size(lv::Size(50_percent, 50_percent))
-            .add(lv::Button(brightness_slider)
-                   .add(lv::Label("buttonLabel")
-                          .set_text("Button")
-                          .set_alignment(Alignment::center))
-                   .add_event_callback(
-                     lv::EventCode::value_changed, nullptr,
-                     [](lv_event_t *event) {
-                       const auto value =
-                         lv::Event(event).target().reinterpret<lv::Slider>()->get_value();
-                       printf("slider value changed %d\n", value);
+  auto screen = Container::active_screen();
 
-                       Container::active_screen()
-                         .find_child("Hello1")
-                         .reinterpret<lv::Label>()
-                         ->set_text(var::NumberString(value).cstring());
-                     }))
-            .add(
-              lv::Label("Hello1").set_text("Hello2").add_style(style).set_y(50_percent)))
-        .add_tab("Analytics", lv::Label("Hello2").set_text("Hello2").add_style(style))
-        .add_tab("Shopping", lv::Label("Hello3").set_text("Hello3").add_style(style)));
-  API_PRINTF_TRACE_LINE();
+  screen.add<TabView>(TabView::Create(tab_view).set_size(10_percent))
+    .find(tab_view)
+    .cast<TabView>()
+    ->add_tab(
+      "Hello", nullptr,
+      [](Container &container, void *) {
 
-  printf("Hello1 is %p\n", Container::active_screen().find_child("Hello1").object());
-  printf("hello1 y is %d\n", Container::active_screen().find_child("Hello1").get_y());
+        container.add<Label>(Label::Create("HelloLabel1"))
+          .add<Label>(Label::Create("HelloLabel2"))
+          .find("HelloLabel1")
+          .cast<Label>()
+          ->set_text("Hello Label 1");
 
-  Container::active_screen().find_child(tab_view).reinterpret<TabView>()->get_tab(1).add(
-    lv::Button("Hello5")
-      .add_style(style)
-      .set_y(10_percent)
-      .set_size(Size(50_percent, 50_percent))
-      .add_event_callback(lv::EventCode::clicked, nullptr, [](lv_event_t *event) {
-        lv::Event(event).target().reinterpret<Button>()->set_y(100);
-      }));
-  API_PRINTF_TRACE_LINE();
+        container.find("HelloLabel2")
+          .cast<Label>()
+          ->set_text("Hello Label 2")
+          .set_y(100);
+      })
+    .add_tab("World");
 
 #if 0
-  lv::TabView tv(screen, lv::Direction::top, 70);
+  screen.add<TabView>(TabView::Create(tab_view).set_size(10_percent).set_context(&style).set_initialize(
+    [](TabView &tv, void *context) {
+      tv.add_tab("Profile")
+        .add_tab<Label>(
+          "Analytics", Label::Create("Hello World")
+                         .set_context(context)
+                         .set_initialize([](Label &label, void *context) {
+                           Style *style = reinterpret_cast<Style *>(context);
+                           label.set_text("Hello Analytics").add_style(*style);
+                         }))
+        .add_tab("Shop")
+        .add_content<Label>(
+          0, Label::Create("ProfileLabel").set_initialize([](Label &label, void *) {
+            label.set_text("Hello").align(Alignment::center);
+          }))
+        .add_content<Slider>(
+          0, Slider::Create("slider").set_initialize([](Slider &slider, void *) {
+            slider.align(Alignment::top_middle)
+              .set_range(Range(0, 100))
+              .add_event_callback(EventCode::value_changed, nullptr, [](lv_event_t *ev) {
+                auto screen = Container::active_screen();
+                Event event(ev);
+                const auto range = event.target().reinterpret<Slider>()->get_range();
+                const auto value = event.target().reinterpret<Slider>()->get_value();
+                printf("Range is %d / %d\n", range.minimum(), range.maximum());
 
-  // auto *tv = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 70);
-  lv::ButtonMatrix tab_buttons = tv.get_tab_buttons();
-
-  tv.add_tab("Profile").add_tab("Analytics").add_tab("Shop");
-
-  lv::Object tab0 = tv.get_tab(0);
-
-  lv::Style style = lv::Style().set_text_font(font_large);
-  lv::Label panel_title =
-      lv::Label(tab0).set_text("Hello World").add_style(style);
+                screen.find("ProgressBar").reinterpret<Bar>()->set_value(value);
+              });
+          }))
+        .add_content<Bar>(0, Bar::Create("ProgressBar").set_initialize([](Bar &bar, void *) {
+                            bar.align(Alignment::bottom_middle);
+                          }));
+    }));
 #endif
+
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   engine.load(url);
   auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().value(0, nullptr));

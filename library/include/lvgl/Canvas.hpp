@@ -7,7 +7,7 @@ namespace lv {
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
-  Canvas(Object &parent) {
+  Canvas(Object parent) {
     m_object =
         lv_canvas_create(parent.object());
   }

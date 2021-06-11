@@ -249,27 +249,30 @@ public:
     return Object();
   }
 
-  template <bool isAssertOnFail = true> Object find_child(const char *name) const {
+  template <bool isAssertOnFail = true> Object find(const char *name) const {
     // recursively find the child
+    printf("searching %s\n", this->name());
     auto get = get_child(name);
     if (get.object() != nullptr) {
       return get;
     }
     const auto count = get_child_count();
+    printf("%d children\n", count);
     for (u32 i = 0; i < count; i++) {
       const auto child = get_child(i);
-      auto result = child.find_child<false>(name);
+      auto result = child.find<false>(name);
       if (result.m_object != nullptr) {
         return result;
       }
     }
     if (isAssertOnFail) {
+      printf("failed searching %s\n", this->name());
       API_ASSERT(false);
     }
     return Object();
   }
 
-  template <class ReinterpretedClass> ReinterpretedClass *reinterpret() {
+  template <class ReinterpretedClass> ReinterpretedClass *cast() {
     return reinterpret_cast<ReinterpretedClass *>(this);
   }
 
@@ -404,13 +407,14 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &align(Alignment alignment, const Point &offset) {
+  Derived &align(Alignment alignment, const Point &offset = Point()) {
     api()->obj_align(
       m_object, static_cast<lv_align_t>(alignment), offset.x(), offset.y());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &align(const Object &object, Alignment alignment, const Point &offset) {
+  Derived &
+  align(const Object &object, Alignment alignment, const Point &offset = Point()) {
     api()->obj_align_to(
       m_object, object.object(), static_cast<lv_align_t>(alignment), offset.x(),
       offset.y());
@@ -538,7 +542,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_parent(Object &parent) {
+  Derived &set_parent(Object parent) {
     api()->obj_set_parent(m_object, parent.object());
     return static_cast<Derived &>(*this);
   }
@@ -562,11 +566,51 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add(Object object) {
-    api()->obj_update_layout(object.object());
-    api()->obj_set_parent(object.object(), m_object);
+  template<class CreateDerived> class CreateAccess {
+  public:
+    using Callback = void (*)(Derived &, void*);
+
+    CreateAccess(const char *name_value)
+      : m_name(name_value){}
+
+    const char * name() const {
+      return m_name;
+    }
+
+    Callback initialize() const {
+      return m_initialize;
+    }
+
+    void * context() const {
+      return m_context;
+    }
+
+    CreateDerived & set_context(void * context){
+      m_context = context;
+      return static_cast<CreateDerived &>(*this);
+    }
+
+    CreateDerived & set_initialize(Callback callback){
+      m_initialize = callback;
+      return static_cast<CreateDerived &>(*this);
+    }
+
+  private:
+    Callback m_initialize = nullptr;
+    void * m_context = nullptr;
+    const char *m_name = nullptr;
+  };
+
+  template <class ChildClass, class ChildClassCreate>
+  Derived &add(
+    const ChildClassCreate & create) {
+    ChildClass child(*this, create);
+    if (create.initialize()) {
+      create.initialize()(child, create.context());
+    }
     return static_cast<Derived &>(*this);
   }
+
 };
 
 class Container : public ObjectAccess<Container> {

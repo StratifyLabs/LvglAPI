@@ -2,7 +2,3 @@
 
 using namespace lv;
 
-Slider::Slider()
-{
-
-}

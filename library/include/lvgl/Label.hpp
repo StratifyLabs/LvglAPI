@@ -7,7 +7,12 @@ namespace lv {
 
 class Label : public ObjectAccess<Label> {
 public:
-  Label(const char * name);
+
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Label(Object parent, const Create & options);
 
   enum class LongMode {
     wrap = LV_LABEL_LONG_WRAP,

@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-Label::Label(const char* name){
-  m_object = api()->label_create(lv_scr_act());
-  set_name(name);
+Label::Label(Object parent, const Create& options){
+  m_object = api()->label_create(parent.object());
+  set_name(options.name());
 }

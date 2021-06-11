@@ -14,11 +14,14 @@ public:
     range = LV_SLIDER_MODE_RANGE
   };
 
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
 
-  Slider();
-  Slider(const char * name){
-    m_object = lv_slider_create(lv_scr_act());
-    set_name(name);
+  Slider(Object parent, const Create & options){
+    m_object = lv_slider_create(parent.object());
+    set_name(options.name());
   }
 
   Slider & set_mode(Mode value){

@@ -7,8 +7,14 @@ namespace lv {
 
 class Button : public ObjectAccess<Button> {
 public:
-  Button(const char * name){
-    m_object = lv_btn_create(Container::active_screen().object());
+
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+
+  Button(Object parent, const char * name){
+    m_object = api()->btn_create(parent.object());
     set_name(name);
   }
 
