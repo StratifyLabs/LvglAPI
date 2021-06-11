@@ -6,10 +6,14 @@
 
 namespace lv {
 
-class LineMeter
+class LineMeter : public ObjectAccess<LineMeter>
 {
 public:
-  LineMeter();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  LineMeter(Object parent, const Create & options);
 };
 }
 

@@ -5,9 +5,13 @@
 
 namespace lv {
 
-class Keyboard
+class Keyboard : public ObjectAccess<Keyboard>
 {
 public:
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
   Keyboard();
 };
 

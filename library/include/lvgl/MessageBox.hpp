@@ -5,9 +5,13 @@
 
 namespace lv {
 
-class MessageBox {
+class MessageBox  : public ObjectAccess<MessageBox> {
 public:
-  MessageBox();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  MessageBox(Object parent, const Create & options);
 };
 
 } // namespace lv

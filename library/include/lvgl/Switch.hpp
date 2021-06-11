@@ -6,10 +6,14 @@
 
 namespace lv {
 
-class Switch
+class Switch : public ObjectAccess<Switch>
 {
 public:
-  Switch();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Switch(Object parent, const Create & options);
 };
 
 }

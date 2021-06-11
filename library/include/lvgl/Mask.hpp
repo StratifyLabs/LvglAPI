@@ -6,10 +6,14 @@
 
 namespace lv {
 
-class Mask
+class Mask : public ObjectAccess<Mask>
 {
 public:
-  Mask();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Mask(Object parent, const Create & options);
 };
 
 }

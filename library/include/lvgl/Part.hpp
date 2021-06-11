@@ -4,11 +4,7 @@
 #include "lvgl.h"
 
 namespace lv {
-class Part {
-public:
-  Part();
 
-};
 }
 
 #endif // LVGLAPI_LVGL_PART_HPP

@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class Roller
+class Roller : public ObjectAccess<Roller>
 {
 public:
-  Roller();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Roller(Object parent, const Create & options);
 };
 
 }

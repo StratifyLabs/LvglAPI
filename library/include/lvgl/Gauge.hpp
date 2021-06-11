@@ -5,10 +5,14 @@
 #include "Object.hpp"
 
 namespace lv {
-class Gauge
+class Gauge : public ObjectAccess<Gauge>
 {
 public:
-  Gauge();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Gauge(Object parent, const Create & options);
 };
 
 }

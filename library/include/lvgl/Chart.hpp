@@ -5,10 +5,15 @@
 
 namespace lv {
 
-class Chart
+class Chart : public ObjectAccess<Chart>
 {
 public:
-  Chart();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+
+  Chart(Object parent, const Create & options);
 };
 
 }

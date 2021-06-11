@@ -10,7 +10,12 @@ namespace lv {
 
 class Image : public ObjectAccess<Image> {
 public:
-  Image(Object &parent);
+
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Image(Object parent, const Create & options);
 
   Image &set_source(const var::StringView src) {
     api()->img_set_src(m_object, var::PathString(src).cstring());

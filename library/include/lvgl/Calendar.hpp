@@ -5,9 +5,15 @@
 
 namespace lv {
 
-class Calendar {
+class Calendar : public ObjectAccess<Calendar> {
 public:
-  Calendar();
+
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+
+  Calendar(Object parent, const Create& options);
 };
 
 } // namespace lv

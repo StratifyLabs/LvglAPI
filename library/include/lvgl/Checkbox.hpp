@@ -5,10 +5,13 @@
 
 namespace lv {
 
-class Checkbox
-{
+class Checkbox : public ObjectAccess<Checkbox>{
 public:
-  Checkbox();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Checkbox(Object parent, const Create & options);
 };
 
 }

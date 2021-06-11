@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class Spinbox
+class SpinBox : public ObjectAccess<SpinBox>
 {
 public:
-  Spinbox();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  SpinBox(Object parent, const Create & options);
 };
 
 }

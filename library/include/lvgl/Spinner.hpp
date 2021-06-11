@@ -5,10 +5,20 @@
 
 namespace lv {
 
-class Spinner
+class Spinner : public ObjectAccess<Spinner>
 {
 public:
-  Spinner();
+
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  private:
+    API_AF(Create, u32, time, 1000);
+    API_AF(Create, u32, arc_length, 60);
+  };
+
+
+  Spinner(Object parent, const Create & options);
 };
 
 }

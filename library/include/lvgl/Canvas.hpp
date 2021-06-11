@@ -7,13 +7,11 @@ namespace lv {
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
-  Canvas(Object parent) {
-    m_object =
-        lv_canvas_create(parent.object());
-  }
-
-
-
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Canvas(Object parent, const Create & options);
 };
 
 } // namespace lv

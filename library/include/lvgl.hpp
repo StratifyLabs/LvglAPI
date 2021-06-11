@@ -6,8 +6,14 @@
 namespace lv {
 }
 
+#include "lvgl/Bar.hpp"
+#include "lvgl/Button.hpp"
+#include "lvgl/Label.hpp"
+#include "lvgl/Slider.hpp"
+#include "lvgl/Spinner.hpp"
+#include "lvgl/TabView.hpp"
 #include "lvgl/Part.hpp"
 
-using namespace lvgl;
+using namespace lv;
 
 #endif // LVGLAPI_LVGL_HPP

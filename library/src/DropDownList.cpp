@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-DropDownList::DropDownList()
-{
-
+DropDownList::DropDownList(Object parent, const Create& options){
+  m_object = api()->dropdown_create(parent.object());
+  set_name(options.name());
 }

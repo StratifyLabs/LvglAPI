@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-Page::Page()
-{
+Page::Page(Object parent, const Create & options){
 
+  set_name(options.name());
 }

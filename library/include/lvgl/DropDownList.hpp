@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class DropDownList
+class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
-  DropDownList();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  DropDownList(Object parent, const Create & options);
 };
 
 }

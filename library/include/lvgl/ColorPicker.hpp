@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class ColorPicker
+class ColorPicker : public ObjectAccess<ColorPicker>
 {
 public:
-  ColorPicker();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  ColorPicker(Object parent, const Create & options);
 };
 
 }

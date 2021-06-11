@@ -13,9 +13,9 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
 
-  Button(Object parent, const char * name){
+  Button(Object parent, const Create & options){
     m_object = api()->btn_create(parent.object());
-    set_name(name);
+    set_name(options.name());
   }
 
 };

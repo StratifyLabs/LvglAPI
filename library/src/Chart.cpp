@@ -2,7 +2,6 @@
 
 using namespace lv;
 
-Chart::Chart()
-{
+Chart::Chart(Object parent, const Create & options){
 
 }

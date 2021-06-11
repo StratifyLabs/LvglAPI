@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class TileView
+class TileView : public ObjectAccess<TileView>
 {
 public:
-  TileView();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  TileView(Object parent, const Create & options);
 };
 
 }

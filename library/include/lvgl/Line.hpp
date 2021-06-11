@@ -5,10 +5,13 @@
 
 namespace lv {
 
-class Line
-{
+class Line : public ObjectAccess<Line> {
 public:
-  Line();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Line(Object parent, const Create & options);
 };
 
 }

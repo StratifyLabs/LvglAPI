@@ -6,10 +6,15 @@
 namespace lv {
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+
   explicit ButtonMatrix(lv_obj_t * obj){
     m_object = obj;
   }
-  ButtonMatrix(Object parent);
+  ButtonMatrix(Object parent, const Create & options);
 };
 
 } // namespace lv

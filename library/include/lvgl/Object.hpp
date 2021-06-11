@@ -251,13 +251,11 @@ public:
 
   template <bool isAssertOnFail = true> Object find(const char *name) const {
     // recursively find the child
-    printf("searching %s\n", this->name());
     auto get = get_child(name);
     if (get.object() != nullptr) {
       return get;
     }
     const auto count = get_child_count();
-    printf("%d children\n", count);
     for (u32 i = 0; i < count; i++) {
       const auto child = get_child(i);
       auto result = child.find<false>(name);
@@ -266,7 +264,6 @@ public:
       }
     }
     if (isAssertOnFail) {
-      printf("failed searching %s\n", this->name());
       API_ASSERT(false);
     }
     return Object();
@@ -566,51 +563,59 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  template<class CreateDerived> class CreateAccess {
+  Derived &set_flex_flow(FlexFlow value) {
+    api()->obj_set_flex_flow(m_object, static_cast<lv_flex_flow_t>(value));
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_flex_grow(u8 value) {
+    api()->obj_set_flex_grow(m_object, value);
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_flex_align(FlexAlign main, FlexAlign cross, FlexAlign track) {
+    api()->obj_set_flex_align(
+      m_object, static_cast<lv_flex_align_t>(main), static_cast<lv_flex_align_t>(cross),
+      static_cast<lv_flex_align_t>(track));
+    return static_cast<Derived &>(*this);
+  }
+
+  template <class CreateDerived> class CreateAccess {
   public:
-    using Callback = void (*)(Derived &, void*);
+    using Callback = void (*)(Derived &, void *);
 
-    CreateAccess(const char *name_value)
-      : m_name(name_value){}
+    CreateAccess(const char *name_value) : m_name(name_value) {}
 
-    const char * name() const {
-      return m_name;
-    }
+    const char *name() const { return m_name; }
 
-    Callback initialize() const {
-      return m_initialize;
-    }
+    Callback initialize() const { return m_initialize; }
 
-    void * context() const {
-      return m_context;
-    }
+    void *context() const { return m_context; }
 
-    CreateDerived & set_context(void * context){
+    CreateDerived &set_context(void *context) {
       m_context = context;
       return static_cast<CreateDerived &>(*this);
     }
 
-    CreateDerived & set_initialize(Callback callback){
+    CreateDerived &set_initialize(Callback callback) {
       m_initialize = callback;
       return static_cast<CreateDerived &>(*this);
     }
 
   private:
     Callback m_initialize = nullptr;
-    void * m_context = nullptr;
+    void *m_context = nullptr;
     const char *m_name = nullptr;
   };
 
   template <class ChildClass, class ChildClassCreate>
-  Derived &add(
-    const ChildClassCreate & create) {
+  Derived &add(const ChildClassCreate &create) {
     ChildClass child(*this, create);
     if (create.initialize()) {
       create.initialize()(child, create.context());
     }
     return static_cast<Derived &>(*this);
   }
-
 };
 
 class Container : public ObjectAccess<Container> {

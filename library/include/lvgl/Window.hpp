@@ -5,10 +5,15 @@
 
 namespace lv {
 
-class Window
-{
+class Window : public ObjectAccess<Window> {
 public:
-  Window();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  private:
+    API_AF(Create, lv_coord_t, height, 15_percent);
+  };
+  Window(Object parent, const Create & options);
 };
 
 }

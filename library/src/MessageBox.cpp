@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-MessageBox::MessageBox()
-{
+MessageBox::MessageBox(Object parent, const Create& options){
 
+  set_name(options.name());
 }

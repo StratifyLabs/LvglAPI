@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class TextArea
+class TextArea : public ObjectAccess<TextArea>
 {
 public:
-  TextArea();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  TextArea(Object parent, const Create & options);
 };
 
 }

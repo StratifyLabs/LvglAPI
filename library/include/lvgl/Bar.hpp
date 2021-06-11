@@ -54,7 +54,7 @@ public:
   };
 
   Bar &set_mode(Mode value) {
-    lv_bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
+    api()->bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
     return *this;
   }
 };

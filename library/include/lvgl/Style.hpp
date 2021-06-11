@@ -246,6 +246,26 @@ enum class Property {
 
 };
 
+enum class FlexFlow {
+  row = LV_FLEX_FLOW_ROW,
+  column = LV_FLEX_FLOW_COLUMN,
+  row_wrap = LV_FLEX_FLOW_ROW_WRAP,
+  row_reverse = LV_FLEX_FLOW_ROW_REVERSE,
+  row_wrap_reverse = LV_FLEX_FLOW_ROW_WRAP_REVERSE,
+  column_wrap = LV_FLEX_FLOW_COLUMN_WRAP,
+  column_reverse = LV_FLEX_FLOW_COLUMN_REVERSE,
+  column_wrap_reverse = LV_FLEX_FLOW_COLUMN_WRAP_REVERSE
+};
+
+enum class FlexAlign {
+  start = LV_FLEX_ALIGN_START,
+  end = LV_FLEX_ALIGN_END,
+  center = LV_FLEX_ALIGN_CENTER,
+  space_evenly = LV_FLEX_ALIGN_SPACE_EVENLY,
+  space_around = LV_FLEX_ALIGN_SPACE_AROUND,
+  space_between = LV_FLEX_ALIGN_SPACE_BETWEEN
+};
+
 class Style : public Api {
 public:
   class Value {

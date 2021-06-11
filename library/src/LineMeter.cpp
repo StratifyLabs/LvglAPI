@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-LineMeter::LineMeter()
-{
+LineMeter::LineMeter(Object parent, const Create& options){
 
+  set_name(options.name());
 }

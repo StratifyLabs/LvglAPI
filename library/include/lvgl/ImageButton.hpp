@@ -5,9 +5,13 @@
 
 namespace lv {
 
-class ImageButton
+class ImageButton : public ObjectAccess<ImageButton>
 {
 public:
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
   ImageButton();
 };
 

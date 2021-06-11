@@ -9,11 +9,7 @@
 
 #include <font/lv_font.h>
 
-#include "lvgl/Bar.hpp"
-#include "lvgl/Button.hpp"
-#include "lvgl/Label.hpp"
-#include "lvgl/Slider.hpp"
-#include "lvgl/TabView.hpp"
+#include "lvgl.hpp"
 
 // Local
 #include "LvglImageProvider.hpp"
@@ -50,17 +46,17 @@ int main(int argc, char *argv[]) {
     ->add_tab(
       "Hello", nullptr,
       [](Container &container, void *) {
-
-        container.add<Label>(Label::Create("HelloLabel1"))
+        container.set_layout(LV_LAYOUT_FLEX)
+          .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
+          .add<Label>(Label::Create("HelloLabel1"))
           .add<Label>(Label::Create("HelloLabel2"))
+          .add<Spinner>(Spinner::Create("Spinner").set_initialize(
+            [](Spinner &spinner, void *) {  }))
           .find("HelloLabel1")
           .cast<Label>()
           ->set_text("Hello Label 1");
 
-        container.find("HelloLabel2")
-          .cast<Label>()
-          ->set_text("Hello Label 2")
-          .set_y(100);
+        container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })
     .add_tab("World");
 

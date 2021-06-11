@@ -2,7 +2,7 @@
 
 using namespace lv;
 
-Mask::Mask()
-{
+Mask::Mask(Object parent, const Create & options){
 
+  set_name(options.name());
 }

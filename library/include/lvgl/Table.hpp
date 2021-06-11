@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class Table
+class Table : public ObjectAccess<Table>
 {
 public:
-  Table();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Table(Object parent, const Create & options);
 };
 
 }

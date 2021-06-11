@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class List
+class List : public ObjectAccess<List>
 {
 public:
-  List();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  List(Object parent, const Create & options);
 };
 
 }

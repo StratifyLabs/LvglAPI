@@ -5,10 +5,14 @@
 
 namespace lv {
 
-class Page
+class Page : public ObjectAccess<Page>
 {
 public:
-  Page();
+  class Create : public CreateAccess<Create> {
+  public:
+    Create(const char * name) : CreateAccess(name){}
+  };
+  Page(Object parent, const Create & options);
 };
 
 }
