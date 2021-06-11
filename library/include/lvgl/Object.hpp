@@ -114,21 +114,8 @@ public:
     lv_obj_class_t m_class;
   };
 
-  Object() = default;
-  explicit Object(lv_obj_t *obj) : m_object(obj) {}
-
-  template <class ChildClass, typename... Args>
-  ChildClass add_child(Args... args) {
+  template <class ChildClass, typename... Args> ChildClass add_child(Args... args) {
     return ChildClass(*this, args...);
-  }
-
-  Object &add(Object object) {
-    api()->obj_set_parent(object.m_object, m_object);
-    return *this;
-  }
-
-  static Object active_screen(){
-    return Object(lv_scr_act());
   }
 
   static void initialize() { lv_init(); }
@@ -136,6 +123,12 @@ public:
 #if LV_ENABLE_GC || !LV_MEM_CUSTOM
     lv_deinit();
 #endif
+  }
+
+  static Object active_screen() {
+    Object result(lv_scr_act());
+    result.set_name("objroot");
+    return result;
   }
 
   enum class IsRecursive { no, yes };
@@ -171,9 +164,7 @@ public:
 
   bool is_valid() const { return api()->obj_is_valid(m_object); }
 
-  bool is_layout_positioned() const {
-    return api()->obj_is_layout_positioned(m_object);
-  }
+  bool is_layout_positioned() const { return api()->obj_is_layout_positioned(m_object); }
 
   lv_coord_t get_x() const { return api()->obj_get_x(m_object); }
   lv_coord_t get_x2() const { return api()->obj_get_x2(m_object); }
@@ -189,17 +180,11 @@ public:
     return result;
   }
 
-  lv_coord_t get_self_width() const {
-    return api()->obj_get_self_width(m_object);
-  }
+  lv_coord_t get_self_width() const { return api()->obj_get_self_width(m_object); }
 
-  lv_coord_t get_self_height() const {
-    return api()->obj_get_self_height(m_object);
-  }
+  lv_coord_t get_self_height() const { return api()->obj_get_self_height(m_object); }
 
-  lv_coord_t get_content_width() const {
-    return api()->obj_get_content_width(m_object);
-  }
+  lv_coord_t get_content_width() const { return api()->obj_get_content_width(m_object); }
 
   lv_coord_t get_content_height() const {
     return api()->obj_get_content_height(m_object);
@@ -231,21 +216,13 @@ public:
 
   lv_coord_t get_scroll_y() const { return api()->obj_get_scroll_y(m_object); }
 
-  lv_coord_t get_scroll_top() const {
-    return api()->obj_get_scroll_top(m_object);
-  }
+  lv_coord_t get_scroll_top() const { return api()->obj_get_scroll_top(m_object); }
 
-  lv_coord_t get_scroll_bottom() const {
-    return api()->obj_get_scroll_bottom(m_object);
-  }
+  lv_coord_t get_scroll_bottom() const { return api()->obj_get_scroll_bottom(m_object); }
 
-  lv_coord_t get_scroll_left() const {
-    return api()->obj_get_scroll_left(m_object);
-  }
+  lv_coord_t get_scroll_left() const { return api()->obj_get_scroll_left(m_object); }
 
-  lv_coord_t get_scroll_right() const {
-    return api()->obj_get_scroll_right(m_object);
-  }
+  lv_coord_t get_scroll_right() const { return api()->obj_get_scroll_right(m_object); }
 
   Point get_scroll_end() const {
     Point result;
@@ -259,9 +236,7 @@ public:
 
   Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
 
-  Object get_child(s32 id) const {
-    return Object(api()->obj_get_child(m_object, id));
-  }
+  Object get_child(s32 id) const { return Object(api()->obj_get_child(m_object, id)); }
 
   Object get_child(const char *name) const {
     const auto count = get_child_count();
@@ -274,7 +249,7 @@ public:
     return Object();
   }
 
-  Object find_child(const char *name) const {
+  template <bool isAssertOnFail = true> Object find_child(const char *name) const {
     // recursively find the child
     auto get = get_child(name);
     if (get.object() != nullptr) {
@@ -283,10 +258,13 @@ public:
     const auto count = get_child_count();
     for (u32 i = 0; i < count; i++) {
       const auto child = get_child(i);
-      auto result = child.find_child(name);
+      auto result = child.find_child<false>(name);
       if (result.m_object != nullptr) {
         return result;
       }
+    }
+    if (isAssertOnFail) {
+      API_ASSERT(false);
     }
     return Object();
   }
@@ -302,12 +280,17 @@ public:
 
   const char *name() const {
     API_ASSERT(m_object != nullptr);
-    return reinterpret_cast<const char *>(m_object->user_data);
+
+    return m_object->user_data ? reinterpret_cast<const char *>(m_object->user_data)
+                               : "unnamed";
   }
+
+  Object() = default;
 
 protected:
   lv_obj_t *m_object = nullptr;
 
+  friend class TabView;
   void set_name(const char *name) {
     API_ASSERT(m_object != nullptr);
     m_object->user_data = (void *)name;
@@ -320,6 +303,9 @@ protected:
     }
     return false;
   }
+
+private:
+  explicit Object(lv_obj_t *obj) : m_object(obj) {}
 };
 
 template <class Derived> class ObjectAccess : public Object {
@@ -419,16 +405,15 @@ public:
   }
 
   Derived &align(Alignment alignment, const Point &offset) {
-    api()->obj_align(m_object, static_cast<lv_align_t>(alignment), offset.x(),
-                     offset.y());
+    api()->obj_align(
+      m_object, static_cast<lv_align_t>(alignment), offset.x(), offset.y());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &align(const Object &object, Alignment alignment,
-                 const Point &offset) {
-    api()->obj_align_to(m_object, object.object(),
-                        static_cast<lv_align_t>(alignment), offset.x(),
-                        offset.y());
+  Derived &align(const Object &object, Alignment alignment, const Point &offset) {
+    api()->obj_align_to(
+      m_object, object.object(), static_cast<lv_align_t>(alignment), offset.x(),
+      offset.y());
     return static_cast<Derived &>(*this);
   }
 
@@ -447,11 +432,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &move_children_by(const Point &difference,
-                            IsIgnoreFloating is_ignore_floating) {
+  Derived &
+  move_children_by(const Point &difference, IsIgnoreFloating is_ignore_floating) {
     api()->obj_move_children_by(
-        m_object, difference.x(), difference.y(),
-        is_ignore_floating == IsIgnoreFloating::yes ? true : false);
+      m_object, difference.x(), difference.y(),
+      is_ignore_floating == IsIgnoreFloating::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
@@ -471,8 +456,7 @@ public:
   }
 
   Derived &set_scroll_mode(ScrollBarMode value) {
-    api()->obj_set_scrollbar_mode(m_object,
-                                  static_cast<lv_scrollbar_mode_t>(value));
+    api()->obj_set_scrollbar_mode(m_object, static_cast<lv_scrollbar_mode_t>(value));
     return static_cast<Derived &>(*this);
   }
 
@@ -482,56 +466,50 @@ public:
   }
 
   Derived &set_scroll_snap_x(ScrollSnap value) {
-    api()->obj_set_scroll_snap_x(m_object,
-                                 static_cast<lv_scroll_snap_t>(value));
+    api()->obj_set_scroll_snap_x(m_object, static_cast<lv_scroll_snap_t>(value));
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_scroll_snap_y(ScrollSnap value) {
-    api()->obj_set_scroll_snap_y(m_object,
-                                 static_cast<lv_scroll_snap_t>(value));
+    api()->obj_set_scroll_snap_y(m_object, static_cast<lv_scroll_snap_t>(value));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_by(const Point &position, IsAnimate is_animate) {
-    api()->obj_scroll_by(m_object, position.x(), position.y(),
-                         is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_by(
+      m_object, position.x(), position.y(), is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to(const Point &position, IsAnimate is_animate) {
-    api()->obj_scroll_to(m_object, position.x(), position.y(),
-                         is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to(
+      m_object, position.x(), position.y(), is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_x(lv_coord_t value, IsAnimate is_animate) {
-    api()->obj_scroll_to_x(m_object, value,
-                           is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_x(m_object, value, is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_y(lv_coord_t value, IsAnimate is_animate) {
-    api()->obj_scroll_to_y(m_object, value,
-                           is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_y(m_object, value, is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_view(IsAnimate is_animate) {
-    api()->obj_scroll_to_view(m_object,
-                              is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_view(m_object, is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_view_recursive(IsAnimate is_animate) {
     api()->obj_scroll_to_view_recursive(
-        m_object, is_animate == IsAnimate::yes ? true : false);
+      m_object, is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
   Derived &update_snap(IsAnimate is_animate) {
-    api()->obj_update_snap(m_object,
-                           is_animate == IsAnimate::yes ? true : false);
+    api()->obj_update_snap(m_object, is_animate == IsAnimate::yes ? true : false);
     return static_cast<Derived &>(*this);
   }
 
@@ -545,15 +523,13 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &remove_style(const Style &style,
-                        lv_style_selector_t style_selector) {
+  Derived &remove_style(const Style &style, lv_style_selector_t style_selector) {
     api()->obj_remove_style(m_object, style.style(), style_selector);
     return static_cast<Derived &>(*this);
   }
 
   Derived &refresh_style(Part part, lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, static_cast<lv_part_t>(part),
-                            style_selector);
+    api()->obj_remove_style(m_object, static_cast<lv_part_t>(part), style_selector);
     return static_cast<Derived &>(*this);
   }
 
@@ -577,17 +553,35 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add_event_callback(EventCode event_code, void *context,
-                              void (*event_callback)(lv_event_t *)) {
-    api()->obj_add_event_cb(m_object, event_callback,
-                            static_cast<lv_event_code_t>(event_code), context);
+  Derived &add_event_callback(
+    EventCode event_code,
+    void *context,
+    void (*event_callback)(lv_event_t *)) {
+    api()->obj_add_event_cb(
+      m_object, event_callback, static_cast<lv_event_code_t>(event_code), context);
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &add(Object object) {
+    api()->obj_update_layout(object.object());
+    api()->obj_set_parent(object.object(), m_object);
     return static_cast<Derived &>(*this);
   }
 };
 
 class Container : public ObjectAccess<Container> {
 public:
-  Container() { m_object = api()->obj_create(lv_scr_act()); }
+  Container(const char *name) {
+    m_object = api()->obj_create(lv_scr_act());
+    set_name(name);
+  }
+  Container(lv_obj_t *object) { m_object = object; }
+
+  static Container active_screen() {
+    Container result(lv_scr_act());
+    result.set_name("activeScreen");
+    return result;
+  }
 
 private:
 };

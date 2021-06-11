@@ -9,6 +9,7 @@
 
 #include <font/lv_font.h>
 
+#include "lvgl/Button.hpp"
 #include "lvgl/Label.hpp"
 #include "lvgl/Slider.hpp"
 #include "lvgl/TabView.hpp"
@@ -41,32 +42,47 @@ int main(int argc, char *argv[]) {
   const auto tab_view = "tabview";
   static const auto brightness_slider = "brightness";
 
-  lv::Object::active_screen().add(
-    lv::TabView(tab_view, lv::Direction::top, 70)
-      .add_tab(
-        "Profile",
-        lv::Container()
-          .set_content_size(lv::Size(100_percent, 100_percent))
+  API_PRINTF_TRACE_LINE();
+  Container::active_screen().add(
+      lv::TabView(tab_view, lv::Direction::top, 70)
+        .add_tab(
+          "Profile",
+          lv::Container("ProfileContainer")
+            .set_content_size(lv::Size(50_percent, 50_percent))
+            .add(lv::Button(brightness_slider)
+                   .add(lv::Label("buttonLabel")
+                          .set_text("Button")
+                          .set_alignment(Alignment::center))
+                   .add_event_callback(
+                     lv::EventCode::value_changed, nullptr,
+                     [](lv_event_t *event) {
+                       const auto value =
+                         lv::Event(event).target().reinterpret<lv::Slider>()->get_value();
+                       printf("slider value changed %d\n", value);
 
-          .add(lv::Slider(brightness_slider)
-                 .set_width(400)
-                 .set_height(12)
-                 .set_position(Point(10_percent, 10_percent))
-                 .add_event_callback(
-                   lv::EventCode::value_changed, nullptr,
-                   [](lv_event_t *event) {
-                     const auto value =
-                       lv::Event(event).target().reinterpret<lv::Slider>()->get_value();
-                     printf("slider value changed %d\n", value);
+                       Container::active_screen()
+                         .find_child("Hello1")
+                         .reinterpret<lv::Label>()
+                         ->set_text(var::NumberString(value).cstring());
+                     }))
+            .add(
+              lv::Label("Hello1").set_text("Hello2").add_style(style).set_y(50_percent)))
+        .add_tab("Analytics", lv::Label("Hello2").set_text("Hello2").add_style(style))
+        .add_tab("Shopping", lv::Label("Hello3").set_text("Hello3").add_style(style)));
+  API_PRINTF_TRACE_LINE();
 
-                     lv::Object::active_screen()
-                       .find_child("Hello1")
-                       .reinterpret<lv::Label>()
-                       ->set_text(var::NumberString(value).cstring());
-                   }))
-          .add(lv::Label("Hello1").set_text("Hello2").add_style(style).set_y(50_percent)))
-      .add_tab("Analytics", lv::Label("Hello2").set_text("Hello2").add_style(style))
-      .add_tab("Shopping", lv::Label("Hello3").set_text("Hello3").add_style(style)));
+  printf("Hello1 is %p\n", Container::active_screen().find_child("Hello1").object());
+  printf("hello1 y is %d\n", Container::active_screen().find_child("Hello1").get_y());
+
+  Container::active_screen().find_child(tab_view).reinterpret<TabView>()->get_tab(1).add(
+    lv::Button("Hello5")
+      .add_style(style)
+      .set_y(10_percent)
+      .set_size(Size(50_percent, 50_percent))
+      .add_event_callback(lv::EventCode::clicked, nullptr, [](lv_event_t *event) {
+        lv::Event(event).target().reinterpret<Button>()->set_y(100);
+      }));
+  API_PRINTF_TRACE_LINE();
 
 #if 0
   lv::TabView tv(screen, lv::Direction::top, 70);

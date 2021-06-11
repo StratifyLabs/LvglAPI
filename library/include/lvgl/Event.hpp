@@ -6,6 +6,7 @@
 namespace lv {
 
 class Object;
+class Container;
 
 enum class EventCode {
   all = LV_EVENT_ALL,
@@ -61,8 +62,8 @@ public:
     return EventCode(m_event->code);
   }
 
-  Object target() const;
-  Object current_target() const;
+  Container target() const;
+  Container current_target() const;
 
   Event previous_event() const {
     return Event(m_event->prev);

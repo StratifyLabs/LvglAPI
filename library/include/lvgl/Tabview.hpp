@@ -13,11 +13,11 @@ public:
   TabView(const char * name, Direction direction, u32 size);
 
   TabView& add_tab(const char *name, Object content = Object()){
-    auto * obj = api()->tabview_add_tab(m_object, name);
+    Object obj(api()->tabview_add_tab(m_object, name));
+    obj.set_name(name);
     if( content.object() ){
-      Object(obj).add(content);
+      Container(obj.object()).add(content);
     }
-    printf("added tab %p\n", obj);
     return *this;
   }
 
@@ -26,18 +26,18 @@ public:
     return *this;
   }
 
-  Object get_content() const {
-    return Object(api()->tabview_get_content(m_object));
+  Container get_content() const {
+    return Container(api()->tabview_get_content(m_object));
   }
 
   ButtonMatrix get_tab_buttons() const {
     return ButtonMatrix(api()->tabview_get_tab_btns(m_object));
   }
 
-  Object get_tab(size_t i){
+  Container get_tab(size_t i){
     API_ASSERT(get_content().object());
     API_ASSERT(i < get_content().get_child_count());
-    return Object(get_content().get_child(i));
+    return Container(get_content().get_child(i).object());
   }
 
 private:
