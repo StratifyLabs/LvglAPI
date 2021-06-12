@@ -806,6 +806,8 @@ typedef struct {
 
 extern const lvgl_api_t lvgl_api;
 
+void lvgl_api_initialize();
+
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)
 #else

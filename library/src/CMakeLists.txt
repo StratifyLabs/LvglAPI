@@ -1,11 +1,13 @@
 
 
 set(SOURCES
+	Arc.cpp
 	Button.cpp
 	Bar.cpp
 	ColorPicker.cpp
 	Label.cpp
 	Event.cpp
+	Font.cpp
 	MessageBox.cpp
 	SpinBox.cpp
 	TileView.cpp

@@ -137,7 +137,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
  *-----------*/
 
 /*Enable the log module*/
-#define LV_USE_LOG      0
+#define LV_USE_LOG      1
 #if LV_USE_LOG
 
 /*How important log should be added:
@@ -147,11 +147,11 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
  *LV_LOG_LEVEL_ERROR       Only critical issue, when the system may fail
  *LV_LOG_LEVEL_USER        Only logs added by the user
  *LV_LOG_LEVEL_NONE        Do not log anything*/
-#  define LV_LOG_LEVEL    LV_LOG_LEVEL_WARN
+#  define LV_LOG_LEVEL    LV_LOG_LEVEL_INFO
 
 /*1: Print the log with 'printf';
  *0: User need to register a callback with `lv_log_register_print_cb()`*/
-#  define LV_LOG_PRINTF   0
+#  define LV_LOG_PRINTF   1
 
 /*Enable/disable LV_LOG_TRACE in modules that produces a huge number of logs*/
 #  define LV_LOG_TRACE_MEM            1
@@ -308,7 +308,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_FONT_FMT_TXT_LARGE   0
 
 /*Enables/disables support for compressed fonts.*/
-#define LV_USE_FONT_COMPRESSED  0
+#define LV_USE_FONT_COMPRESSED  1
 
 /*Enable subpixel rendering*/
 #define LV_USE_FONT_SUBPX       0

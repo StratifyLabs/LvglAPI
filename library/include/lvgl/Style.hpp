@@ -266,15 +266,10 @@ enum class FlexAlign {
   space_between = LV_FLEX_ALIGN_SPACE_BETWEEN
 };
 
+class Font;
+
 class Style : public Api {
 public:
-  class Value {
-  public:
-    lv_style_value_t value() const { return m_value; }
-
-  private:
-    lv_style_value_t m_value;
-  };
 
   Style() { api()->style_init(&m_style); }
 
@@ -608,11 +603,7 @@ public:
     return *this;
   }
 
-  Style &set_text_font(const lv_font_t *value) {
-    lv_style_value_t v = {.ptr = value};
-    api()->style_set_prop(&m_style, LV_STYLE_TEXT_FONT, v);
-    return *this;
-  }
+  Style &set_text_font(const Font & value);
 
   Style &set_text_letter_space(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};

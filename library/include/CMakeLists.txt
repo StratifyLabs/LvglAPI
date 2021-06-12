@@ -1,11 +1,13 @@
 
 
 set(SOURCES
+	lvgl/Arc.hpp
 	lvgl/Button.hpp
 	lvgl/Bar.hpp
 	lvgl/ColorPicker.hpp
 	lvgl/Label.hpp
 	lvgl/MessageBox.hpp
+	lvgl/Font.hpp
 	lvgl/Event.hpp
 	lvgl/Spinbox.hpp
 	lvgl/TileView.hpp

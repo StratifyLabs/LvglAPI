@@ -13,7 +13,22 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
   List(Object parent, const Create & options);
+
+
+  List & add_button(const char * symbol, const char * text){
+    api()->list_add_btn(m_object, symbol, text);
+    return *this;
+  }
+
+  List & add_text(const char * text){
+    api()->list_add_text(m_object, text);
+    return *this;
+  }
+
 };
+
+
+
 
 }
 

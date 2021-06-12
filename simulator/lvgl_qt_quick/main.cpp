@@ -32,11 +32,21 @@ int main(int argc, char *argv[]) {
   /// lvgl_sim_qt_example
   // lv_demo_widgets();
 
+  lvgl_api_initialize();
+
   font_large = &lv_font_montserrat_28;
 
-  lv::Style style = lv::Style().set_text_font(font_large);
+  Font font_large(&lv_font_montserrat_28);
+
+  Font loaded_font("S./roboto_l_36.font");
+
+  printf("roboto font is %p\n", loaded_font.font());
 
   const auto tab_view = "tabview";
+
+  Style style;
+
+  style.set_text_font(loaded_font);
 
   auto screen = Container::active_screen();
 
@@ -44,17 +54,19 @@ int main(int argc, char *argv[]) {
     .find(tab_view)
     .cast<TabView>()
     ->add_tab(
-      "Hello", nullptr,
-      [](Container &container, void *) {
+      "Hello", &style,
+      [](Container &container, void * context) {
+        Style * style = reinterpret_cast<Style*>(context);
+        printf("style font is %p\n", style->style()->v_p.value1.ptr);
         container.set_layout(LV_LAYOUT_FLEX)
           .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
           .add<Label>(Label::Create("HelloLabel1"))
           .add<Label>(Label::Create("HelloLabel2"))
           .add<Spinner>(Spinner::Create("Spinner").set_initialize(
-            [](Spinner &spinner, void *) {  }))
+            [](Spinner &spinner, void *) { spinner.align(Alignment::center); }))
           .find("HelloLabel1")
           .cast<Label>()
-          ->set_text("Hello Label 1");
+          ->set_text("Hello Label 1").add_style(*style);
 
         container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })
