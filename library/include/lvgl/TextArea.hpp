@@ -13,6 +13,13 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
   TextArea(Object parent, const Create & options);
+
+
+private:
+  friend class Keyboard;
+  TextArea(lv_obj_t * obj){
+    m_object = obj;
+  }
 };
 
 }

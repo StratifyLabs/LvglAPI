@@ -22,6 +22,7 @@ class Point {
 public:
   Point() = default;
   Point(lv_coord_t x, lv_coord_t y) : m_point{x, y} {}
+  Point(const lv_point_t & point) : m_point(point){}
 
   Point operator+(const Point &a) const {
     return Point(m_point.x + a.m_point.x,

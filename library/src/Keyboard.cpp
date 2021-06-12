@@ -2,7 +2,8 @@
 
 using namespace lv;
 
-Keyboard::Keyboard()
+Keyboard::Keyboard(Object parent, const Create& options)
 {
-
+  m_object = api()->keyboard_create(parent.object());
+  set_name(options.name());
 }

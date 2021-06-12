@@ -92,7 +92,16 @@ int main(int argc, char *argv[]) {
 
         container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })
-    .add_tab("World");
+    .add_tab("World", [](Container & container){
+      container
+        .add<TextArea>(TextArea::Create("TextArea").configure([](TextArea & text_area, void*){
+          text_area.set_size(Size(100_percent,50_percent));
+        }))
+        .add<Keyboard>(Keyboard::Create("Keyboard").configure([](Keyboard & keyboard, void*){
+          auto text_area = *(keyboard.get_parent().find("TextArea").cast<TextArea>());
+          keyboard.set_text_area(text_area);
+        }));
+    });
 
 #if 0
   screen.add<TabView>(TabView::Create(tab_view).set_size(10_percent).set_context(&style).set_initialize(
