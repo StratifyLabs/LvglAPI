@@ -21,11 +21,18 @@ public:
 
   TabView &add_tab(
     const char *name,
-    void *context = nullptr,
-    void (*add)(Container &container, void *context) = nullptr) {
+    void *context,
+    void (*add)(Container &container, void *context)) {
+    API_ASSERT(add != nullptr);
+    Container obj(api()->tabview_add_tab(m_object, name));
+    add(obj, context);
+    return *this;
+  }
+
+  TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
     if (add) {
-      add(obj, context);
+      add(obj);
     }
     return *this;
   }
@@ -38,6 +45,15 @@ public:
     Container container(get_tab(tab).object());
     add(container, context);
 
+    return *this;
+  }
+
+  TabView &add_content(size_t tab, void (*add)(Container &container) = nullptr) {
+    API_ASSERT(add != nullptr);
+    Container container(get_tab(tab).object());
+    if( add ){
+      add(container);
+    }
     return *this;
   }
 

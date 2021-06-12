@@ -272,6 +272,9 @@ class Style : public Api {
 public:
 
   Style() { api()->style_init(&m_style); }
+  ~Style(){
+    api()->style_reset(&m_style);
+  }
 
   Style &set_width(lv_coord_t value) {
     lv_style_value_t v = {.num = value};

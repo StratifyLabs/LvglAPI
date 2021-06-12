@@ -563,6 +563,16 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+
+  Derived &add_event_callback(
+    EventCode event_code,
+    void (*event_callback)(lv_event_t *)) {
+    api()->obj_add_event_cb(
+      m_object, event_callback, static_cast<lv_event_code_t>(event_code), nullptr);
+    return static_cast<Derived &>(*this);
+  }
+
+
   Derived &set_flex_flow(FlexFlow value) {
     api()->obj_set_flex_flow(m_object, static_cast<lv_flex_flow_t>(value));
     return static_cast<Derived &>(*this);
@@ -592,12 +602,13 @@ public:
 
     void *context() const { return m_context; }
 
-    CreateDerived &set_context(void *context) {
-      m_context = context;
+    CreateDerived &configure(Callback callback) {
+      m_initialize = callback;
       return static_cast<CreateDerived &>(*this);
     }
 
-    CreateDerived &configure(Callback callback) {
+    CreateDerived &configure(void * context, Callback callback) {
+      m_context = context;
       m_initialize = callback;
       return static_cast<CreateDerived &>(*this);
     }

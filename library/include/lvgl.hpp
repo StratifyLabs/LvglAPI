@@ -9,6 +9,7 @@ namespace lv {
 #include "lvgl/Arc.hpp"
 #include "lvgl/Bar.hpp"
 #include "lvgl/Button.hpp"
+#include "lvgl/Calendar.hpp"
 #include "lvgl/Label.hpp"
 #include "lvgl/Roller.hpp"
 #include "lvgl/Slider.hpp"

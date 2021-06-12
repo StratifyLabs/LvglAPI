@@ -57,31 +57,38 @@ int main(int argc, char *argv[]) {
       "Hello", &style,
       [](Container &container, void *context) {
         Style *style = reinterpret_cast<Style *>(context);
-        printf("style font is %p\n", style->style()->v_p.value1.ptr);
         container.set_layout(LV_LAYOUT_FLEX)
           .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
           .set_flex_flow(FlexFlow::row_wrap)
+          .add<Calendar>(Calendar::Create("Calendar"))
           .add<Arc>(Arc::Create("Arc"))
-          .add<Roller>(
-            Roller::Create("roller").configure([](Roller &roller, void *) {
-              roller.set_options("January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember")
-                .set_visible_row_count(5).set_size(Size(LV_SIZE_CONTENT, 150));
-            }))
+          .add<Bar>(
+            Bar::Create("Bar").configure([](Bar &bar, void *) { bar.set_width(75); }))
+          .add<Roller>(Roller::Create("roller").configure([](Roller &roller, void *) {
+            roller
+              .set_options(
+                "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember")
+              .set_visible_row_count(5)
+              .set_size(Size(LV_SIZE_CONTENT, 150));
+          }))
           .add<Label>(
-            Label::Create("HelloLabel1").set_context(style).configure([](Label &label, void * context) {
-              Style * style = reinterpret_cast<Style*>(context);
-              printf("style font is %p\n", style->style()->v_p.value1.ptr);
-
-              label.set_text("Hello Label X").add_style(*style).update_layout();
-            }))
+            Label::Create("HelloLabel1")
+              .configure(
+                style,
+                [](Label &label, void *context) {
+                  Style *style = reinterpret_cast<Style *>(context);
+                  label.set_text("Hello Label X").add_style(*style).update_layout();
+                }))
           .add<Label>(Label::Create("HelloLabel2"))
           .add<Spinner>(Spinner::Create("Spinner").configure(
             [](Spinner &spinner, void *) { spinner.align(Alignment::center); }))
-          .find("HelloLabel1")
-          .cast<Label>()
-          ->set_text("Hello Label 1")
-          //.add_style(*style)
-          ;
+          .add<Slider>(Slider::Create("Slider").configure([](Slider &slider, void *) {
+            slider.set_height(12).set_width(150).add_event_callback(
+              EventCode::value_changed, nullptr, [](lv_event_t *ev) {
+                const auto value = Event(ev).target().cast<Slider>()->get_value();
+                Container::active_screen().find("Bar").cast<Bar>()->set_value(value);
+              });
+          }));
 
         container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })
