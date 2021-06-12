@@ -597,7 +597,7 @@ public:
       return static_cast<CreateDerived &>(*this);
     }
 
-    CreateDerived &set_initialize(Callback callback) {
+    CreateDerived &configure(Callback callback) {
       m_initialize = callback;
       return static_cast<CreateDerived &>(*this);
     }

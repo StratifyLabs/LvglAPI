@@ -55,18 +55,33 @@ int main(int argc, char *argv[]) {
     .cast<TabView>()
     ->add_tab(
       "Hello", &style,
-      [](Container &container, void * context) {
-        Style * style = reinterpret_cast<Style*>(context);
+      [](Container &container, void *context) {
+        Style *style = reinterpret_cast<Style *>(context);
         printf("style font is %p\n", style->style()->v_p.value1.ptr);
         container.set_layout(LV_LAYOUT_FLEX)
           .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
-          .add<Label>(Label::Create("HelloLabel1"))
+          .set_flex_flow(FlexFlow::row_wrap)
+          .add<Arc>(Arc::Create("Arc"))
+          .add<Roller>(
+            Roller::Create("roller").configure([](Roller &roller, void *) {
+              roller.set_options("January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember")
+                .set_visible_row_count(5).set_size(Size(LV_SIZE_CONTENT, 150));
+            }))
+          .add<Label>(
+            Label::Create("HelloLabel1").set_context(style).configure([](Label &label, void * context) {
+              Style * style = reinterpret_cast<Style*>(context);
+              printf("style font is %p\n", style->style()->v_p.value1.ptr);
+
+              label.set_text("Hello Label X").add_style(*style).update_layout();
+            }))
           .add<Label>(Label::Create("HelloLabel2"))
-          .add<Spinner>(Spinner::Create("Spinner").set_initialize(
+          .add<Spinner>(Spinner::Create("Spinner").configure(
             [](Spinner &spinner, void *) { spinner.align(Alignment::center); }))
           .find("HelloLabel1")
           .cast<Label>()
-          ->set_text("Hello Label 1").add_style(*style);
+          ->set_text("Hello Label 1")
+          //.add_style(*style)
+          ;
 
         container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })

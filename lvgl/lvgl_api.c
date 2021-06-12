@@ -819,9 +819,7 @@ static lv_fs_res_t lvgl_api_fs_read_cb(
   uint32_t *br) {
   MCU_UNUSED_ARGUMENT(drv);
   const int fd = (long)file_p;
-
   const int result = read(fd, buf, btr);
-  printf("read %d bytes from file %d\n", result, fd);
   if( result > 0 ){
     *br = result;
     return LV_FS_RES_OK;
@@ -905,6 +903,5 @@ void lvgl_api_initialize() {
 
   drv.user_data = NULL; /*Any custom data if required*/
 
-  printf("register drive\n");
   lv_fs_drv_register(&drv); /*Finally register the drive*/
 }

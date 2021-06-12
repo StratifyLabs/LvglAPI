@@ -10,6 +10,7 @@ namespace lv {
 #include "lvgl/Bar.hpp"
 #include "lvgl/Button.hpp"
 #include "lvgl/Label.hpp"
+#include "lvgl/Roller.hpp"
 #include "lvgl/Slider.hpp"
 #include "lvgl/Spinner.hpp"
 #include "lvgl/TabView.hpp"
