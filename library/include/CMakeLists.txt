@@ -4,6 +4,7 @@ set(SOURCES
 	lvgl/Arc.hpp
 	lvgl/Button.hpp
 	lvgl/Bar.hpp
+	lvgl/Color.hpp
 	lvgl/ColorPicker.hpp
 	lvgl/Label.hpp
 	lvgl/MessageBox.hpp
@@ -20,6 +21,7 @@ set(SOURCES
 	lvgl/Calendar.hpp
 	lvgl/Gauge.hpp
 	lvgl/LineMeter.hpp
+	lvgl/Meter.hpp
 	lvgl/Page.hpp
 	lvgl/Switch.hpp
 	lvgl/Style.hpp
@@ -32,6 +34,7 @@ set(SOURCES
 	lvgl/ImageButton.hpp
 	lvgl/Roller.hpp
 	lvgl/Table.hpp
+	lvgl/Theme.hpp
 	lvgl/Checkbox.hpp
 	lvgl/Keyboard.hpp
 	lvgl/Mask.hpp

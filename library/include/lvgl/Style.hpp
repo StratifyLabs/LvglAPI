@@ -2,6 +2,8 @@
 #define LVGLAPI_LVGL_STYLE_HPP
 
 #include <api/api.hpp>
+#include <chrono/MicroTime.hpp>
+
 #include <lvgl.h>
 
 #include "lvgl/lvgl_api.h"
@@ -818,6 +820,7 @@ private:
 inline lv_coord_t operator"" _percent(unsigned long long value) {
   return static_cast<lv_coord_t>(lv_pct(value));
 }
+
 
 } // namespace lv
 

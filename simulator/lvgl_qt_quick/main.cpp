@@ -60,6 +60,28 @@ int main(int argc, char *argv[]) {
         container.set_layout(LV_LAYOUT_FLEX)
           .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
           .set_flex_flow(FlexFlow::row_wrap)
+          .add<Meter>(Meter::Create("Meter").configure([](Meter &meter, void *) {
+            meter.remove_style(Part::indicator);
+            auto scale0 = meter.add_scale();
+            meter
+              .set_size(Size(200,200))
+              .set_scale_ticks(
+                scale0, Meter::Tick().set_count(11).set_width(2).set_length(30).set_color(
+                          Color::get_palette(Palette::grey)))
+              .set_scale_major_ticks(
+                scale0, Meter::Tick()
+                          .set_skip_minor_count(2)
+                          .set_label_gap(40)
+                          .set_length(10)
+                          .set_color(Color::get_palette(
+                            Palette::grey)))
+              .set_scale_range(scale0, Meter::ScaleRange());
+
+            auto indicator0 = meter.add_arc(scale0, 10, Color::get_palette(Palette::green), 0);
+
+            meter.set_indicator_end_value(indicator0, 50);
+
+          }))
           .add<Calendar>(Calendar::Create("Calendar"))
           .add<Arc>(Arc::Create("Arc"))
           .add<Bar>(
@@ -92,52 +114,36 @@ int main(int argc, char *argv[]) {
 
         container.find("HelloLabel2").cast<Label>()->set_text("Hello Label 2").set_y(100);
       })
-    .add_tab("World", [](Container & container){
-      container
-        .add<TextArea>(TextArea::Create("TextArea").configure([](TextArea & text_area, void*){
-          text_area.set_size(Size(100_percent,50_percent));
-        }))
-        .add<Keyboard>(Keyboard::Create("Keyboard").configure([](Keyboard & keyboard, void*){
-          auto text_area = *(keyboard.get_parent().find("TextArea").cast<TextArea>());
-          keyboard.set_text_area(text_area);
-        }));
+    .add_tab(
+      "KeyboardTab",
+      [](Container &container) {
+        container
+          .add<TextArea>(
+            TextArea::Create("TextArea").configure([](TextArea &text_area, void *) {
+              text_area.set_size(Size(100_percent, 50_percent));
+            }))
+          .add<Keyboard>(
+            Keyboard::Create("Keyboard").configure([](Keyboard &keyboard, void *) {
+              auto text_area = *(keyboard.get_parent().find("TextArea").cast<TextArea>());
+              keyboard.set_text_area(text_area);
+            }));
+      })
+    .add_tab("ChartTab", [](Container &container) {
+      container.add<Chart>(Chart::Create("Chart").configure([](Chart &chart, void *) {
+        chart.set_size(Size(100_percent, 100_percent)).set_type(Chart::Type::bar);
+        auto series = chart.add_series(
+          Color::get_palette(Palette::amber), Chart::Axis::primary_y);
+        chart.set_point_count(10)
+          .set_next_value(series, 5)
+          .set_next_value(series, 10)
+          .set_next_value(series, 15)
+          .set_next_value(series, 3)
+          .set_next_value(series, 20)
+          .set_next_value(series, 8)
+          .set_next_value(series, 11)
+          .set_x_start_point(series, 0);
+      }));
     });
-
-#if 0
-  screen.add<TabView>(TabView::Create(tab_view).set_size(10_percent).set_context(&style).set_initialize(
-    [](TabView &tv, void *context) {
-      tv.add_tab("Profile")
-        .add_tab<Label>(
-          "Analytics", Label::Create("Hello World")
-                         .set_context(context)
-                         .set_initialize([](Label &label, void *context) {
-                           Style *style = reinterpret_cast<Style *>(context);
-                           label.set_text("Hello Analytics").add_style(*style);
-                         }))
-        .add_tab("Shop")
-        .add_content<Label>(
-          0, Label::Create("ProfileLabel").set_initialize([](Label &label, void *) {
-            label.set_text("Hello").align(Alignment::center);
-          }))
-        .add_content<Slider>(
-          0, Slider::Create("slider").set_initialize([](Slider &slider, void *) {
-            slider.align(Alignment::top_middle)
-              .set_range(Range(0, 100))
-              .add_event_callback(EventCode::value_changed, nullptr, [](lv_event_t *ev) {
-                auto screen = Container::active_screen();
-                Event event(ev);
-                const auto range = event.target().reinterpret<Slider>()->get_range();
-                const auto value = event.target().reinterpret<Slider>()->get_value();
-                printf("Range is %d / %d\n", range.minimum(), range.maximum());
-
-                screen.find("ProgressBar").reinterpret<Bar>()->set_value(value);
-              });
-          }))
-        .add_content<Bar>(0, Bar::Create("ProgressBar").set_initialize([](Bar &bar, void *) {
-                            bar.align(Alignment::bottom_middle);
-                          }));
-    }));
-#endif
 
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   engine.load(url);

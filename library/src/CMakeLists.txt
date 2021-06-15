@@ -4,6 +4,7 @@ set(SOURCES
 	Arc.cpp
 	Button.cpp
 	Bar.cpp
+	Color.cpp
 	ColorPicker.cpp
 	Label.cpp
 	Event.cpp
@@ -21,6 +22,7 @@ set(SOURCES
 	Calendar.cpp
 	Gauge.cpp
 	LineMeter.cpp
+	Meter.cpp
 	Page.cpp
 	Switch.cpp
 	Canvas.cpp
@@ -31,6 +33,7 @@ set(SOURCES
 	ImageButton.cpp
 	Roller.cpp
 	Table.cpp
+	Theme.cpp
 	Checkbox.cpp
 	Keyboard.cpp
 	Mask.cpp

@@ -2,6 +2,7 @@
 #define LVGLAPI_LVGL_CHART_HPP
 
 #include "Bar.hpp"
+#include "Color.hpp"
 #include "Object.hpp"
 
 namespace lv {
@@ -30,9 +31,7 @@ public:
   class Series {
   public:
 
-    Series(lv_chart_series_t * series) : m_series(series) {
-
-    }
+    Series(lv_chart_series_t * series) : m_series(series) {}
 
     const lv_chart_series_t * series() const {
       return m_series;
@@ -132,9 +131,8 @@ public:
     return *this;
   }
 
-  Chart& add_series(lv_color_t color, Axis axis){
-    api()->chart_add_series(object(), color, static_cast<lv_chart_axis_t>(axis));
-    return *this;
+  Series add_series(Color color, Axis axis){
+    return Series(api()->chart_add_series(object(), color.get_color(), static_cast<lv_chart_axis_t>(axis)));
   }
 
   Chart & remove_series(Series series){
@@ -152,8 +150,8 @@ public:
     return *this;
   }
 
-  Chart& set_series_color(Series series, lv_color_t color){
-    api()->chart_set_series_color(object(), series.series(), color);
+  Chart& set_series_color(Series series, Color color){
+    api()->chart_set_series_color(object(), series.series(), color.get_color());
     return *this;
   }
 
@@ -166,8 +164,8 @@ public:
     return Series(api()->chart_get_series_next(object(), series.series()));
   }
 
-  Chart & add_cursor(lv_color_t color, Direction direction){
-    api()->chart_add_cursor(object(), color, static_cast<lv_dir_t>(direction));
+  Chart & add_cursor(Color color, Direction direction){
+    api()->chart_add_cursor(object(), color.get_color(), static_cast<lv_dir_t>(direction));
     return *this;
   }
 
