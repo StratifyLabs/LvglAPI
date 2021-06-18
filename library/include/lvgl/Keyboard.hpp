@@ -10,6 +10,8 @@ class Keyboard : public ObjectAccess<Keyboard>
 {
 public:
 
+  static constexpr auto newline = LV_SYMBOL_NEW_LINE;
+
   enum class Mode {
     text_lower = LV_KEYBOARD_MODE_TEXT_LOWER,
     text_upper = LV_KEYBOARD_MODE_TEXT_UPPER,
@@ -40,6 +42,12 @@ public:
   Mode get_mode() const {
     return Mode(api()->keyboard_get_mode(object()));
   }
+
+  const char ** get_map_array() const {
+    return lv_keyboard_get_map_array(object());
+  }
+
+
 
 };
 

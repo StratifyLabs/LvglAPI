@@ -14,6 +14,10 @@ extern "C" {
 typedef struct {
   api_t sos_api;
 
+  //timer handler
+  uint32_t (*timer_handler)();
+  void(*tick_inc)(uint32_t);
+
   //events
   lv_res_t (*event_send)(struct _lv_obj_t * obj, lv_event_code_t event_code, void * param);
   lv_res_t (*obj_event_base)(const lv_obj_class_t * class_p, lv_event_t * e);
@@ -811,7 +815,7 @@ void lvgl_api_initialize();
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)
 #else
-enum { LVGL_API_REQUEST = MCU_API_REQUEST_CODE('l', 'v', 'g', 'l') }
+#define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
 #endif
 
 #ifdef __cplusplus

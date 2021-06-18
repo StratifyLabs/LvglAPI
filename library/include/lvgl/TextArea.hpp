@@ -14,6 +14,17 @@ public:
   };
   TextArea(Object parent, const Create & options);
 
+  TextArea & set_password_mode(bool value = true){
+    api()->textarea_set_password_mode(object(), value);
+    return *this;
+  }
+
+
+  TextArea & set_one_line_mode(bool value = true){
+    api()->textarea_set_one_line(object(), value);
+    return *this;
+  }
+
 
 private:
   friend class Keyboard;

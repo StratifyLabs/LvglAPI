@@ -278,9 +278,8 @@ target_sources(${RELEASE_TARGET}
 
 target_compile_definitions(${RELEASE_TARGET}
 	PUBLIC
-	HAVE_CONFIG_H=1
+	LV_CONF_INCLUDE_SIMPLE=1
 	PRIVATE
-	IS_LOCAL_BUILD=1
 	)
 
 target_compile_options(${RELEASE_TARGET}
@@ -290,11 +289,12 @@ target_compile_options(${RELEASE_TARGET}
 
 target_include_directories(${RELEASE_TARGET}
 	PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
+	$<INSTALL_INTERFACE:include/lvgl>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:lvgl>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src
 	)
 
 sos_sdk_library_target(DEBUG ${PROJECT_NAME} "${LIB_OPTION}" debug ${SOS_ARCH})
@@ -311,62 +311,152 @@ endif()
 
 sos_sdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${SOS_ARCH} "")
 
-set(HEADER_LIST
-	${SOURCES_PREFIX}/misc/lv_log.h
-	${SOURCES_PREFIX}/misc/lv_task.h
-	${SOURCES_PREFIX}/misc/lv_math.h
-	${SOURCES_PREFIX}/misc/lv_async.h
-	${SOURCES_PREFIX}/hal/lv_hal.h
-	${SOURCES_PREFIX}/core/lv_obj.h
+install(FILES
+	${SOURCES_PREFIX}/core/lv_disp.h
+	${SOURCES_PREFIX}/core/lv_event.h
 	${SOURCES_PREFIX}/core/lv_group.h
 	${SOURCES_PREFIX}/core/lv_indev.h
+	${SOURCES_PREFIX}/core/lv_indev_scroll.h
+	${SOURCES_PREFIX}/core/lv_obj.h
+	${SOURCES_PREFIX}/core/lv_obj_class.h
+	${SOURCES_PREFIX}/core/lv_obj_draw.h
+	${SOURCES_PREFIX}/core/lv_obj_pos.h
+	${SOURCES_PREFIX}/core/lv_obj_scroll.h
+	${SOURCES_PREFIX}/core/lv_obj_style.h
+	${SOURCES_PREFIX}/core/lv_obj_style_gen.h
+	${SOURCES_PREFIX}/core/lv_obj_tree.h
 	${SOURCES_PREFIX}/core/lv_refr.h
-	${SOURCES_PREFIX}/core/lv_disp.h
-	${SOURCES_PREFIX}/themes/lv_theme.h
-	${SOURCES_PREFIX}/font/lv_font.h
-	${SOURCES_PREFIX}/font/lv_font_loader.h
-	${SOURCES_PREFIX}/font/lv_font_fmt_txt.h
-	${SOURCES_PREFIX}/misc/lv_printf.h
-	${SOURCES_PREFIX}/widgets/lv_btn.h
-	${SOURCES_PREFIX}/widgets/lv_imgbtn.h
-	${SOURCES_PREFIX}/widgets/lv_img.h
-	${SOURCES_PREFIX}/widgets/lv_label.h
-	${SOURCES_PREFIX}/widgets/lv_line.h
-	${SOURCES_PREFIX}/widgets/lv_page.h
-	${SOURCES_PREFIX}/widgets/lv_cont.h
-	${SOURCES_PREFIX}/widgets/lv_list.h
-	${SOURCES_PREFIX}/widgets/lv_chart.h
-	${SOURCES_PREFIX}/widgets/lv_table.h
-	${SOURCES_PREFIX}/widgets/lv_checkbox.h
-	${SOURCES_PREFIX}/widgets/lv_cpicker.h
-	${SOURCES_PREFIX}/widgets/lv_bar.h
-	${SOURCES_PREFIX}/widgets/lv_slider.h
-	${SOURCES_PREFIX}/widgets/lv_led.h
-	${SOURCES_PREFIX}/widgets/lv_btnmatrix.h
-	${SOURCES_PREFIX}/widgets/lv_keyboard.h
-	${SOURCES_PREFIX}/widgets/lv_dropdown.h
-	${SOURCES_PREFIX}/widgets/lv_roller.h
-	${SOURCES_PREFIX}/widgets/lv_textarea.h
-	${SOURCES_PREFIX}/widgets/lv_canvas.h
-	${SOURCES_PREFIX}/widgets/lv_win.h
-	${SOURCES_PREFIX}/widgets/lv_tabview.h
-	${SOURCES_PREFIX}/widgets/lv_tileview.h
-	${SOURCES_PREFIX}/widgets/lv_msgbox.h
-	${SOURCES_PREFIX}/widgets/lv_objmask.h
-	${SOURCES_PREFIX}/widgets/lv_gauge.h
-	${SOURCES_PREFIX}/widgets/lv_linemeter.h
-	${SOURCES_PREFIX}/widgets/lv_switch.h
-	${SOURCES_PREFIX}/widgets/lv_arc.h
-	${SOURCES_PREFIX}/widgets/lv_spinner.h
-	${SOURCES_PREFIX}/widgets/lv_calendar.h
-	${SOURCES_PREFIX}/widgets/lv_spinbox.h
-	${SOURCES_PREFIX}/draw/lv_img_cache.h
-	${SOURCES_PREFIX}/lv_api_map.h
+	${SOURCES_PREFIX}/core/lv_theme.h
+	DESTINATION include/lvgl/src/core
 	)
 
 install(FILES
-	./lvgl/src/lvgl.h
-	${HEADER_LIST}
+	${SOURCES_PREFIX}/draw/lv_draw_line.h
+	${SOURCES_PREFIX}/draw/lv_draw_mask.h
+	${SOURCES_PREFIX}/draw/lv_draw_rect.h
+	${SOURCES_PREFIX}/draw/lv_draw_triangle.h
+	${SOURCES_PREFIX}/draw/lv_img_buf.h
+	${SOURCES_PREFIX}/draw/lv_img_cache.h
+	${SOURCES_PREFIX}/draw/lv_img_decoder.h
+	${SOURCES_PREFIX}/draw/lv_draw.h
+	${SOURCES_PREFIX}/draw/lv_draw_arc.h
+	${SOURCES_PREFIX}/draw/lv_draw_blend.h
+	${SOURCES_PREFIX}/draw/lv_draw_img.h
+	${SOURCES_PREFIX}/draw/lv_draw_label.h
+	DESTINATION include/lvgl/src/draw
+	)
+
+install(FILES
+	${SOURCES_PREFIX}/misc/lv_anim.h
+	${SOURCES_PREFIX}/misc/lv_types.h
+	${SOURCES_PREFIX}/misc/lv_area.h
+	${SOURCES_PREFIX}/misc/lv_utils.h
+	${SOURCES_PREFIX}/misc/lv_assert.h
+	${SOURCES_PREFIX}/misc/lv_async.h
+	${SOURCES_PREFIX}/misc/lv_bidi.h
+	${SOURCES_PREFIX}/misc/lv_color.h
+	${SOURCES_PREFIX}/misc/lv_fs.h
+	${SOURCES_PREFIX}/misc/lv_gc.h
+	${SOURCES_PREFIX}/misc/lv_ll.h
+	${SOURCES_PREFIX}/misc/lv_log.h
+	${SOURCES_PREFIX}/misc/lv_math.h
+	${SOURCES_PREFIX}/misc/lv_mem.h
+	${SOURCES_PREFIX}/misc/lv_printf.h
+	${SOURCES_PREFIX}/misc/lv_style.h
+	${SOURCES_PREFIX}/misc/lv_style_gen.h
+	${SOURCES_PREFIX}/misc/lv_templ.h
+	${SOURCES_PREFIX}/misc/lv_timer.h
+	${SOURCES_PREFIX}/misc/lv_tlsf.h
+	${SOURCES_PREFIX}/misc/lv_txt.h
+	${SOURCES_PREFIX}/misc/lv_txt_ap.h
+	DESTINATION include/lvgl/src/misc
+	)
+
+install(FILES
+	${SOURCES_PREFIX}/widgets/lv_arc.h
+	${SOURCES_PREFIX}/widgets/lv_bar.h
+	${SOURCES_PREFIX}/widgets/lv_btn.h
+	${SOURCES_PREFIX}/widgets/lv_btnmatrix.h
+	${SOURCES_PREFIX}/widgets/lv_canvas.h
+	${SOURCES_PREFIX}/widgets/lv_checkbox.h
+	${SOURCES_PREFIX}/widgets/lv_dropdown.h
+	${SOURCES_PREFIX}/widgets/lv_img.h
+	${SOURCES_PREFIX}/widgets/lv_label.h
+	${SOURCES_PREFIX}/widgets/lv_line.h
+	${SOURCES_PREFIX}/widgets/lv_objx_templ.h
+	${SOURCES_PREFIX}/widgets/lv_roller.h
+	${SOURCES_PREFIX}/widgets/lv_slider.h
+	${SOURCES_PREFIX}/widgets/lv_switch.h
+	${SOURCES_PREFIX}/widgets/lv_table.h
+	${SOURCES_PREFIX}/widgets/lv_textarea.h
+	DESTINATION include/lvgl/src/widgets
+	)
+
+install(FILES
+	${SOURCES_PREFIX}/font/lv_font.h
+	${SOURCES_PREFIX}/font/lv_font_fmt_txt.h
+	${SOURCES_PREFIX}/font/lv_font_loader.h
+	${SOURCES_PREFIX}/font/lv_symbol_def.h
+	DESTINATION include/lvgl/src/font
+	)
+install(FILES
+	${SOURCES_PREFIX}/gpu/lv_gpu_nxp_pxp.h
+	${SOURCES_PREFIX}/gpu/lv_gpu_nxp_pxp_osa.h
+	${SOURCES_PREFIX}/gpu/lv_gpu_nxp_vglite.h
+	${SOURCES_PREFIX}/gpu/lv_gpu_stm32_dma2d.h
+	DESTINATION include/lvgl/src/gpu
+	)
+
+install(FILES
+	${SOURCES_PREFIX}/hal/lv_hal.h
+	${SOURCES_PREFIX}/hal/lv_hal_disp.h
+	${SOURCES_PREFIX}/hal/lv_hal_indev.h
+	${SOURCES_PREFIX}/hal/lv_hal_tick.h
+	DESTINATION include/lvgl/src/hal
+	)
+
+install(FILES ${SOURCES_PREFIX}/extra/lv_extra.h DESTINATION include/lvgl/src/extra)
+
+install(FILES ${SOURCES_PREFIX}/extra/widgets/lv_widgets.h DESTINATION include/lvgl/src/extra/widgets)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/animimg/lv_animimg.h DESTINATION include/lvgl/src/extra/widgets/animimg)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/imgbtn/lv_imgbtn.h DESTINATION include/lvgl/src/extra/widgets/imgbtn)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/span/lv_span.h DESTINATION include/lvgl/src/extra/widgets/span)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/calendar/lv_calendar.h DESTINATION include/lvgl/src/extra/widgets/calendar)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/calendar/lv_calendar_header_arrow.h DESTINATION include/lvgl/src/extra/widgets/calendar)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/calendar/lv_calendar_header_dropdown.h DESTINATION include/lvgl/src/extra/widgets/calendar)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/keyboard/lv_keyboard.h DESTINATION include/lvgl/src/extra/widgets/keyboard)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/spinbox/lv_spinbox.h DESTINATION include/lvgl/src/extra/widgets/spinbox)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/led/lv_led.h DESTINATION include/lvgl/src/extra/widgets/led)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/spinner/lv_spinner.h DESTINATION include/lvgl/src/extra/widgets/spinner)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/list/lv_list.h DESTINATION include/lvgl/src/extra/widgets/list)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/tabview/lv_tabview.h DESTINATION include/lvgl/src/extra/widgets/tabview)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/chart/lv_chart.h DESTINATION include/lvgl/src/extra/widgets/chart)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/colorwheel/lv_colorwheel.h DESTINATION include/lvgl/src/extra/widgets/colorwheel)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/msgbox/lv_msgbox.h DESTINATION include/lvgl/src/extra/widgets/msgbox)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/tileview/lv_tileview.h DESTINATION include/lvgl/src/extra/widgets/tileview)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/meter/lv_meter.h DESTINATION include/lvgl/src/extra/widgets/meter)
+install(FILES ${SOURCES_PREFIX}/extra/widgets/win/lv_win.h DESTINATION include/lvgl/src/extra/widgets/win)
+
+install(FILES ${SOURCES_PREFIX}/extra/themes/lv_themes.h DESTINATION include/lvgl/src/extra/themes)
+install(FILES ${SOURCES_PREFIX}/extra/themes/basic/lv_theme_basic.h DESTINATION include/lvgl/src/extra/themes/basic)
+install(FILES ${SOURCES_PREFIX}/extra/themes/default/lv_theme_default.h DESTINATION include/lvgl/src/extra/themes/default)
+install(FILES ${SOURCES_PREFIX}/extra/themes/mono/lv_theme_mono.h DESTINATION include/lvgl/src/extra/themes/mono)
+
+install(FILES ${SOURCES_PREFIX}/extra/layouts/lv_layouts.h DESTINATION include/lvgl/src/extra/layouts)
+install(FILES ${SOURCES_PREFIX}/extra/layouts/flex/lv_flex.h DESTINATION include/lvgl/src/extra/layouts/flex)
+install(FILES ${SOURCES_PREFIX}/extra/layouts/grid/lv_grid.h DESTINATION include/lvgl/src/extra/layouts/grid)
+
+install(FILES
+	${SOURCES_PREFIX}/lvgl.h
+	${SOURCES_PREFIX}/lv_api_map.h
+	${SOURCES_PREFIX}/lv_conf_internal.h
+	${SOURCES_PREFIX}/lv_conf_kconfig.h
+	DESTINATION include/lvgl/src)
+
+install(FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
+	${SOURCES_PREFIX}/../lvgl.h
 	DESTINATION include/lvgl)
 
 install(FILES ${PROJECT_NAME}.cmake

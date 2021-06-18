@@ -11,6 +11,8 @@
 
 #include "lvgl.hpp"
 
+#include "lvgl/Event.hpp"
+
 // Local
 #include "LvglImageProvider.hpp"
 #include "LvglRenderer.hpp"
@@ -18,6 +20,9 @@
 using namespace lv;
 
 static const lv_font_t *font_large;
+
+static Style no_padding_style;
+
 
 int main(int argc, char *argv[]) {
   QGuiApplication app(argc, argv);
@@ -50,21 +55,23 @@ int main(int argc, char *argv[]) {
 
   auto screen = Container::active_screen();
 
+  no_padding_style.set_top_padding(0).set_left_padding(0).set_right_padding(0).set_bottom_padding(0);
+
   screen.add<TabView>(TabView::Create(tab_view).set_size(10_percent))
     .find(tab_view)
     .cast<TabView>()
-    ->add_tab(
+    ->add_style(no_padding_style)
+    .add_tab(
       "Hello", &style,
       [](Container &container, void *context) {
         Style *style = reinterpret_cast<Style *>(context);
-        container.set_layout(LV_LAYOUT_FLEX)
-          .set_flex_align(FlexAlign::center, FlexAlign::center, FlexAlign::center)
+        container.set_layout(LV_LAYOUT_FLEX).add_style(no_padding_style)
+          .set_flex_align(Container::SetFlexAlign())
           .set_flex_flow(FlexFlow::row_wrap)
           .add<Meter>(Meter::Create("Meter").configure([](Meter &meter, void *) {
             meter.remove_style(Part::indicator);
             auto scale0 = meter.add_scale();
-            meter
-              .set_size(Size(200,200))
+            meter.set_size(Size(200, 200))
               .set_scale_ticks(
                 scale0, Meter::Tick().set_count(11).set_width(2).set_length(30).set_color(
                           Color::get_palette(Palette::grey)))
@@ -73,14 +80,13 @@ int main(int argc, char *argv[]) {
                           .set_skip_minor_count(2)
                           .set_label_gap(40)
                           .set_length(10)
-                          .set_color(Color::get_palette(
-                            Palette::grey)))
+                          .set_color(Color::get_palette(Palette::grey)))
               .set_scale_range(scale0, Meter::ScaleRange());
 
-            auto indicator0 = meter.add_arc(scale0, 10, Color::get_palette(Palette::green), 0);
+            auto indicator0 =
+              meter.add_arc(scale0, 10, Color::get_palette(Palette::green), 0);
 
             meter.set_indicator_end_value(indicator0, 50);
-
           }))
           .add<Calendar>(Calendar::Create("Calendar"))
           .add<Arc>(Arc::Create("Arc"))
@@ -120,19 +126,19 @@ int main(int argc, char *argv[]) {
         container
           .add<TextArea>(
             TextArea::Create("TextArea").configure([](TextArea &text_area, void *) {
-              text_area.set_size(Size(100_percent, 50_percent));
+              text_area.set_size(Size(100_percent, 15_percent));
             }))
           .add<Keyboard>(
             Keyboard::Create("Keyboard").configure([](Keyboard &keyboard, void *) {
               auto text_area = *(keyboard.get_parent().find("TextArea").cast<TextArea>());
-              keyboard.set_text_area(text_area);
+              keyboard.set_text_area(text_area).set_size(Size(100_percent, 85_percent)).add_style(no_padding_style);
             }));
       })
     .add_tab("ChartTab", [](Container &container) {
       container.add<Chart>(Chart::Create("Chart").configure([](Chart &chart, void *) {
         chart.set_size(Size(100_percent, 100_percent)).set_type(Chart::Type::bar);
-        auto series = chart.add_series(
-          Color::get_palette(Palette::amber), Chart::Axis::primary_y);
+        auto series =
+          chart.add_series(Color::get_palette(Palette::amber), Chart::Axis::primary_y);
         chart.set_point_count(10)
           .set_next_value(series, 5)
           .set_next_value(series, 10)

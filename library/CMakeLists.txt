@@ -13,12 +13,14 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			PUBLIC
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl>
 			)
 
 		target_include_directories(LvglAPI_release_${ARCH}
 			PUBLIC
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl>
 			)
 	endmacro()
 

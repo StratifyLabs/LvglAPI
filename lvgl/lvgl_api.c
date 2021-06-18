@@ -7,16 +7,15 @@
 #include "lvgl/lvgl_api.h"
 #include "lvgl.h"
 
-#define lv_ NULL
-
 const lvgl_api_t lvgl_api = {
   .sos_api =
     {
       .name = "lvgl",
       .version = LVGL_API_VERSION,
       .git_hash = SOS_GIT_HASH,
-    },
-
+      },
+  .timer_handler = lv_timer_handler,
+  .tick_inc = lv_tick_inc,
   .event_send = lv_event_send,
   .obj_event_base = lv_obj_event_base,
   .event_get_target = lv_event_get_target,

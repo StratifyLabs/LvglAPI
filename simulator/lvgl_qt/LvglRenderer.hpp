@@ -24,8 +24,8 @@ public:
   static constexpr QImage::Format image_format =
       LVGL_SIM_QT_LVGL_RENDERER_IMAGE_FORMAT;
   static constexpr int tick_perios_ms = 16;
-  static constexpr int max_height = 480;
-  static constexpr int max_width = 800;
+  static constexpr int max_height = 240;
+  static constexpr int max_width = 320;
 
 private:
   lv_color_t m_display_frame1[max_width * max_height];
