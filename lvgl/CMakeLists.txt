@@ -18,6 +18,11 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
 		)
 endif()
 
+
+# Make a copy of lv_conf_template.h if it doesn't exist already
+
+
+
 project(lvgl C)
 
 set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
