@@ -4,3 +4,4 @@ cmake_arm/
 cmake_link/
 *.user
 
+lvgl/lv_conf.h

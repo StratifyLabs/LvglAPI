@@ -20,7 +20,15 @@ endif()
 
 
 # Make a copy of lv_conf_template.h if it doesn't exist already
-
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h)
+	file(READ
+		${CMAKE_CURRENT_SOURCE_DIR}/lv_conf_template.h
+		TEMPLATE_CONTENTS)
+	file(WRITE
+		${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
+		${TEMPLATE_CONTENTS}
+		)
+endif()
 
 
 project(lvgl C)
