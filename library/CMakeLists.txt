@@ -6,7 +6,6 @@ endif()
 
 api_add_api_library(LvglAPI "${LIBRARIES}")
 
-
 if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 	macro(add_lvgl_include ARCH)
 		target_include_directories(LvglAPI_debug_${ARCH}
@@ -14,6 +13,7 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl>
+			$<INSTALL_INTERFACE:include/lvgl/src>
 			)
 
 		target_include_directories(LvglAPI_release_${ARCH}
@@ -21,6 +21,7 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl>
+			$<INSTALL_INTERFACE:include/lvgl/src>
 			)
 	endmacro()
 

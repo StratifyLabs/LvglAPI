@@ -20,12 +20,12 @@ endif()
 
 
 # Make a copy of lv_conf_template.h if it doesn't exist already
-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h)
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h)
 	file(READ
-		${CMAKE_CURRENT_SOURCE_DIR}/lv_conf_template.h
+		${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf_template.h
 		TEMPLATE_CONTENTS)
 	file(WRITE
-		${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
+		${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
 		${TEMPLATE_CONTENTS}
 		)
 endif()
@@ -38,7 +38,7 @@ set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
 
 set(PRIVATE_SOURCELIST
 	${CMAKE_CURRENT_SOURCE_DIR}/lvgl_api.c
-	${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
+	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
 	${SOURCES_PREFIX}/lv_api_map.h
 	${SOURCES_PREFIX}/misc/lv_printf.h
@@ -303,6 +303,7 @@ target_compile_options(${RELEASE_TARGET}
 target_include_directories(${RELEASE_TARGET}
 	PUBLIC
 	$<INSTALL_INTERFACE:include/lvgl>
+	$<INSTALL_INTERFACE:include/lvgl/src>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
@@ -468,8 +469,8 @@ install(FILES
 
 install(FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
-	${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h
-	${SOURCES_PREFIX}/../lvgl.h
+	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
+	${CMAKE_CURRENT_SOURCE_DIR}/lvgl/lvgl.h
 	DESTINATION include/lvgl)
 
 install(FILES ${PROJECT_NAME}.cmake
