@@ -6,7 +6,7 @@
 
 #include <lvgl.h>
 
-#include "lvgl/lvgl_api.h"
+#include <lvgl_api.h>
 
 namespace lv {
 

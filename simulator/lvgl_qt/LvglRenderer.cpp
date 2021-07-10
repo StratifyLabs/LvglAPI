@@ -51,7 +51,7 @@ QPixmap LvglRenderer::pixmap() const
 
 static void lvglFlushCallback(lv_disp_drv_t* display_driver, const lv_area_t* area, lv_color_t* colors)
 {
-  auto* renderer = static_cast<LvglRenderer*>(display_driver->user_data);
+  auto* renderer = reinterpret_cast<LvglRenderer*>(display_driver->user_data);
   renderer->flush(display_driver, area, colors);
   lv_disp_flush_ready(display_driver);
 }

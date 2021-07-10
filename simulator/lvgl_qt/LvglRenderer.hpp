@@ -9,7 +9,7 @@
 #include <QImage>
 #include <QPixmap>
 
-#include <lvgl.h>
+#include "lvgl.h"
 
 #if (LV_COLOR_DEPTH == 32)
 #define LVGL_SIM_QT_LVGL_RENDERER_IMAGE_FORMAT (QImage::Format_ARGB32)

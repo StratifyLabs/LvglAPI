@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 
-#include "lvgl/lvgl_api.h"
+#include "lvgl_api.h"
 #include "lvgl.h"
 
 const lvgl_api_t lvgl_api = {
@@ -885,6 +885,9 @@ static lv_fs_res_t lvgl_api_fs_dir_close_cb(struct _lv_fs_drv_t *drv, void *rddi
 static lv_fs_drv_t drv;
 
 void lvgl_api_initialize() {
+
+  lv_init();
+
   lv_fs_drv_init(&drv); /*Basic initialization*/
 
   drv.letter = 'S';                       /*An uppercase letter to identify the drive */

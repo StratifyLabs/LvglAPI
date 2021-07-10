@@ -217,6 +217,7 @@ set(PRIVATE_SOURCELIST
 	${SOURCES_PREFIX}/font/lv_font_montserrat_24.c
 	${SOURCES_PREFIX}/font/lv_font_montserrat_12_subpx.c
 	${SOURCES_PREFIX}/lvgl.h
+	${SOURCES_PREFIX}/../lvgl.h
 	${SOURCES_PREFIX}/draw/lv_draw_line.c
 	${SOURCES_PREFIX}/draw/lv_draw_triangle.c
 	${SOURCES_PREFIX}/draw/lv_img_decoder.c
@@ -304,7 +305,7 @@ target_include_directories(${RELEASE_TARGET}
 	PUBLIC
 	$<INSTALL_INTERFACE:include/lvgl>
 	$<INSTALL_INTERFACE:include/lvgl/src>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
