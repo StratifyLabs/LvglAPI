@@ -383,6 +383,13 @@ enum class Key {
   end = LV_KEY_END
 };
 
+enum class BlendMode {
+  normal = LV_BLEND_MODE_NORMAL,
+  additive = LV_BLEND_MODE_ADDITIVE,
+  subtractive = LV_BLEND_MODE_SUBTRACTIVE
+};
+
+
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);
 }

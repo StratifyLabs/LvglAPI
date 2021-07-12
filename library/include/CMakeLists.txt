@@ -5,6 +5,7 @@ set(SOURCES
 	lvgl/Arc.hpp
 	lvgl/Button.hpp
 	lvgl/Bar.hpp
+	lvgl/Draw.hpp
 	lvgl/Color.hpp
 	lvgl/ColorPicker.hpp
 	lvgl/Label.hpp
