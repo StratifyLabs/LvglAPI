@@ -14,9 +14,8 @@ extern "C" {
 typedef struct {
   api_t sos_api;
 
-  //timer handler
   uint32_t (*timer_handler)();
-  void(*tick_inc)(uint32_t);
+  void (*tick_inc)(uint32_t);
 
   //events
   lv_res_t (*event_send)(struct _lv_obj_t * obj, lv_event_code_t event_code, void * param);
@@ -101,6 +100,14 @@ typedef struct {
   bool (*obj_hit_test)(struct _lv_obj_t * obj, const lv_point_t * point);
   lv_coord_t (*clamp_width)(lv_coord_t width, lv_coord_t min_width, lv_coord_t max_width, lv_coord_t ref_width);
   lv_coord_t (*clamp_height)(lv_coord_t height, lv_coord_t min_height, lv_coord_t max_height, lv_coord_t ref_height);
+
+  //built-in layouts
+  uint32_t *layout_flex;
+  lv_style_prop_t *style_flex_flow;
+  lv_style_prop_t *style_flex_main_place;
+  lv_style_prop_t *style_flex_cross_place;
+  lv_style_prop_t *style_flex_track_place;
+  lv_style_prop_t *style_flex_grow;
 
   //obj scroll
   void (*obj_set_scrollbar_mode)(struct _lv_obj_t * obj, lv_scrollbar_mode_t mode);
@@ -810,12 +817,13 @@ typedef struct {
 
 extern const lvgl_api_t lvgl_api;
 
-void lvgl_api_initialize();
+void lvgl_api_initialize_filesystem();
 
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)
 #else
 #define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
+#define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
 #endif
 
 #ifdef __cplusplus

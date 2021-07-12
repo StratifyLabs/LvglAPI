@@ -3,7 +3,7 @@
 #ifndef LVGLAPI_LVGL_HPP
 #define LVGLAPI_LVGL_HPP
 
-namespace lv {}
+namespace lvgl {}
 
 #include "lvgl/Arc.hpp"
 #include "lvgl/Bar.hpp"
@@ -11,18 +11,23 @@ namespace lv {}
 #include "lvgl/Calendar.hpp"
 #include "lvgl/Chart.hpp"
 #include "lvgl/Color.hpp"
+#include "lvgl/Container.hpp"
 #include "lvgl/Event.hpp"
 #include "lvgl/Font.hpp"
 #include "lvgl/Keyboard.hpp"
 #include "lvgl/Label.hpp"
+#include "lvgl/List.hpp"
 #include "lvgl/Meter.hpp"
 #include "lvgl/Roller.hpp"
+#include "lvgl/Runtime.hpp"
 #include "lvgl/Slider.hpp"
 #include "lvgl/Spinner.hpp"
 #include "lvgl/TabView.hpp"
+#include "lvgl/Table.hpp"
 #include "lvgl/Theme.hpp"
 #include "lvgl/TileView.hpp"
+#include "lvgl/Window.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
 #endif // LVGLAPI_LVGL_HPP

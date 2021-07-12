@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_TABVIEW_HPP
 
 #include "ButtonMatrix.hpp"
-#include "Object.hpp"
+#include "Container.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class TabView : public ObjectAccess<TabView> {
 public:
@@ -19,32 +19,11 @@ public:
 
   TabView(Object parent, const Create &options);
 
-  TabView &add_tab(
-    const char *name,
-    void *context,
-    void (*add)(Container &container, void *context)) {
-    API_ASSERT(add != nullptr);
-    Container obj(api()->tabview_add_tab(m_object, name));
-    add(obj, context);
-    return *this;
-  }
-
   TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
     if (add) {
       add(obj);
     }
-    return *this;
-  }
-
-  TabView &add_content(
-    size_t tab,
-    void *context,
-    void (*add)(Container &container, void *context)) {
-    API_ASSERT(add != nullptr);
-    Container container(get_tab(tab).object());
-    add(container, context);
-
     return *this;
   }
 
@@ -74,6 +53,6 @@ public:
 private:
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_TABVIEW_HPP

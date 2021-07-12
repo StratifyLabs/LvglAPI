@@ -4,9 +4,9 @@
 #include <var/StackString.hpp>
 #include <var/StringView.hpp>
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Image : public ObjectAccess<Image> {
 public:
@@ -93,6 +93,6 @@ public:
 
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_IMAGE_HPP

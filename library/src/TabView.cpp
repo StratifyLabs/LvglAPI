@@ -1,8 +1,8 @@
 #include "lvgl/TabView.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-TabView::TabView(Object parent, const Create& options) {
+TabView::TabView(Object parent, const Create& options) : ObjectAccess(object_type()){
   m_object = api()->tabview_create(
     parent.object(), static_cast<lv_dir_t>(options.direction()), options.size());
   set_name(options.name());

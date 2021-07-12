@@ -1,6 +1,7 @@
 
 
 set(SOURCES
+	lvgl/Animation.hpp
 	lvgl/Arc.hpp
 	lvgl/Button.hpp
 	lvgl/Bar.hpp
@@ -16,6 +17,8 @@ set(SOURCES
 	lvgl/DropDownList.hpp
 	lvgl/Line.hpp
 	lvgl/Object.hpp
+	lvgl/ObjectAccess.hpp
+	lvgl/Container.hpp
 	lvgl/Spinner.hpp
 	lvgl/Window.hpp
 	lvgl/Calendar.hpp
@@ -34,12 +37,14 @@ set(SOURCES
 	lvgl/ImageButton.hpp
 	lvgl/Roller.hpp
 	lvgl/Table.hpp
+	lvgl/Runtime.hpp
 	lvgl/Theme.hpp
 	lvgl/Checkbox.hpp
 	lvgl/Keyboard.hpp
 	lvgl/Mask.hpp
 	lvgl/Slider.hpp
 	lvgl/TextArea.hpp
+	lvgl/Types.hpp
 	lvgl.hpp
 	PARENT_SCOPE
 	)

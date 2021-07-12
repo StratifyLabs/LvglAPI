@@ -3,7 +3,7 @@
 
 #include "Style.hpp"
 
-namespace lv {
+namespace lvgl {
 
 enum class Palette {
   red = LV_PALETTE_RED,
@@ -106,6 +106,6 @@ private:
   lv_color_t m_color;
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // COLOR_HPP

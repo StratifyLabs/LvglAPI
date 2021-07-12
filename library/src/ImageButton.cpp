@@ -1,8 +1,8 @@
 #include "lvgl/ImageButton.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-ImageButton::ImageButton()
+ImageButton::ImageButton() : ObjectAccess(object_type())
 {
 
 }

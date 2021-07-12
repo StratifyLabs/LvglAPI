@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_ROLLER_HPP
 #define LVGLAPI_LVGL_ROLLER_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Roller : public ObjectAccess<Roller> {
 public:
@@ -46,6 +46,6 @@ public:
 
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_ROLLER_HPP

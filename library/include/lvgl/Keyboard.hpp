@@ -1,10 +1,10 @@
 #ifndef LVGLAPI_LVGL_KEYBOARD_HPP
 #define LVGLAPI_LVGL_KEYBOARD_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 #include "TextArea.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Keyboard : public ObjectAccess<Keyboard>
 {

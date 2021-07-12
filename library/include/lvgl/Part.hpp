@@ -3,7 +3,7 @@
 
 #include "lvgl.h"
 
-namespace lv {
+namespace lvgl {
 
 }
 

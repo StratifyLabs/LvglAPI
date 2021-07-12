@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_SPINNER_HPP
 #define LVGLAPI_LVGL_SPINNER_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Spinner : public ObjectAccess<Spinner>
 {

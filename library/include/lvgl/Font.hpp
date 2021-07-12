@@ -6,7 +6,7 @@
 
 #include "Style.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Font : public Api
 {

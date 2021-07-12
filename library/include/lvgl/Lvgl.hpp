@@ -10,7 +10,7 @@
 #include <var/String.hpp>
 #include <var/Vector.hpp>
 
-namespace lv {
+namespace lvgl {
 
 
 } // namespace json

@@ -1,5 +1,5 @@
 #include "lvgl/Object.hpp"
 
-lv::LvglApi lv::Api::m_api;
+lvgl::LvglApi lvgl::Api::m_api;
 
-using namespace lv;
+using namespace lvgl;

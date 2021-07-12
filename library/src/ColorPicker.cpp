@@ -1,8 +1,6 @@
 #include "lvgl/ColorPicker.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-ColorPicker::ColorPicker(Object parent, const Create& options){
-
-  set_name(options.name());
+ColorPicker::ColorPicker(Object parent, const Create& options): ObjectAccess(object_type()){
 }

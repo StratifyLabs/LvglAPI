@@ -1,8 +1,7 @@
 #include "lvgl/LineMeter.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-LineMeter::LineMeter(Object parent, const Create& options){
+LineMeter::LineMeter(Object parent, const Create& options): ObjectAccess(object_type()){
 
-  set_name(options.name());
 }

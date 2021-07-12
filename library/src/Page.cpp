@@ -1,8 +1,7 @@
 #include "lvgl/Page.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-Page::Page(Object parent, const Create & options){
+Page::Page(Object parent, const Create & options): ObjectAccess(object_type()){
 
-  set_name(options.name());
 }

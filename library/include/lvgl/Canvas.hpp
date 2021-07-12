@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_CANVAS_HPP
 #define LVGLAPI_LVGL_CANVAS_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
@@ -14,6 +14,6 @@ public:
   Canvas(Object parent, const Create & options);
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_CANVAS_HPP

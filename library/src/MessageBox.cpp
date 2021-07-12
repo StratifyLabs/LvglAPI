@@ -1,8 +1,7 @@
 #include "lvgl/MessageBox.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-MessageBox::MessageBox(Object parent, const Create& options){
+MessageBox::MessageBox(Object parent, const Create& options): ObjectAccess(object_type()){
 
-  set_name(options.name());
 }

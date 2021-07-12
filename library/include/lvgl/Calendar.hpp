@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_CALENDAR_HPP
 #define LVGLAPI_LVGL_CALENDAR_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Calendar : public ObjectAccess<Calendar> {
 public:
@@ -16,6 +16,6 @@ public:
   Calendar(Object parent, const Create& options);
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_CALENDAR_HPP

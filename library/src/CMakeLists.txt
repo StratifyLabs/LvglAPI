@@ -16,6 +16,7 @@ set(SOURCES
 	DropDownList.cpp
 	Line.cpp
 	Object.cpp
+	Runtime.cpp
 	Spinner.cpp
 	Style.cpp
 	Window.cpp

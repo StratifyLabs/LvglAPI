@@ -1,7 +1,7 @@
 #include "lvgl/Style.hpp"
 #include "lvgl/Font.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
 
 

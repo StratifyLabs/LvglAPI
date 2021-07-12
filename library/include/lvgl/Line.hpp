@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_LINE_HPP
 #define LVGLAPI_LVGL_LINE_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Line : public ObjectAccess<Line> {
 public:

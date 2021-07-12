@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_MASK_HPP
 
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Mask : public ObjectAccess<Mask>
 {

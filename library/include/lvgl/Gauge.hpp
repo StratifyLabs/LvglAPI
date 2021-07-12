@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_GAUGE_HPP
 
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 class Gauge : public ObjectAccess<Gauge>
 {
 public:

@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_BAR_HPP
 #define LVGLAPI_LVGL_BAR_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Range {
 public:
@@ -17,6 +17,9 @@ private:
 
 template <class Derived> class BarAccess : public ObjectAccess<Derived> {
 public:
+
+  BarAccess(u32 type) : ObjectAccess<Derived>(type){}
+
   Derived &set_range(const Range &value) {
     Object::api()->bar_set_range(Object::object(), value.minimum(), value.maximum());
     return static_cast<Derived &>(*this);
@@ -59,6 +62,6 @@ public:
   }
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_BAR_HPP

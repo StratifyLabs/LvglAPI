@@ -3,7 +3,7 @@
 
 #include "Bar.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Slider : public BarAccess<Slider> {
 public:
@@ -19,7 +19,7 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
 
-  Slider(Object parent, const Create & options){
+  Slider(Object parent, const Create & options): BarAccess(object_type()){
     m_object = lv_slider_create(parent.object());
     set_name(options.name());
   }

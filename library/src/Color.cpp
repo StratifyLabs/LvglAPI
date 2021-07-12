@@ -1,6 +1,6 @@
 #include "lvgl/Color.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
 Color::Color()
 {

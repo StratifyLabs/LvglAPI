@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_METER_HPP
 
 #include "Color.hpp"
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Meter : public ObjectAccess<Meter> {
 public:
@@ -120,6 +120,6 @@ public:
 
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_METER_HPP

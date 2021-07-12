@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_TEXTAREA_HPP
 #define LVGLAPI_LVGL_TEXTAREA_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class TextArea : public ObjectAccess<TextArea>
 {
@@ -28,7 +28,7 @@ public:
 
 private:
   friend class Keyboard;
-  TextArea(lv_obj_t * obj){
+  TextArea(lv_obj_t * obj) : ObjectAccess(object_type()){
     m_object = obj;
   }
 };

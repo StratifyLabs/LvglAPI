@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_IMAGEBUTTON_HPP
 #define LVGLAPI_LVGL_IMAGEBUTTON_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class ImageButton : public ObjectAccess<ImageButton>
 {

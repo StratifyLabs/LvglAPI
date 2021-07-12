@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_SWITCH_HPP
 
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Switch : public ObjectAccess<Switch>
 {

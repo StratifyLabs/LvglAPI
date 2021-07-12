@@ -13,6 +13,7 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include/lvgl>
 			$<INSTALL_INTERFACE:include/lvgl/src>
+			$<INSTALL_INTERFACE:include/lvgl>
 			)
 
 		target_include_directories(LvglAPI_release_${ARCH}
@@ -20,6 +21,7 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/lvgl/src>
 			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../lvgl/include/lvgl>
 			$<INSTALL_INTERFACE:include/lvgl/src>
+			$<INSTALL_INTERFACE:include/lvgl>
 			)
 
 		target_compile_definitions(LvglAPI_debug_${ARCH}

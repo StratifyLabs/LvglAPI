@@ -3,9 +3,9 @@
 
 #include "Bar.hpp"
 #include "Color.hpp"
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Chart : public ObjectAccess<Chart> {
 public:
@@ -226,6 +226,6 @@ public:
 
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_CHART_HPP

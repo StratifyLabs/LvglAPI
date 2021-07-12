@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_BUTTON_HPP
 #define LVGLAPI_LVGL_BUTTON_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Button : public ObjectAccess<Button> {
 public:
@@ -13,13 +13,19 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
 
-  Button(Object parent, const Create & options){
+  Button(Object parent, const Create & options): ObjectAccess(object_type()){
     m_object = api()->btn_create(parent.object());
     set_name(options.name());
   }
 
+private:
+  friend class Window;
+  Button(lv_obj_t * object) : ObjectAccess(object_type()){
+    m_object = object;
+  }
+
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_BUTTON_HPP

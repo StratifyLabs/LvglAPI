@@ -1,4 +1,4 @@
 #include "lvgl/Slider.hpp"
 
-using namespace lv;
+using namespace lvgl;
 

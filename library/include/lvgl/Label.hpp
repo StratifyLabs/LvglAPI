@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_LABEL_HPP
 #define LVGLAPI_LVGL_LABEL_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Label : public ObjectAccess<Label> {
 public:
@@ -96,6 +96,12 @@ public:
   Label & cut_text(u32 position, u32 count){
     api()->label_cut_text(m_object, position, count);
     return *this;
+  }
+
+private:
+  friend class Window;
+  Label(lv_obj_t * object) : ObjectAccess(object_type()){
+    m_object = object;
   }
 
 };

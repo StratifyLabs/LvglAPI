@@ -1,10 +1,10 @@
 #ifndef LVGLAPI_LVGL_THEME_HPP
 #define LVGLAPI_LVGL_THEME_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 #include "Font.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Theme : public Api {
 public:

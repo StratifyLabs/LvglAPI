@@ -2,9 +2,9 @@
 #define LVGLAPI_LVGL_LINEMETER_HPP
 
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class LineMeter : public ObjectAccess<LineMeter>
 {

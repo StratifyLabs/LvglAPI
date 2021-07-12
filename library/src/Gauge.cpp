@@ -1,8 +1,7 @@
 #include "lvgl/Gauge.hpp"
 
-using namespace lv;
+using namespace lvgl;
 
-Gauge::Gauge(Object parent, const Create& options){
+Gauge::Gauge(Object parent, const Create& options): ObjectAccess(object_type()){
 
-  set_name(options.name());
 }

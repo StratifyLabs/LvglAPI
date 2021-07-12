@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_PAGE_HPP
 #define LVGLAPI_LVGL_PAGE_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class Page : public ObjectAccess<Page>
 {

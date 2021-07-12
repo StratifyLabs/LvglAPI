@@ -1,11 +1,11 @@
+#include <dirent.h>
+#include <fcntl.h>
 #include <sdk/types.h>
 #include <sos/dev/display.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <dirent.h>
 
-#include "lvgl_api.h"
 #include "lvgl.h"
+#include "lvgl_api.h"
 
 const lvgl_api_t lvgl_api = {
   .sos_api =
@@ -13,9 +13,11 @@ const lvgl_api_t lvgl_api = {
       .name = "lvgl",
       .version = LVGL_API_VERSION,
       .git_hash = SOS_GIT_HASH,
-      },
+    },
+
   .timer_handler = lv_timer_handler,
   .tick_inc = lv_tick_inc,
+
   .event_send = lv_event_send,
   .obj_event_base = lv_obj_event_base,
   .event_get_target = lv_event_get_target,
@@ -97,6 +99,13 @@ const lvgl_api_t lvgl_api = {
   .obj_hit_test = lv_obj_hit_test,
   .clamp_width = lv_clamp_width,
   .clamp_height = lv_clamp_height,
+
+  .layout_flex = &LV_LAYOUT_FLEX,
+  .style_flex_flow = &LV_STYLE_FLEX_FLOW,
+  .style_flex_main_place = &LV_STYLE_FLEX_MAIN_PLACE,
+  .style_flex_cross_place = &LV_STYLE_FLEX_CROSS_PLACE,
+  .style_flex_track_place = &LV_STYLE_FLEX_TRACK_PLACE,
+  .style_flex_grow = &LV_STYLE_FLEX_GROW,
 
   // obj scroll
   .obj_set_scrollbar_mode = lv_obj_set_scrollbar_mode,
@@ -786,10 +795,9 @@ const lvgl_api_t lvgl_api = {
   .theme_basic_init = lv_theme_basic_init,
 };
 
-
 #include <stdio.h>
 
-static bool lvgl_api_fs_ready_cb(struct _lv_fs_drv_t *drv){
+static bool lvgl_api_fs_ready_cb(struct _lv_fs_drv_t *drv) {
   MCU_UNUSED_ARGUMENT(drv);
   return true;
 }
@@ -800,7 +808,7 @@ lvgl_api_fs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mod
   const int f_mode = mode == LV_FS_MODE_WR ? O_RDWR : O_RDONLY;
   printf("open %s\n", path);
   long fd = open(path, f_mode);
-  return (void*)fd;
+  return (void *)fd;
 }
 
 static lv_fs_res_t lvgl_api_fs_close_cb(struct _lv_fs_drv_t *drv, void *file_p) {
@@ -819,7 +827,7 @@ static lv_fs_res_t lvgl_api_fs_read_cb(
   MCU_UNUSED_ARGUMENT(drv);
   const int fd = (long)file_p;
   const int result = read(fd, buf, btr);
-  if( result > 0 ){
+  if (result > 0) {
     *br = result;
     return LV_FS_RES_OK;
   }
@@ -836,7 +844,7 @@ static lv_fs_res_t lvgl_api_fs_write_cb(
   const int fd = (long)file_p;
 
   const int result = write(fd, buf, btw);
-  if( result > 0 ){
+  if (result > 0) {
     *bw = result;
     return LV_FS_RES_OK;
   }
@@ -850,7 +858,9 @@ static lv_fs_res_t lvgl_api_fs_seek_cb(
   lv_fs_whence_t whence) {
   MCU_UNUSED_ARGUMENT(drv);
   const int fd = (long)file_p;
-  const int fwhence = (whence == LV_FS_SEEK_CUR) ? SEEK_CUR : (whence == LV_FS_SEEK_SET ? SEEK_SET : (SEEK_END));
+  const int fwhence = (whence == LV_FS_SEEK_CUR)
+                        ? SEEK_CUR
+                        : (whence == LV_FS_SEEK_SET ? SEEK_SET : (SEEK_END));
   lseek(fd, pos, fwhence);
   return LV_FS_RES_OK;
 }
@@ -870,7 +880,7 @@ static lv_fs_res_t
 lvgl_api_fs_dir_read_cb(struct _lv_fs_drv_t *drv, void *rddir_p, char *fn) {
   MCU_UNUSED_ARGUMENT(drv);
   struct dirent entry;
-  struct dirent * result;
+  struct dirent *result;
   readdir_r(rddir_p, &entry, &result);
   strncpy(fn, entry.d_name, 256);
   return LV_FS_RES_OK;
@@ -884,22 +894,21 @@ static lv_fs_res_t lvgl_api_fs_dir_close_cb(struct _lv_fs_drv_t *drv, void *rddi
 
 static lv_fs_drv_t drv;
 
-void lvgl_api_initialize() {
-
-  lv_init();
+void lvgl_api_initialize_filesystem() {
 
   lv_fs_drv_init(&drv); /*Basic initialization*/
 
-  drv.letter = 'S';                       /*An uppercase letter to identify the drive */
-  drv.ready_cb = lvgl_api_fs_ready_cb;   /*Callback to tell if the drive is ready to use */
-  drv.open_cb = lvgl_api_fs_open_cb;     /*Callback to open a file */
-  drv.close_cb = lvgl_api_fs_close_cb;   /*Callback to close a file */
-  drv.read_cb = lvgl_api_fs_read_cb;     /*Callback to read a file */
-  drv.write_cb = lvgl_api_fs_write_cb;   /*Callback to write a file */
-  drv.seek_cb = lvgl_api_fs_seek_cb;     /*Callback to seek in a file (Move cursor) */
-  drv.tell_cb = lvgl_api_fs_tell_cb;     /*Callback to tell the cursor position  */
+  drv.letter = 'S';                    /*An uppercase letter to identify the drive */
+  drv.ready_cb = lvgl_api_fs_ready_cb; /*Callback to tell if the drive is ready to use */
+  drv.open_cb = lvgl_api_fs_open_cb;   /*Callback to open a file */
+  drv.close_cb = lvgl_api_fs_close_cb; /*Callback to close a file */
+  drv.read_cb = lvgl_api_fs_read_cb;   /*Callback to read a file */
+  drv.write_cb = lvgl_api_fs_write_cb; /*Callback to write a file */
+  drv.seek_cb = lvgl_api_fs_seek_cb;   /*Callback to seek in a file (Move cursor) */
+  drv.tell_cb = lvgl_api_fs_tell_cb;   /*Callback to tell the cursor position  */
 
-  drv.dir_open_cb = lvgl_api_fs_dir_open_cb;   /*Callback to open directory to read its content */
+  drv.dir_open_cb =
+    lvgl_api_fs_dir_open_cb; /*Callback to open directory to read its content */
   drv.dir_read_cb = lvgl_api_fs_dir_read_cb;   /*Callback to read a directory's content */
   drv.dir_close_cb = lvgl_api_fs_dir_close_cb; /*Callback to close a directory */
 

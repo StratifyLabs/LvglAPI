@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_TILEVIEW_HPP
 #define LVGLAPI_LVGL_TILEVIEW_HPP
 
-#include "Object.hpp"
+#include "Container.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class TileView : public ObjectAccess<TileView> {
 public:
@@ -21,29 +21,20 @@ public:
   };
 
   TileView &add_tile(
-    const Location &location,
-    void * context,
-    void (*add)(Container &container, void * context)) {
-    Container obj(api()->tileview_add_tile(
-      m_object, location.row(), location.column(),
-      static_cast<lv_dir_t>(location.direction())));
-    if (add) {
-      add(obj, context);
-    }
-    return *this;
-  }
-
-  TileView &add_tile(
+    const char * name,
     const Location &location,
     void (*add)(Container &container) = nullptr) {
     Container obj(api()->tileview_add_tile(
-      m_object, location.row(), location.column(),
+      m_object, location.column(), location.row(),
       static_cast<lv_dir_t>(location.direction())));
+    obj.set_name(name);
+    //obj.m_object->user_data = (void*)name;
     if (add) {
       add(obj);
     }
     return *this;
   }
+
 
   Object get_active_tile() const {
     return Object(api()->tileview_get_tile_act(m_object));
@@ -55,8 +46,9 @@ public:
       static_cast<lv_anim_enable_t>(location.is_animate()));
     return *this;
   }
+
 };
 
-} // namespace lv
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_TILEVIEW_HPP

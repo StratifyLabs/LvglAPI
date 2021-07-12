@@ -1,7 +1,7 @@
 #include "lvgl/Font.hpp"
 
 
-using namespace lv;
+using namespace lvgl;
 
 Font::Font(const var::PathString & path){
   m_font = api()->font_load(path.cstring());

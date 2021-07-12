@@ -1,7 +1,7 @@
 #include "lvgl/Calendar.hpp"
-using namespace lv;
+using namespace lvgl;
 
-Calendar::Calendar(Object parent, const Create  & options){
+Calendar::Calendar(Object parent, const Create  & options): ObjectAccess(object_type()){
   m_object = api()->calendar_create(parent.object());
   set_name(options.name());
 }

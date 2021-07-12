@@ -1,9 +1,9 @@
 #ifndef LVGLAPI_LVGL_SPINBOX_HPP
 #define LVGLAPI_LVGL_SPINBOX_HPP
 
-#include "Object.hpp"
+#include "ObjectAccess.hpp"
 
-namespace lv {
+namespace lvgl {
 
 class SpinBox : public ObjectAccess<SpinBox>
 {
