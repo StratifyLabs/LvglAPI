@@ -389,6 +389,37 @@ enum class BlendMode {
   subtractive = LV_BLEND_MODE_SUBTRACTIVE
 };
 
+enum class Opacity {
+  transparent = LV_OPA_TRANSP,
+  x0 = LV_OPA_0,
+  x10 = LV_OPA_10,
+  x20 = LV_OPA_20,
+  x30 = LV_OPA_30,
+  x40 = LV_OPA_40,
+  x50 = LV_OPA_50,
+  x60 = LV_OPA_60,
+  x70 = LV_OPA_70,
+  x80 = LV_OPA_80,
+  x90 = LV_OPA_90,
+  x100 = LV_OPA_100,
+  cover = LV_OPA_COVER,
+  opaque = LV_OPA_COVER
+};
+
+enum class MixRatio {
+  x0 = LV_OPA_0,
+  x10 = LV_OPA_10,
+  x20 = LV_OPA_20,
+  x30 = LV_OPA_30,
+  x40 = LV_OPA_40,
+  x50 = LV_OPA_50,
+  x60 = LV_OPA_60,
+  x70 = LV_OPA_70,
+  x80 = LV_OPA_80,
+  x90 = LV_OPA_90,
+  x100 = LV_OPA_100
+};
+
 
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);

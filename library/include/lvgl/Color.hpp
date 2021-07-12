@@ -81,18 +81,18 @@ public:
     return Color(api()->palette_main(p));
   }
 
-  Color &lighten(u8 level) {
-    m_color = lv_color_mix(lv_color_white(), m_color, level);
+  Color &lighten(MixRatio ratio) {
+    m_color = lv_color_mix(lv_color_white(), m_color, u8(ratio));
     return *this;
   }
 
-  Color &darken(u8 level) {
-    m_color = lv_color_mix(lv_color_black(), m_color, level);
+  Color &darken(MixRatio ratio) {
+    m_color = lv_color_mix(lv_color_black(), m_color, u8(ratio));
     return *this;
   }
 
-  Color &mix(Color color, u8 ratio) {
-    m_color = lv_color_mix(m_color, color.get_color(), ratio);
+  Color &mix(Color color, MixRatio ratio) {
+    m_color = lv_color_mix(m_color, color.get_color(), u8(ratio));
     return *this;
   }
 
