@@ -31,7 +31,6 @@ set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
 
 set(PRIVATE_SOURCELIST
 	${CMAKE_CURRENT_SOURCE_DIR}/lvgl_api.c
-	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
 	${SOURCES_PREFIX}/lv_api_map.h
 	${SOURCES_PREFIX}/misc/lv_printf.h
