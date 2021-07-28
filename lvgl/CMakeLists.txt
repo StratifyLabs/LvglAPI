@@ -19,15 +19,8 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
 endif()
 
 
-# Make a copy of lv_conf_template.h if it doesn't exist already
-if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h)
-	file(READ
-		${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf_template.h
-		TEMPLATE_CONTENTS)
-	file(WRITE
-		${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
-		${TEMPLATE_CONTENTS}
-		)
+if(NOT LVGL_CONFIG_PATH)
+	message(FATAL_ERROR "LVGL_CONFIG_PATH must be defined")
 endif()
 
 
