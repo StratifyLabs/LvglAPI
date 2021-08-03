@@ -10,6 +10,7 @@ set(SOURCES
 	lvgl/ColorPicker.hpp
 	lvgl/Label.hpp
 	lvgl/MessageBox.hpp
+	lvgl/PeriodicTimer.hpp
 	lvgl/Font.hpp
 	lvgl/Event.hpp
 	lvgl/Spinbox.hpp

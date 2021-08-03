@@ -14,6 +14,7 @@ set(SOURCES
 	TileView.cpp
 	ButtonMatrix.cpp
 	DropDownList.cpp
+	PeriodicTimer.cpp
 	Line.cpp
 	Object.cpp
 	Runtime.cpp

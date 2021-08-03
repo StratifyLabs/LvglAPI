@@ -7,13 +7,12 @@
 
 namespace lvgl {
 
-class Runtime : public Api
-{
+class Runtime : public Api {
 public:
-  void setup();
+  Runtime &setup();
 
-  static void * thread_loop(void * args){
-    reinterpret_cast<Runtime*>(args)->loop();
+  static void *thread_loop(void *args) {
+    reinterpret_cast<Runtime *>(args)->loop();
     return nullptr;
   }
 
@@ -22,9 +21,8 @@ public:
 private:
   API_AF(Runtime, chrono::MicroTime, period, 5_milliseconds);
   API_AB(Runtime, stopped, false);
-
 };
 
-}
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_RUNTIME_HPP

@@ -24,6 +24,7 @@ namespace lvgl {}
 #include "lvgl/Slider.hpp"
 #include "lvgl/Spinner.hpp"
 #include "lvgl/TabView.hpp"
+#include "lvgl/PeriodicTimer.hpp"
 #include "lvgl/Table.hpp"
 #include "lvgl/Theme.hpp"
 #include "lvgl/TileView.hpp"

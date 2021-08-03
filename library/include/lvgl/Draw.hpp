@@ -184,8 +184,8 @@ public:
     return m_draw->id;
   }
 
-  auto part() const {
-    return m_draw->part;
+  Part part() const {
+    return Part(m_draw->part);
   }
 
   auto radius() const {

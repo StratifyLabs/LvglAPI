@@ -9,10 +9,11 @@
 
 using namespace lvgl;
 
-void Runtime::setup(){
+Runtime& Runtime::setup(){
 #if __StratifyOS__
   kernel_request(LVGL_REQUEST_START, nullptr);
 #endif
+  return *this;
 }
 
 void Runtime::loop(){
