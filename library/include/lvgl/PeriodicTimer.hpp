@@ -13,17 +13,21 @@ public:
   using Callback = void (*)(lv_timer_t *);
 
   PeriodicTimer();
-  PeriodicTimer(const chrono::MicroTime & period, Callback callback);
+  PeriodicTimer(lv_timer_t * timer);
+
+  PeriodicTimer(const char* name, const chrono::MicroTime & period, Callback callback);
 
   PeriodicTimer(const PeriodicTimer & a) = delete;
   PeriodicTimer& operator=(const PeriodicTimer & a) = delete;
 
   PeriodicTimer(PeriodicTimer && a){
     std::swap(m_timer, a.m_timer);
+    std::swap(m_needs_free, a.m_needs_free);
   }
 
   PeriodicTimer& operator=(PeriodicTimer && a){
     std::swap(m_timer, a.m_timer);
+    std::swap(m_needs_free, a.m_needs_free);
     return *this;
   };
 
@@ -38,6 +42,18 @@ public:
   PeriodicTimer& set_callback(Callback callback){
     API_ASSERT(m_timer != nullptr);
     api()->timer_set_cb(m_timer, callback);
+    return *this;
+  }
+
+  PeriodicTimer& reset(){
+    API_ASSERT(m_timer != nullptr);
+    api()->timer_reset(m_timer);
+    return *this;
+  }
+
+  PeriodicTimer& make_ready(){
+    API_ASSERT(m_timer != nullptr);
+    api()->timer_ready(m_timer);
     return *this;
   }
 
@@ -59,8 +75,17 @@ public:
     return *this;
   }
 
+  PeriodicTimer& set_repeat_infinite(){
+    return set_repeat_count(-1);
+  }
+
+  const char * name() const {
+    return reinterpret_cast<char*>(m_timer->user_data);
+  }
+
 private:
-  lv_timer_t * m_timer;
+  lv_timer_t * m_timer = nullptr;
+  bool m_needs_free = false;
 };
 
 } // namespace lvgl
