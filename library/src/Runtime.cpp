@@ -9,22 +9,22 @@
 
 using namespace lvgl;
 
-Runtime& Runtime::setup(){
+Runtime::Runtime(){
 #if __StratifyOS__
   kernel_request(LVGL_REQUEST_START, nullptr);
 #endif
-  return *this;
 }
 
-void Runtime::loop(){
+Runtime& Runtime::loop(){
   while( is_stopped() == false ){
     chrono::wait(period());
-    api()->tick_inc(period().milliseconds());
+    api()->tick_inc(period().milliseconds() * increment_scale());
     api()->timer_handler();
   }
 
 #if __StratifyOS__
   kernel_request(LVGL_REQUEST_STOP, nullptr);
 #endif
+  return *this;
 }
 

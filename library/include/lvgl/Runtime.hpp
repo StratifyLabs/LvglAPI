@@ -9,17 +9,25 @@ namespace lvgl {
 
 class Runtime : public Api {
 public:
-  Runtime &setup();
+  Runtime();
+
+  Runtime(const Runtime &) = delete;
+  Runtime(Runtime &&) = delete;
+  Runtime& operator=(const Runtime&) = delete;
+  Runtime& operator=(Runtime&&) = delete;
 
   static void *thread_loop(void *args) {
     reinterpret_cast<Runtime *>(args)->loop();
     return nullptr;
   }
 
-  void loop();
+  Runtime& loop();
+
+
 
 private:
   API_AF(Runtime, chrono::MicroTime, period, 5_milliseconds);
+  API_AF(Runtime, float, increment_scale, 1.0f);
   API_AB(Runtime, stopped, false);
 };
 
