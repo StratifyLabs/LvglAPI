@@ -22,5 +22,9 @@ void Runtime::loop(){
     api()->tick_inc(period().milliseconds());
     api()->timer_handler();
   }
+
+#if __StratifyOS__
+  kernel_request(LVGL_REQUEST_STOP, nullptr);
+#endif
 }
 

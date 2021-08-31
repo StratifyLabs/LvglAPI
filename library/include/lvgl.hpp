@@ -19,6 +19,7 @@ namespace lvgl {}
 #include "lvgl/Label.hpp"
 #include "lvgl/List.hpp"
 #include "lvgl/Meter.hpp"
+#include "lvgl/MessageBox.hpp"
 #include "lvgl/PeriodicTimer.hpp"
 #include "lvgl/Roller.hpp"
 #include "lvgl/Runtime.hpp"

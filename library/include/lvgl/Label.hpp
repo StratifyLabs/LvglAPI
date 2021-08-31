@@ -100,6 +100,8 @@ public:
 
 private:
   friend class Window;
+  friend class TextArea;
+  friend class MessageBox;
   Label(lv_obj_t * object) : ObjectAccess(object_type()){
     m_object = object;
   }

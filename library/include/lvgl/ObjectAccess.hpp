@@ -107,12 +107,13 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+
   Derived &set_alignment(Alignment alignment) {
     api()->obj_set_align(m_object, static_cast<lv_align_t>(alignment));
     return static_cast<Derived &>(*this);
   }
 
-  Derived &align(Alignment alignment, const Point &offset = Point()) {
+  Derived &set_alignment(Alignment alignment, const Point &offset) {
     api()->obj_align(
       m_object, static_cast<lv_align_t>(alignment), offset.x(), offset.y());
     return static_cast<Derived &>(*this);
@@ -336,8 +337,8 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_align(lv_align_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.num = value};
+  Derived &set_align(Alignment value, lv_style_selector_t selector = 0) {
+    lv_style_value_t v = {.num = lv_align_t(value)};
     api()->obj_set_local_style_prop(m_object, LV_STYLE_ALIGN, v, selector);
     return static_cast<Derived &>(*this);
   }

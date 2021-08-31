@@ -3,6 +3,7 @@
 
 #include "ObjectAccess.hpp"
 #include "TextArea.hpp"
+#include "ButtonMatrix.hpp"
 
 namespace lvgl {
 
@@ -44,7 +45,11 @@ public:
   }
 
   const char ** get_map_array() const {
-    return lv_keyboard_get_map_array(object());
+    return api()->btnmatrix_get_map(object());
+  }
+
+  ButtonMatrix get_button_matrix() const {
+    return ButtonMatrix(&(reinterpret_cast<lv_keyboard_t*>(m_object)->btnm));
   }
 
 

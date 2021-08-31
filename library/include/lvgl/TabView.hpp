@@ -21,6 +21,7 @@ public:
 
   TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
+    obj.set_name(name);
     if (add) {
       add(obj);
     }
@@ -44,10 +45,18 @@ public:
     return ButtonMatrix(api()->tabview_get_tab_btns(m_object));
   }
 
-  Container get_tab(size_t i) {
+  size_t get_active_tab_offset() const {
+    return api()->tabview_get_tab_act(m_object);
+  }
+
+  Container get_tab(size_t i) const {
     API_ASSERT(get_content().object());
     API_ASSERT(i < get_content().get_child_count());
     return Container(get_content().get_child(i).object());
+  }
+
+  Container get_active_tab() const {
+    return get_tab( get_active_tab_offset() );
   }
 
 private:

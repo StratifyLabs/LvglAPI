@@ -823,7 +823,8 @@ void lvgl_api_initialize_filesystem();
 #define LVGL_API_REQUEST (&lvgl_api)
 #else
 #define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
-#define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
+#define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'o')
+#define LVGL_REQUEST_STOP MCU_API_REQUEST_CODE('l', 's', 't', 'p')
 #endif
 
 #ifdef __cplusplus

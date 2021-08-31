@@ -69,8 +69,8 @@ public:
     return *this;
   }
 
-  Style &set_align(lv_align_t value) {
-    lv_style_value_t v = {.num = value};
+  Style &set_align(Alignment value) {
+    lv_style_value_t v = {.num = lv_align_t(value) };
     api()->style_set_prop(&m_style, LV_STYLE_ALIGN, v);
     return *this;
   }
