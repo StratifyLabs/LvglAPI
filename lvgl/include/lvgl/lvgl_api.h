@@ -825,6 +825,19 @@ void lvgl_api_initialize_filesystem();
 #define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
 #define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'o')
 #define LVGL_REQUEST_STOP MCU_API_REQUEST_CODE('l', 's', 't', 'p')
+#define LVGL_REQUEST_GET_FONT MCU_API_REQUEST_CODE('l', 'f', 'n', 't')
+
+typedef struct {
+  const char *name;
+  const lv_font_t * font;
+} lvgl_api_font_descriptor_t;
+
+typedef struct {
+  u16 offset;
+  const lvgl_api_font_descriptor_t * descriptor;
+} lvgl_api_font_request_t;
+
+
 #endif
 
 #ifdef __cplusplus

@@ -391,6 +391,10 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived& set_vertical_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+    return set_top_padding(value, selector).set_bottom_padding(value, selector);
+  }
+
   Derived &set_left_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_LEFT, v, selector);
@@ -401,6 +405,14 @@ public:
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_RIGHT, v, selector);
     return static_cast<Derived &>(*this);
+  }
+
+  Derived& set_horizontal_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+    return set_left_padding(value, selector).set_right_padding(value, selector);
+  }
+
+  Derived& set_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+    return set_vertical_padding(value, selector).set_horizontal_padding(value, selector);
   }
 
   Derived &set_row_padding(lv_coord_t value, lv_style_selector_t selector = 0) {

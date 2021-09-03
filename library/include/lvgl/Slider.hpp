@@ -20,7 +20,7 @@ public:
   };
 
   Slider(Object parent, const Create & options): BarAccess(object_type()){
-    m_object = lv_slider_create(parent.object());
+    m_object = api()->slider_create(parent.object());
     set_name(options.name());
   }
 

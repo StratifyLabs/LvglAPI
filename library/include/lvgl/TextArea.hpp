@@ -92,6 +92,11 @@ public:
     return *this;
   }
 
+  TextArea & set_text(const char * value){
+    api()->textarea_set_text(object(), value);
+    return *this;
+  }
+
   const char * get_text() const {
     return api()->textarea_get_text(object());
   }

@@ -10,15 +10,23 @@ public:
   Range() = default;
   Range(s16 minimum, s16 maximum) : m_minimum(minimum), m_maximum(maximum) {}
 
+  static Range from_string(const var::StringView value) {
+    // min is zero, string is expresse as <value>/<maximum>
+    const auto tokens = value.split("/");
+    return Range()
+      .set_value(tokens.count() > 0 ? tokens.at(0).to_integer() : 0)
+      .set_maximum(tokens.count() > 1 ? tokens.at(1).to_integer() : 100);
+  }
+
 private:
-  API_AF(Range, s16, minimum, 1);
+  API_AF(Range, s16, minimum, 0);
   API_AF(Range, s16, maximum, 100);
+  API_AF(Range, s16, value, 0);
 };
 
 template <class Derived> class BarAccess : public ObjectAccess<Derived> {
 public:
-
-  BarAccess(u32 type) : ObjectAccess<Derived>(type){}
+  BarAccess(u32 type) : ObjectAccess<Derived>(type) {}
 
   Derived &set_range(const Range &value) {
     Object::api()->bar_set_range(Object::object(), value.minimum(), value.maximum());
@@ -37,18 +45,27 @@ public:
       .set_maximum(Object::api()->bar_get_max_value(Object::object()));
   }
 
+  Derived &set_value(const Range &value, IsAnimate is_animate = IsAnimate::yes) {
+    const auto range = get_range();
+    if (value.minimum() != range.minimum() || value.maximum() != range.maximum()) {
+      set_range(value);
+    }
+    Object::api()->bar_set_value(
+      Object::object(), value.value(), static_cast<lv_anim_enable_t>(is_animate));
+    return static_cast<Derived &>(*this);
+  }
+
   s16 get_value() const { return Object::api()->bar_get_value(Object::object()); }
 };
 
 class Bar : public BarAccess<Bar> {
 public:
-
   class Create : public CreateAccess<Create> {
-    public:
-      Create(const char * name) : CreateAccess(name){}
+  public:
+    Create(const char *name) : CreateAccess(name) {}
   };
 
-  Bar(Object parent, const Create & options);
+  Bar(Object parent, const Create &options);
 
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,
@@ -63,5 +80,9 @@ public:
 };
 
 } // namespace lvgl
+
+namespace printer {
+Printer &operator<<(Printer &printer, const lvgl::Range &range);
+}
 
 #endif // LVGLAPI_LVGL_BAR_HPP
