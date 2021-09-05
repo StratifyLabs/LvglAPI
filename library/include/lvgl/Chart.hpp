@@ -45,11 +45,6 @@ public:
     lv_chart_series_t * m_series;
   };
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
-
   explicit Chart(const char * name) : ObjectAccess(name){}
 
   Chart &set_type(Type value) {
@@ -228,7 +223,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Chart(lv_obj_t * object){ m_object = object; }
   Chart(Object parent, const Chart &);
-  Chart(Object parent, const Create &options);
 
 };
 

@@ -6,7 +6,7 @@
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
 
-class Spinbox : public ObjectAccess<SpinBox>
+class Spinbox : public ObjectAccess<Spinbox>
 {
 public:
   explicit Spinbox(const char * name) : ObjectAccess(name){}

@@ -17,11 +17,6 @@ public:
     custom4 = LV_TABLE_CELL_CTRL_CUSTOM_4,
   };
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
-
   explicit Table(const char * name) : ObjectAccess(name){}
 
 
@@ -90,7 +85,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Table(lv_obj_t * object){ m_object = object; }
   Table(Object parent, const Table &);
-  Table(Object parent, const Create &options);
 
 };
 

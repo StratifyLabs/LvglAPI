@@ -22,10 +22,7 @@ set(SOURCES
 	Style.cpp
 	Window.cpp
 	Calendar.cpp
-	Gauge.cpp
-	LineMeter.cpp
 	Meter.cpp
-	Page.cpp
 	Switch.cpp
 	Canvas.cpp
 	Image.cpp
@@ -38,7 +35,6 @@ set(SOURCES
 	Theme.cpp
 	Checkbox.cpp
 	Keyboard.cpp
-	Mask.cpp
 	Slider.cpp
 	TextArea.cpp
 	PARENT_SCOPE

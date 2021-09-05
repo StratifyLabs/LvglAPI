@@ -24,10 +24,7 @@ set(SOURCES
 	lvgl/Spinner.hpp
 	lvgl/Window.hpp
 	lvgl/Calendar.hpp
-	lvgl/Gauge.hpp
-	lvgl/LineMeter.hpp
 	lvgl/Meter.hpp
-	lvgl/Page.hpp
 	lvgl/Switch.hpp
 	lvgl/Style.hpp
 	lvgl/macros.hpp
@@ -43,7 +40,6 @@ set(SOURCES
 	lvgl/Theme.hpp
 	lvgl/Checkbox.hpp
 	lvgl/Keyboard.hpp
-	lvgl/Mask.hpp
 	lvgl/Slider.hpp
 	lvgl/TextArea.hpp
 	lvgl/Types.hpp
