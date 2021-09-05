@@ -139,7 +139,7 @@ Font::Info Font::find_best_fit(const Info &info) {
   }();
 
   if (count == 0) {
-    return nullptr;
+    return Info();
   }
 
   const lvgl_api_font_descriptor_t *descriptor_list[count];
@@ -172,9 +172,6 @@ Font::Info Font::find_best_fit(const Info &info) {
       }
     }
   }
-
-  printf(
-    "system has %d fonts -- found font %s\n", count, descriptor_list[best_offset]->name);
 
   return Info(descriptor_list[best_offset]->name)
     .set_font(descriptor_list[best_offset]->font);

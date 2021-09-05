@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Roller : public ObjectAccess<Roller> {
 public:
@@ -13,7 +14,8 @@ public:
   public:
     Create(const char *name) : CreateAccess(name) {}
   };
-  Roller(Object parent, const Create &options);
+
+  explicit Roller(const char * name) : ObjectAccess(name){}
 
   Roller &set_options(const char *options, Mode mode = Mode::normal) {
     api()->roller_set_options(object(), options, static_cast<lv_roller_mode_t>(mode));
@@ -43,6 +45,12 @@ public:
   u16 get_option_count() const {
     return api()->roller_get_option_cnt(object());
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Roller(lv_obj_t * object){ m_object = object; }
+  Roller(Object parent, const Roller &);
+  Roller(Object parent, const Create &options);
 
 };
 

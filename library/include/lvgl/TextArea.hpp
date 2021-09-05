@@ -5,6 +5,7 @@
 #include "Label.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class TextArea : public ObjectAccess<TextArea>
 {
@@ -13,7 +14,8 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
-  TextArea(Object parent, const Create & options);
+
+  explicit TextArea(const char * name) : ObjectAccess(name){}
 
   TextArea & set_password_mode(bool value = true){
     api()->textarea_set_password_mode(object(), value);
@@ -163,10 +165,12 @@ public:
   }
 
 private:
+  OBJECT_ACCESS_FRIENDS();
   friend class Keyboard;
-  TextArea(lv_obj_t * obj) : ObjectAccess(object_type()){
-    m_object = obj;
-  }
+  explicit TextArea(lv_obj_t * obj){ m_object = obj; }
+  TextArea(Object parent, const TextArea & );
+  TextArea(Object parent, const Create & options);
+
 };
 
 }

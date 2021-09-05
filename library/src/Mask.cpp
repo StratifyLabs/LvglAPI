@@ -2,6 +2,6 @@
 
 using namespace lvgl;
 
-Mask::Mask(Object parent, const Create & options): ObjectAccess(object_type()){
+Mask::Mask(Object parent, const Create & options){
 
 }

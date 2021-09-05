@@ -9,9 +9,9 @@ namespace lvgl {
 
 template <class Derived> class ObjectAccess : public Object {
 public:
-  ObjectAccess<Derived>(u32 type) {
-    m_type = type;
-  }
+  ObjectAccess<Derived>() = default;
+  ObjectAccess<Derived>(u32 type) {}
+  ObjectAccess<Derived>(const char *name) : m_initial_name(name) {}
 
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
@@ -92,7 +92,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived & set_flex_layout(){
+  Derived &set_flex_layout() {
     api()->obj_set_layout(m_object, *api()->layout_flex);
     return static_cast<Derived &>(*this);
   }
@@ -106,7 +106,6 @@ public:
     api()->obj_update_layout(m_object);
     return static_cast<Derived &>(*this);
   }
-
 
   Derived &set_alignment(Alignment alignment) {
     api()->obj_set_align(m_object, static_cast<lv_align_t>(alignment));
@@ -229,7 +228,7 @@ public:
   }
 
   Derived &add_style(const Style &style, lv_style_selector_t style_selector = 0) {
-    api()->obj_add_style(m_object, (lv_style_t*)style.style(), style_selector);
+    api()->obj_add_style(m_object, (lv_style_t *)style.style(), style_selector);
     return static_cast<Derived &>(*this);
   }
 
@@ -391,7 +390,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived& set_vertical_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+  Derived &set_vertical_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
     return set_top_padding(value, selector).set_bottom_padding(value, selector);
   }
 
@@ -407,11 +406,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived& set_horizontal_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+  Derived &set_horizontal_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
     return set_left_padding(value, selector).set_right_padding(value, selector);
   }
 
-  Derived& set_padding(lv_coord_t value, lv_style_selector_t selector = 0){
+  Derived &set_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
     return set_vertical_padding(value, selector).set_horizontal_padding(value, selector);
   }
 
@@ -871,14 +870,33 @@ public:
     const char *m_name = nullptr;
   };
 
-  template <class ChildClass, class ChildClassCreate>
-  Derived &add(const ChildClassCreate &create) {
+  template <typename ChildClass> Derived &add(const typename ChildClass::Create &create) {
     ChildClass child(*this, create);
     if (create.initialize()) {
       create.initialize()(child);
     }
     return static_cast<Derived &>(*this);
   }
+
+  template <typename ChildClass> Derived &add(const ChildClass &child) {
+    ChildClass new_child(*this, child);
+    new_child.set_name(child.initial_name());
+    if (child.initialize()) {
+      child.initialize()(new_child);
+    }
+    return static_cast<Derived &>(*this);
+  }
+
+#if 0
+  template <typename ChildClass> Derived &add(const ChildClass & child) {
+    ChildClass new_child(*this, child);
+    new_child.set_name(child.initial_name());
+    if (child.initialize()) {
+      child.initialize()(new_child);
+    }
+    return static_cast<Derived &>(*this);
+  }
+#endif
 
   static u32 object_type() { return reinterpret_cast<size_t>(object_type); }
 
@@ -892,9 +910,33 @@ public:
     return static_cast<const Derived &>(*this);
   }
 
+  using Callback = void (*)(Derived &);
+  Callback initialize() const { return m_initialize; }
+
+  Derived &configure(Callback callback) {
+    m_initialize = callback;
+    return static_cast<Derived &>(*this);
+  }
+
+  const char *initial_name() const { return m_initial_name; }
+
 private:
+  Callback m_initialize = nullptr;
+  const char *m_initial_name = nullptr;
 };
 
+#define OBJECT_ACCESS_FORWARD_FRIENDS()                                                  \
+  class Container;                                                                       \
+  class Window;                                                                          \
+  class Button;                                                                          \
+  class TileView
+
+#define OBJECT_ACCESS_FRIENDS()                                                          \
+  friend class ObjectAccess<Container>;                                                  \
+  friend class ObjectAccess<Window>;                                                     \
+  friend class ObjectAccess<TileView>;                                                   \
+  friend class ObjectAccess<Button>;                                                     \
+  friend class Object;
 
 } // namespace lvgl
 

@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Range {
 public:
@@ -26,7 +27,9 @@ private:
 
 template <class Derived> class BarAccess : public ObjectAccess<Derived> {
 public:
+  BarAccess() = default;
   BarAccess(u32 type) : ObjectAccess<Derived>(type) {}
+  BarAccess(const char * name) : ObjectAccess<Derived>(name) {}
 
   Derived &set_range(const Range &value) {
     Object::api()->bar_set_range(Object::object(), value.minimum(), value.maximum());
@@ -65,7 +68,7 @@ public:
     Create(const char *name) : CreateAccess(name) {}
   };
 
-  Bar(Object parent, const Create &options);
+  explicit Bar(const char * name) : BarAccess(name){}
 
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,
@@ -77,6 +80,12 @@ public:
     api()->bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
     return *this;
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Bar(lv_obj_t *object) { m_object = object; }
+  Bar(Object parent, const Bar &);
+  Bar(Object parent, const Create &options);
 };
 
 } // namespace lvgl

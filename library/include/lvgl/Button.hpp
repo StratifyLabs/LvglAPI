@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Button : public ObjectAccess<Button> {
 public:
@@ -13,16 +14,16 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
 
-  Button(Object parent, const Create & options): ObjectAccess(object_type()){
-    m_object = api()->btn_create(parent.object());
-    set_name(options.name());
-  }
+  Button(const char * name) : ObjectAccess(name){}
 
 private:
+  OBJECT_ACCESS_FRIENDS();
+  friend class List;
   friend class Window;
-  Button(lv_obj_t * object) : ObjectAccess(object_type()){
-    m_object = object;
-  }
+  friend class TabView;
+  Button(lv_obj_t * object){ m_object = object; }
+  Button(Object parent, const Button &);
+  Button(Object parent, const Create & options);
 
 };
 

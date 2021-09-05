@@ -6,6 +6,8 @@
 
 namespace lvgl {
 
+OBJECT_ACCESS_FORWARD_FRIENDS();
+
 class Mask : public ObjectAccess<Mask>
 {
 public:
@@ -13,7 +15,14 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
+  Mask(const char * name) : ObjectAccess(name){}
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Mask(lv_obj_t * object){ m_object = object; }
+  Mask(Object parent, const Mask &);
   Mask(Object parent, const Create & options);
+
 };
 
 }

@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Label : public ObjectAccess<Label> {
 public:
@@ -12,7 +13,6 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
-  Label(Object parent, const Create & options);
 
   enum class LongMode {
     wrap = LV_LABEL_LONG_WRAP,
@@ -21,6 +21,8 @@ public:
     scroll_circular = LV_LABEL_LONG_SCROLL_CIRCULAR,
     clip = LV_LABEL_LONG_CLIP
   };
+
+  explicit Label(const char * name) : ObjectAccess(name){}
 
   Label & set_text(const char * value){
     api()->label_set_text(m_object, value);
@@ -99,14 +101,18 @@ public:
   }
 
 private:
+  OBJECT_ACCESS_FRIENDS();
   friend class Window;
   friend class TextArea;
   friend class MessageBox;
-  Label(lv_obj_t * object) : ObjectAccess(object_type()){
-    m_object = object;
-  }
+  friend class List;
+  explicit Label(lv_obj_t * object){ m_object = object; }
+  Label(Object parent, const Label &);
+  Label(Object parent, const Create & options);
 
 };
+
+
 
 }
 

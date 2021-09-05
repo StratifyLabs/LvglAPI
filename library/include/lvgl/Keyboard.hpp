@@ -6,6 +6,7 @@
 #include "ButtonMatrix.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Keyboard : public ObjectAccess<Keyboard>
 {
@@ -24,7 +25,7 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
-  Keyboard(Object parent, const Create & options);
+  explicit Keyboard(const char * name) : ObjectAccess(name){}
 
   Keyboard & set_text_area(TextArea text_area){
     api()->keyboard_set_textarea(object(), text_area.object());
@@ -52,7 +53,11 @@ public:
     return ButtonMatrix(&(reinterpret_cast<lv_keyboard_t*>(m_object)->btnm));
   }
 
-
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Keyboard(lv_obj_t * object){ m_object = object; }
+  Keyboard(Object parent, const Keyboard &);
+  Keyboard(Object parent, const Create & options);
 
 };
 

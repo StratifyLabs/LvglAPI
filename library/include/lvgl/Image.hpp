@@ -7,6 +7,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Image : public ObjectAccess<Image> {
 public:
@@ -15,7 +16,8 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
-  Image(Object parent, const Create & options);
+
+  explicit Image(const char * name) : ObjectAccess(name){}
 
   Image &set_source(const var::StringView src) {
     api()->img_set_src(m_object, var::PathString(src).cstring());
@@ -90,6 +92,12 @@ public:
   bool is_antialias() const {
     return api()->img_get_antialias(m_object);
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Image(lv_obj_t * object){ m_object = object; }
+  Image(Object parent, const Create & options);
+  Image(Object parent, const Image &);
 
 };
 

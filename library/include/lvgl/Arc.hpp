@@ -5,6 +5,8 @@
 
 namespace lvgl {
 
+OBJECT_ACCESS_FORWARD_FRIENDS();
+
 class Arc : public ObjectAccess<Arc> {
 public:
   enum class Mode {
@@ -13,10 +15,13 @@ public:
     symmetrical = LV_ARC_MODE_SYMMETRICAL
   };
 
+
   class Create : public CreateAccess<Create> {
   public:
     Create(const char * name) : CreateAccess(name){}
   };
+
+  explicit Arc(const char * name) : ObjectAccess(name){}
 
   Arc(Object parent, const Create & options);
 
@@ -85,6 +90,12 @@ public:
   u16 get_value() const {
     return api()->arc_get_value(m_object);
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Arc(lv_obj_t * object){ m_object = object; }
+  Arc(Object parent, const Arc & options);
+
 
 };
 

@@ -54,8 +54,24 @@ public:
 
   class Info {
   public:
-    Info() = default;
-    Info(const char * path);
+    /* Using Info() = default; causes problems with
+     * the following code
+     *
+     * int function(){
+     *   static const auto font_info = Font::Info();
+     * }
+     *
+     * It causes a crash on ARM Cortex M7. The problem
+     * is with the var::NameString member. It seems
+     * it doesn't get moved correctly.
+     *
+     */
+
+    Info(){};
+    explicit Info(const char * path);
+    Font get_font() const {
+      return Font(font());
+    }
 
     bool is_valid() const {
       return point_size() > 0;

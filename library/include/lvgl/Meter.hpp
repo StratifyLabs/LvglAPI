@@ -5,6 +5,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Meter : public ObjectAccess<Meter> {
 public:
@@ -12,7 +13,6 @@ public:
   public:
     Create(const char *name) : CreateAccess(name) {}
   };
-  Meter(Object parent, const Create &options);
 
   class Scale {
   public:
@@ -37,6 +37,8 @@ public:
   private:
     lv_meter_indicator_t *m_indicator = nullptr;
   };
+
+  explicit Meter(const char * name) : ObjectAccess(name){}
 
   Scale add_scale() { return Scale(api()->meter_add_scale(object())); }
 
@@ -116,6 +118,12 @@ public:
     api()->meter_set_indicator_start_value(object(), indicator.indicator(), value);
     return *this;
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Meter(lv_obj_t * object){ m_object = object; }
+  Meter(Object parent, const Meter &);
+  Meter(Object parent, const Create &options);
 
 
 };

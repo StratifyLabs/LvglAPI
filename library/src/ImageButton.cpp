@@ -2,7 +2,4 @@
 
 using namespace lvgl;
 
-ImageButton::ImageButton() : ObjectAccess(object_type())
-{
-
-}
+ImageButton::ImageButton(Object parent, const ImageButton &) {}

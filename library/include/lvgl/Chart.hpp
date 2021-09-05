@@ -6,6 +6,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Chart : public ObjectAccess<Chart> {
 public:
@@ -49,7 +50,7 @@ public:
     Create(const char *name) : CreateAccess(name) {}
   };
 
-  Chart(Object parent, const Create &options);
+  explicit Chart(const char * name) : ObjectAccess(name){}
 
   Chart &set_type(Type value) {
     api()->chart_set_type(object(), static_cast<lv_chart_type_t>(value));
@@ -223,6 +224,11 @@ public:
     return api()->chart_get_pressed_point(object());
   }
 
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Chart(lv_obj_t * object){ m_object = object; }
+  Chart(Object parent, const Chart &);
+  Chart(Object parent, const Create &options);
 
 };
 

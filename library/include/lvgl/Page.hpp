@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Page : public ObjectAccess<Page>
 {
@@ -13,6 +14,9 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
   Page(Object parent, const Create & options);
+
+private:
+  OBJECT_ACCESS_FRIENDS();
 };
 
 }

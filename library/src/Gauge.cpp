@@ -2,6 +2,11 @@
 
 using namespace lvgl;
 
-Gauge::Gauge(Object parent, const Create& options): ObjectAccess(object_type()){
+Gauge::Gauge(Object parent, const Create& options){
+
+}
+
+
+Gauge::Gauge(Object parent, const Gauge&){
 
 }

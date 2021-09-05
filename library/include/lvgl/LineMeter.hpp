@@ -5,6 +5,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class LineMeter : public ObjectAccess<LineMeter>
 {
@@ -13,7 +14,14 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
+  explicit LineMeter(const char * name) : ObjectAccess(name){}
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit LineMeter(lv_obj_t * object){ m_object = object; }
+  LineMeter(Object parent, const LineMeter &);
   LineMeter(Object parent, const Create & options);
+
 };
 }
 

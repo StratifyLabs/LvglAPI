@@ -208,6 +208,10 @@ public:
     return reinterpret_cast<ReinterpretedClass *>(this);
   }
 
+  template <class TargetClass> TargetClass get() {
+    return TargetClass(object());
+  }
+
   bool is_editable() const { return api()->obj_is_editable(m_object); }
 
   lv_obj_t *object() { return m_object; }
@@ -222,8 +226,6 @@ public:
 
   Object() = default;
 
-  u32 type() const { return m_type; }
-
   void remove(){
     api()->obj_del(m_object);
     m_object = nullptr;
@@ -236,7 +238,6 @@ public:
 
 protected:
   lv_obj_t *m_object = nullptr;
-  u32 m_type;
 
   friend class TabView;
   void set_name(const char *name) {

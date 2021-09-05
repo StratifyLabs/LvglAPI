@@ -6,6 +6,7 @@
 #include "Button.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Window : public ObjectAccess<Window> {
 public:
@@ -16,7 +17,8 @@ public:
   private:
     API_AF(Create, lv_coord_t, height, 15_percent);
   };
-  Window(Object parent, const Create &options);
+
+  explicit Window(const char * name) : ObjectAccess(name){}
 
   Window &add_button(const char *name, const void *icon, lv_coord_t width, void (*add)(Button &) = nullptr) {
     auto object = api()->win_add_btn(m_object, icon, width);
@@ -43,6 +45,15 @@ public:
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
 
   Container get_content() const { return Container(api()->win_get_content(m_object)); }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Window(lv_obj_t * object){ m_object = object; }
+  Window(Object parent, const Window &options);
+  Window(Object parent, const Create &options);
+
+  API_AF(Window, lv_coord_t, initial_height, 15_percent);
+
 };
 
 } // namespace lvgl

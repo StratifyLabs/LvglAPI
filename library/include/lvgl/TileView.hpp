@@ -5,13 +5,17 @@
 
 namespace lvgl {
 
+OBJECT_ACCESS_FORWARD_FRIENDS();
+
+
 class TileView : public ObjectAccess<TileView> {
 public:
   class Create : public CreateAccess<Create> {
   public:
     Create(const char *name) : CreateAccess(name) {}
   };
-  TileView(Object parent, const Create &options);
+
+  TileView(const char * name) : ObjectAccess(name){}
 
   class Location {
     API_AF(Location, uint8_t, row, 0);
@@ -46,6 +50,12 @@ public:
       static_cast<lv_anim_enable_t>(location.is_animate()));
     return *this;
   }
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit TileView(lv_obj_t * object){ m_object = object; }
+  TileView(Object parent, const TileView &);
+  TileView(Object parent, const Create &options);
 
 };
 

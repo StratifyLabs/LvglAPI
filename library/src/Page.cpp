@@ -2,6 +2,6 @@
 
 using namespace lvgl;
 
-Page::Page(Object parent, const Create & options): ObjectAccess(object_type()){
+Page::Page(Object parent, const Create & options){
 
 }

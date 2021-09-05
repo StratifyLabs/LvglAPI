@@ -4,6 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Line : public ObjectAccess<Line> {
 public:
@@ -11,7 +12,14 @@ public:
   public:
     Create(const char * name) : CreateAccess(name){}
   };
+  explicit Line(const char * name) : ObjectAccess(name){}
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Line(lv_obj_t * object){ m_object = object; }
+  Line(Object parent, const Line &);
   Line(Object parent, const Create & options);
+
 };
 
 }

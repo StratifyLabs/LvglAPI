@@ -4,6 +4,7 @@
 #include "Bar.hpp"
 
 namespace lvgl {
+OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Slider : public BarAccess<Slider> {
 public:
@@ -19,10 +20,8 @@ public:
     Create(const char * name) : CreateAccess(name){}
   };
 
-  Slider(Object parent, const Create & options): BarAccess(object_type()){
-    m_object = api()->slider_create(parent.object());
-    set_name(options.name());
-  }
+  explicit Slider(const char * name) : BarAccess(name){}
+
 
   Slider & set_mode(Mode value){
     lv_slider_set_mode(m_object, static_cast<lv_slider_mode_t>(value));
@@ -38,6 +37,11 @@ public:
     return lv_slider_get_left_value(m_object);
   }
 
+private:
+  OBJECT_ACCESS_FRIENDS();
+  explicit Slider(lv_obj_t * object){ m_object = object; }
+  Slider(Object parent, const Slider &);
+  Slider(Object parent, const Create & options);
 };
 
 }
