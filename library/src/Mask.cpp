@@ -2,6 +2,6 @@
 
 using namespace lvgl;
 
-Mask::Mask(Object parent, const Create & options){
+Mask::Mask(Object parent, const Mask & options){
 
 }

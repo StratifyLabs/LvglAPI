@@ -10,7 +10,7 @@ set(SOURCES
 	Event.cpp
 	Font.cpp
 	MessageBox.cpp
-	SpinBox.cpp
+	Spinbox.cpp
 	TileView.cpp
 	ButtonMatrix.cpp
 	DropDownList.cpp

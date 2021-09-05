@@ -9,17 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class TabView : public ObjectAccess<TabView> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name_value) : CreateAccess(name_value) {}
-
-  private:
-    API_AF(Create, Direction, direction, Direction::top);
-    API_AF(Create, u32, size, 10_percent);
-  };
-
   explicit TabView(const char * name) : ObjectAccess(name){}
-
 
   TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
@@ -65,7 +55,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit TabView(lv_obj_t * object){ m_object = object; }
   TabView(Object parent, const TabView &options);
-  TabView(Object parent, const Create &options);
 
   API_AF(TabView, Direction, initial_direction, Direction::top);
   API_AF(TabView, u32, initial_size, 10_percent);

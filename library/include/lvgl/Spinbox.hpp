@@ -6,16 +6,16 @@
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
 
-class SpinBox : public ObjectAccess<SpinBox>
+class Spinbox : public ObjectAccess<SpinBox>
 {
 public:
-  explicit SpinBox(const char * name) : ObjectAccess(name){}
+  explicit Spinbox(const char * name) : ObjectAccess(name){}
 
 
 private:
   OBJECT_ACCESS_FRIENDS();
-  explicit SpinBox(lv_obj_t * object){ m_object = object; }
-  SpinBox(Object parent, const SpinBox &);
+  explicit Spinbox(lv_obj_t * object){ m_object = object; }
+  Spinbox(Object parent, const Spinbox &);
 
 };
 

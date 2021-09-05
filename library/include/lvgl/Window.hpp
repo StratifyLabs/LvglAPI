@@ -10,13 +10,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Window : public ObjectAccess<Window> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-
-  private:
-    API_AF(Create, lv_coord_t, height, 15_percent);
-  };
 
   explicit Window(const char * name) : ObjectAccess(name){}
 
@@ -50,7 +43,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Window(lv_obj_t * object){ m_object = object; }
   Window(Object parent, const Window &options);
-  Window(Object parent, const Create &options);
 
   API_AF(Window, lv_coord_t, initial_height, 15_percent);
 

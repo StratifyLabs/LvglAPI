@@ -13,11 +13,6 @@ Printer &operator<<(Printer &printer, const lvgl::Range &range) {
 
 using namespace lvgl;
 
-Bar::Bar(Object parent, const Create &options) : BarAccess(object_type()) {
-  m_object = api()->bar_create(parent.object());
-  set_name(options.name());
-}
-
 Bar::Bar(Object parent, const Bar &){
   m_object = api()->bar_create(parent.object());
 }

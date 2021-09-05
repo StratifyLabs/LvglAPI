@@ -10,11 +10,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class TextArea : public ObjectAccess<TextArea>
 {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
   explicit TextArea(const char * name) : ObjectAccess(name){}
 
   TextArea & set_password_mode(bool value = true){
@@ -169,7 +164,6 @@ private:
   friend class Keyboard;
   explicit TextArea(lv_obj_t * obj){ m_object = obj; }
   TextArea(Object parent, const TextArea & );
-  TextArea(Object parent, const Create & options);
 
 };
 

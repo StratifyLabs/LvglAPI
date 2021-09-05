@@ -9,7 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class MessageBox  : public ObjectAccess<MessageBox> {
 public:
-
   explicit MessageBox(const char * name) : ObjectAccess(name){}
 
   const char * get_active_button_text() const {
