@@ -11,12 +11,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Image : public ObjectAccess<Image> {
 public:
-
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
   explicit Image(const char * name) : ObjectAccess(name){}
 
   Image &set_source(const var::StringView src) {
@@ -96,7 +90,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Image(lv_obj_t * object){ m_object = object; }
-  Image(Object parent, const Create & options);
   Image(Object parent, const Image &);
 
 };

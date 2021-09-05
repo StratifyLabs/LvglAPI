@@ -9,11 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Label : public ObjectAccess<Label> {
 public:
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
   enum class LongMode {
     wrap = LV_LABEL_LONG_WRAP,
     dot = LV_LABEL_LONG_DOT,
@@ -108,7 +103,6 @@ private:
   friend class List;
   explicit Label(lv_obj_t * object){ m_object = object; }
   Label(Object parent, const Label &);
-  Label(Object parent, const Create & options);
 
 };
 

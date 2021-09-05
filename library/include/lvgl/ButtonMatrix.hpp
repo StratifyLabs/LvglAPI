@@ -8,15 +8,8 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
 
-
-  ButtonMatrix(const char * name) : ObjectAccess(name){}
-
-  ButtonMatrix(Object parent, const Create &options);
+  explicit ButtonMatrix(const char * name) : ObjectAccess(name){}
 
   u16 get_selected_button() const { return api()->btnmatrix_get_selected_btn(object()); }
 

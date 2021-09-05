@@ -10,11 +10,6 @@ class Roller : public ObjectAccess<Roller> {
 public:
   enum class Mode { normal = LV_ROLLER_MODE_NORMAL, infinite = LV_ROLLER_MODE_INFINITE };
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
-
   explicit Roller(const char * name) : ObjectAccess(name){}
 
   Roller &set_options(const char *options, Mode mode = Mode::normal) {
@@ -50,7 +45,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Roller(lv_obj_t * object){ m_object = object; }
   Roller(Object parent, const Roller &);
-  Roller(Object parent, const Create &options);
 
 };
 

@@ -21,10 +21,6 @@ public:
     number = LV_KEYBOARD_MODE_NUMBER
   };
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
   explicit Keyboard(const char * name) : ObjectAccess(name){}
 
   Keyboard & set_text_area(TextArea text_area){
@@ -57,7 +53,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Keyboard(lv_obj_t * object){ m_object = object; }
   Keyboard(Object parent, const Keyboard &);
-  Keyboard(Object parent, const Create & options);
 
 };
 

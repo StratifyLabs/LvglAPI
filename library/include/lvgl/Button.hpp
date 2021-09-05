@@ -9,12 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Button : public ObjectAccess<Button> {
 public:
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
-  Button(const char * name) : ObjectAccess(name){}
+  explicit Button(const char * name) : ObjectAccess(name){}
 
 private:
   OBJECT_ACCESS_FRIENDS();
@@ -23,7 +18,6 @@ private:
   friend class TabView;
   Button(lv_obj_t * object){ m_object = object; }
   Button(Object parent, const Button &);
-  Button(Object parent, const Create & options);
 
 };
 

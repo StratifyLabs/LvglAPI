@@ -10,12 +10,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Container : public ObjectAccess<Container> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
-
-
   Container(const char *name) : ObjectAccess(name) {}
 
   static Container active_screen() {
@@ -28,11 +22,6 @@ public:
 
 private:
   OBJECT_ACCESS_FRIENDS();
-  Container(Object parent, const Create &options) : ObjectAccess(object_type()) {
-    m_object = api()->label_create(parent.object());
-    api()->label_set_text(m_object, "");
-    set_name(options.name());
-  }
 
   Container(Object parent, const Container &options) : ObjectAccess(object_type()) {
     if (options.is_initial_bordered()) {

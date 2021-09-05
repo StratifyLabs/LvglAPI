@@ -15,15 +15,7 @@ public:
     symmetrical = LV_ARC_MODE_SYMMETRICAL
   };
 
-
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
   explicit Arc(const char * name) : ObjectAccess(name){}
-
-  Arc(Object parent, const Create & options);
 
   Arc & set_start_angle(u16 value){
     api()->arc_set_start_angle(m_object, value);

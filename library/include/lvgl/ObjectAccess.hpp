@@ -850,26 +850,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  template <class CreateDerived> class CreateAccess {
-  public:
-    using Callback = void (*)(Derived &);
-
-    CreateAccess(const char *name_value) : m_name(name_value) {}
-
-    const char *name() const { return m_name; }
-
-    Callback initialize() const { return m_initialize; }
-
-    CreateDerived &configure(Callback callback) {
-      m_initialize = callback;
-      return static_cast<CreateDerived &>(*this);
-    }
-
-  private:
-    Callback m_initialize = nullptr;
-    const char *m_name = nullptr;
-  };
-
   template <typename ChildClass> Derived &add(const typename ChildClass::Create &create) {
     ChildClass child(*this, create);
     if (create.initialize()) {

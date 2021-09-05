@@ -8,10 +8,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Checkbox : public ObjectAccess<Checkbox>{
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
 
   explicit Checkbox(const char * name) : ObjectAccess(name){}
 
@@ -33,7 +29,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Checkbox(lv_obj_t * object){ m_object = object; }
   Checkbox(Object parent, const Checkbox &);
-  Checkbox(Object parent, const Create & options);
 };
 
 }

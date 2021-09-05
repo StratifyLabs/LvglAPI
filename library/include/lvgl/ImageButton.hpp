@@ -9,10 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class ImageButton : public ObjectAccess<ImageButton>
 {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
   explicit ImageButton(const char * name) : ObjectAccess(name){}
 
 private:

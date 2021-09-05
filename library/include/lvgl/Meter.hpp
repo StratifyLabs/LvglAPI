@@ -9,10 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Meter : public ObjectAccess<Meter> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
 
   class Scale {
   public:
@@ -123,7 +119,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Meter(lv_obj_t * object){ m_object = object; }
   Meter(Object parent, const Meter &);
-  Meter(Object parent, const Create &options);
 
 
 };

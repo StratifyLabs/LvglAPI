@@ -63,10 +63,6 @@ public:
 
 class Bar : public BarAccess<Bar> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
 
   explicit Bar(const char * name) : BarAccess(name){}
 
@@ -85,7 +81,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Bar(lv_obj_t *object) { m_object = object; }
   Bar(Object parent, const Bar &);
-  Bar(Object parent, const Create &options);
 };
 
 } // namespace lvgl

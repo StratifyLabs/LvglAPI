@@ -9,10 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Page : public ObjectAccess<Page>
 {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
   Page(Object parent, const Create & options);
 
 private:

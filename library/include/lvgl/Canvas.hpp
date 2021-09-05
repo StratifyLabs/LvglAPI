@@ -8,17 +8,13 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
+
   explicit Canvas(const char * name) : ObjectAccess(name){}
 
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Canvas(lv_obj_t * object){ m_object = object; }
   Canvas(Object parent, const Canvas &);
-  Canvas(Object parent, const Create & options);
 };
 
 } // namespace lvgl

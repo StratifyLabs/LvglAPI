@@ -9,11 +9,6 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class List : public ObjectAccess<List> {
 public:
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char *name) : CreateAccess(name) {}
-  };
-
   explicit List(const char * name) : ObjectAccess(name){}
 
   List &add_button(const char *symbol, const char *text) {
@@ -68,7 +63,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit List(lv_obj_t * object){ m_object = object; }
   List(Object parent, const List &);
-  List(Object parent, const Create &options);
 
 };
 

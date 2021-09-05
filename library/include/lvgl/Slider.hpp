@@ -15,11 +15,6 @@ public:
     range = LV_SLIDER_MODE_RANGE
   };
 
-  class Create : public CreateAccess<Create> {
-  public:
-    Create(const char * name) : CreateAccess(name){}
-  };
-
   explicit Slider(const char * name) : BarAccess(name){}
 
 
@@ -41,7 +36,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   explicit Slider(lv_obj_t * object){ m_object = object; }
   Slider(Object parent, const Slider &);
-  Slider(Object parent, const Create & options);
 };
 
 }
