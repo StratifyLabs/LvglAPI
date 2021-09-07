@@ -19,6 +19,7 @@ public:
 
   //living dangerously
   Container(lv_obj_t *object) { m_object = object; }
+  Container(Object & object) { m_object = object.object(); }
 
 private:
   OBJECT_ACCESS_FRIENDS();

@@ -13,18 +13,6 @@ public:
   Font() = default;
   Font(const lv_font_t *font) : m_font(font) {}
   Font(const var::PathString &path);
-  ~Font();
-  Font(const Font &) = delete;
-  Font &operator=(const Font &) = delete;
-  Font &operator=(Font &&font) {
-    std::swap(m_font, font.m_font);
-    std::swap(m_is_loaded, font.m_is_loaded);
-    return *this;
-  }
-  Font(Font &&font) {
-    std::swap(m_font, font.m_font);
-    std::swap(m_is_loaded, font.m_is_loaded);
-  }
 
   const lv_font_t *font() const { return m_font; }
 
@@ -76,6 +64,11 @@ public:
     bool is_valid() const {
       return point_size() > 0;
     }
+
+    const Font operator()() const {
+      return get_font();
+    }
+
   private:
     API_AF(Info,const lv_font_t*, font, nullptr);
     API_AF(Info,Style,style,Style::any);
@@ -87,11 +80,18 @@ public:
 
   static Info find_best_fit(const Info & info);
 
+  static Info find(const char * name, size_t point_size, Style style = Style::any){
+    return find_best_fit(Info().set_name(name).set_point_size(point_size).set_style(style));
+  }
+
+  static Info find(size_t point_size, Style style = Style::any){
+    return find_best_fit(Info().set_point_size(point_size).set_style(style));
+  }
+
 #endif
 
 private:
   const lv_font_t *m_font = nullptr;
-  bool m_is_loaded = false;
 };
 
 } // namespace lvgl

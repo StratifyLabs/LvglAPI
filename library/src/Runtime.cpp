@@ -17,9 +17,7 @@ Runtime::Runtime(){
 
 Runtime& Runtime::loop(){
   while( is_stopped() == false ){
-    chrono::wait(period());
-    api()->tick_inc(period().milliseconds() * increment_scale());
-    api()->timer_handler();
+    refresh();
   }
 
 #if __StratifyOS__
@@ -27,4 +25,12 @@ Runtime& Runtime::loop(){
 #endif
   return *this;
 }
+
+Runtime& Runtime::refresh(){
+  chrono::wait(period());
+  api()->tick_inc(period().milliseconds() * increment_scale());
+  api()->timer_handler();
+  return *this;
+}
+
 

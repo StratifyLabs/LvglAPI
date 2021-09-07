@@ -23,6 +23,8 @@ public:
 
   Runtime& loop();
 
+  Runtime& refresh();
+
 
 
 private:

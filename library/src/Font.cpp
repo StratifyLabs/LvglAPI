@@ -46,6 +46,7 @@ const char * Font::to_cstring(Style style) {
   return "unknown";
 }
 
+#if USE_FILE_FONT
 Font::Font(const var::PathString &path) {
   m_font = api()->font_load(path.cstring());
   if (m_font) {
@@ -58,6 +59,7 @@ Font::~Font() {
     api()->font_free((lv_font_t *)m_font);
   }
 }
+#endif
 
 Font::Info::Info(const char *path) {
   const auto parts = var::StringView(path).split("-");

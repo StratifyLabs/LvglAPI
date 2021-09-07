@@ -909,6 +909,7 @@ private:
   class Container;                                                                       \
   class Window;                                                                          \
   class Button;                                                                          \
+  class MessageBox;                                                                          \
   class TileView
 
 #define OBJECT_ACCESS_FRIENDS()                                                          \
@@ -916,6 +917,7 @@ private:
   friend class ObjectAccess<Window>;                                                     \
   friend class ObjectAccess<TileView>;                                                   \
   friend class ObjectAccess<Button>;                                                     \
+  friend class ObjectAccess<MessageBox>;                                                     \
   friend class Object;
 
 } // namespace lvgl
