@@ -33,6 +33,13 @@ public:
     return *this;
   }
 
+  Keyboard & set_map(
+    Mode mode,
+    const char ** map, const lv_btnmatrix_ctrl_t * control_map){
+    api()->keyboard_set_map(object(), lv_keyboard_mode_t(mode), map, control_map);
+    return *this;
+  }
+
   TextArea get_text_area() const {
     return TextArea(api()->keyboard_get_textarea(object()));
   }
