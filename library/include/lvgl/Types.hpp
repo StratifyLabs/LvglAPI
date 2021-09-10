@@ -1,7 +1,6 @@
 #ifndef LVGLAPI_LVGL_TYPES_HPP
 #define LVGLAPI_LVGL_TYPES_HPP
 
-
 #include <api/api.hpp>
 #include <chrono/MicroTime.hpp>
 
@@ -24,11 +23,10 @@ class Point {
 public:
   Point() = default;
   Point(lv_coord_t x, lv_coord_t y) : m_point{x, y} {}
-  Point(const lv_point_t & point) : m_point(point){}
+  Point(const lv_point_t &point) : m_point(point) {}
 
   Point operator+(const Point &a) const {
-    return Point(m_point.x + a.m_point.x,
-                 m_point.y + a.m_point.y);
+    return Point(m_point.x + a.m_point.x, m_point.y + a.m_point.y);
   }
 
   Point &operator+(const Point &a) {
@@ -176,18 +174,25 @@ enum class Direction {
 API_OR_ENUM_CLASS(Direction)
 
 enum class Alignment {
-  default_ = LV_ALIGN_DEFAULT, top_left = LV_ALIGN_TOP_LEFT,
-  top_middle = LV_ALIGN_TOP_MID, top_right = LV_ALIGN_TOP_RIGHT,
-  bottom_left = LV_ALIGN_BOTTOM_LEFT, bottom_middle = LV_ALIGN_BOTTOM_MID,
-  bottom_right = LV_ALIGN_BOTTOM_RIGHT, left_middle = LV_ALIGN_LEFT_MID,
-  right_middle = LV_ALIGN_RIGHT_MID, center = LV_ALIGN_CENTER,
+  default_ = LV_ALIGN_DEFAULT,
+  top_left = LV_ALIGN_TOP_LEFT,
+  top_middle = LV_ALIGN_TOP_MID,
+  top_right = LV_ALIGN_TOP_RIGHT,
+  bottom_left = LV_ALIGN_BOTTOM_LEFT,
+  bottom_middle = LV_ALIGN_BOTTOM_MID,
+  bottom_right = LV_ALIGN_BOTTOM_RIGHT,
+  left_middle = LV_ALIGN_LEFT_MID,
+  right_middle = LV_ALIGN_RIGHT_MID,
+  center = LV_ALIGN_CENTER,
 
-  out_top_left = LV_ALIGN_OUT_TOP_LEFT, out_top_mid = LV_ALIGN_OUT_TOP_MID,
+  out_top_left = LV_ALIGN_OUT_TOP_LEFT,
+  out_top_mid = LV_ALIGN_OUT_TOP_MID,
   out_top_right = LV_ALIGN_OUT_TOP_RIGHT,
   out_bottom_left = LV_ALIGN_OUT_BOTTOM_LEFT,
   out_bottom_middle = LV_ALIGN_OUT_BOTTOM_MID,
   out_bottom_right = LV_ALIGN_OUT_BOTTOM_RIGHT,
-  out_left_top = LV_ALIGN_OUT_LEFT_TOP, out_left_middle = LV_ALIGN_OUT_LEFT_MID,
+  out_left_top = LV_ALIGN_OUT_LEFT_TOP,
+  out_left_middle = LV_ALIGN_OUT_LEFT_MID,
   out_left_bottom = LV_ALIGN_OUT_LEFT_BOTTOM,
   out_right_top = LV_ALIGN_OUT_RIGHT_TOP,
   out_right_middle = LV_ALIGN_OUT_RIGHT_MID,
@@ -334,6 +339,8 @@ enum class State {
   any = LV_STATE_ANY
 };
 
+API_OR_ENUM_CLASS(State)
+
 enum class ScrollBarMode {
   off = LV_SCROLLBAR_MODE_OFF,
   on = LV_SCROLLBAR_MODE_ON,
@@ -366,6 +373,25 @@ enum class Part {
   ticks = LV_PART_TICKS,
   cursor = LV_PART_CURSOR,
   any = LV_PART_ANY
+};
+
+class Selector {
+public:
+  Selector() = default;
+  // selector can be an or'd combo of parts and states
+
+  //allow implicit conversion
+  Selector(Part part) : m_selector(lv_style_selector_t(part)){}
+  Selector(State state) : m_selector(lv_style_selector_t(state)){}
+
+
+  Selector(Part part, State state = State::default_)
+    : m_selector(lv_style_selector_t(part) | lv_style_selector_t(state)) {}
+  lv_style_selector_t value() const { return m_selector; }
+
+
+private:
+  lv_style_selector_t m_selector = 0;
 };
 
 enum class Key {
@@ -420,14 +446,20 @@ enum class MixRatio {
   x100 = LV_OPA_100
 };
 
+class Percent {
+public:
+  Percent(unsigned long long value) : m_value(LV_PCT(value)) {}
+
+  lv_coord_t value() const { return m_value; }
+
+private:
+  lv_coord_t m_value;
+};
 
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);
 }
 
-
-
-}
-
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_TYPES_HPP

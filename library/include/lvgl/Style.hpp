@@ -7,7 +7,7 @@
 #include <lvgl.h>
 #include <lvgl_api.h>
 
-#include "Types.hpp"
+#include "Color.hpp"
 
 namespace lvgl {
 
@@ -159,7 +159,7 @@ public:
     return *this;
   }
 
-  Style &set_opa(lv_opa_t value) {
+  Style &set_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_OPA, v);
     return *this;
@@ -171,7 +171,7 @@ public:
     return *this;
   }
 
-  Style &set_color_filter_opa(lv_opa_t value) {
+  Style &set_color_filter_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_COLOR_FILTER_OPA, v);
     return *this;
@@ -213,49 +213,49 @@ public:
     return *this;
   }
 
-  Style &set_bg_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_COLOR, v);
     return *this;
   }
 
-  Style &set_bg_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_bg_opa(lv_opa_t value) {
+  Style &set_background_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_OPA, v);
     return *this;
   }
 
-  Style &set_bg_grad_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_gradient_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_GRAD_COLOR, v);
     return *this;
   }
 
-  Style &set_bg_grad_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_gradient_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_GRAD_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_bg_grad_dir(GradientDirection value) {
+  Style &set_background_gradient_direction(GradientDirection value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_GRAD_DIR, v);
     return *this;
   }
 
-  Style &set_bg_main_stop(lv_coord_t value) {
+  Style &set_background_main_stop(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_MAIN_STOP, v);
     return *this;
   }
 
-  Style &set_bg_grad_stop(lv_coord_t value) {
+  Style &set_background_gradient_stop(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_GRAD_STOP, v);
     return *this;
@@ -267,25 +267,25 @@ public:
     return *this;
   }
 
-  Style &set_background_image_opa(lv_opa_t value) {
+  Style &set_background_image_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_IMG_OPA, v);
     return *this;
   }
 
-  Style &set_background_image_recolor(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_image_recolor(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_IMG_RECOLOR, v);
     return *this;
   }
 
-  Style &set_background_image_recolor_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_background_image_recolor_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BG_IMG_RECOLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_background_image_recolor_opa(lv_opa_t value) {
+  Style &set_background_image_recolor_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BG_IMG_RECOLOR_OPA, v);
     return *this;
@@ -297,19 +297,19 @@ public:
     return *this;
   }
 
-  Style &set_border_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_border_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BORDER_COLOR, v);
     return *this;
   }
 
-  Style &set_border_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_border_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_BORDER_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_border_opa(lv_opa_t value) {
+  Style &set_border_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_BORDER_OPA, v);
     return *this;
@@ -333,19 +333,19 @@ public:
     return *this;
   }
 
-  Style &set_text_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_text_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_TEXT_COLOR, v);
     return *this;
   }
 
-  Style &set_text_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_text_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_TEXT_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_text_opa(lv_opa_t value) {
+  Style &set_text_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_TEXT_OPA, v);
     return *this;
@@ -377,25 +377,25 @@ public:
     return *this;
   }
 
-  Style &set_img_opa(lv_opa_t value) {
+  Style &set_image_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_IMG_OPA, v);
     return *this;
   }
 
-  Style &set_img_recolor(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_image_recolor(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_IMG_RECOLOR, v);
     return *this;
   }
 
-  Style &set_img_recolor_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_image_recolor_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_IMG_RECOLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_img_recolor_opa(lv_opa_t value) {
+  Style &set_image_recolor_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_IMG_RECOLOR_OPA, v);
     return *this;
@@ -407,19 +407,19 @@ public:
     return *this;
   }
 
-  Style &set_outline_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_outline_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_OUTLINE_COLOR, v);
     return *this;
   }
 
-  Style &set_outline_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_outline_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_OUTLINE_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_outline_opa(lv_opa_t value) {
+  Style &set_outline_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_OUTLINE_OPA, v);
     return *this;
@@ -437,13 +437,13 @@ public:
     return *this;
   }
 
-  Style &set_shadow_ofs_x(lv_coord_t value) {
+  Style &set_shadow_x_offset(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_SHADOW_OFS_X, v);
     return *this;
   }
 
-  Style &set_shadow_ofs_y(lv_coord_t value) {
+  Style &set_shadow_y_offset(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_SHADOW_OFS_Y, v);
     return *this;
@@ -455,19 +455,19 @@ public:
     return *this;
   }
 
-  Style &set_shadow_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_shadow_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_SHADOW_COLOR, v);
     return *this;
   }
 
-  Style &set_shadow_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_shadow_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_SHADOW_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_shadow_opa(lv_opa_t value) {
+  Style &set_shadow_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_SHADOW_OPA, v);
     return *this;
@@ -497,19 +497,19 @@ public:
     return *this;
   }
 
-  Style &set_line_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_line_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_LINE_COLOR, v);
     return *this;
   }
 
-  Style &set_line_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_line_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_LINE_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_line_opa(lv_opa_t value) {
+  Style &set_line_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_LINE_OPA, v);
     return *this;
@@ -527,25 +527,25 @@ public:
     return *this;
   }
 
-  Style &set_arc_color(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_arc_color(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_ARC_COLOR, v);
     return *this;
   }
 
-  Style &set_arc_color_filtered(lv_color_t value) {
-    lv_style_value_t v = {.color = value};
+  Style &set_arc_color_filtered(Color value) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->style_set_prop(&m_style, LV_STYLE_ARC_COLOR_FILTERED, v);
     return *this;
   }
 
-  Style &set_arc_opa(lv_opa_t value) {
+  Style &set_arc_opacity(lv_opa_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_ARC_OPA, v);
     return *this;
   }
 
-  Style &set_arc_img_src(const void *value) {
+  Style &set_arc_image_src(const void *value) {
     lv_style_value_t v = {.ptr = value};
     api()->style_set_prop(&m_style, LV_STYLE_ARC_IMG_SRC, v);
     return *this;

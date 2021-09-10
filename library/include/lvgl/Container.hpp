@@ -24,7 +24,7 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
 
-  Container(Object parent, const Container &options) : ObjectAccess(object_type()) {
+  Container(Object parent, const Container &options){
     if (options.is_initial_bordered()) {
       m_object = api()->obj_create(parent.object());
     } else {

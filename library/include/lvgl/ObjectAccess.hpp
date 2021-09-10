@@ -3,6 +3,7 @@
 
 #include <var/StringView.hpp>
 
+#include "Color.hpp"
 #include "Object.hpp"
 
 namespace lvgl {
@@ -10,7 +11,6 @@ namespace lvgl {
 template <class Derived> class ObjectAccess : public Object {
 public:
   ObjectAccess<Derived>() = default;
-  ObjectAccess<Derived>(u32 type) {}
   ObjectAccess<Derived>(const char *name) : m_initial_name(name) {}
 
   Derived &add_flag(Flags flags) {
@@ -227,30 +227,21 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add_style(const Style &style, lv_style_selector_t style_selector = 0) {
-    api()->obj_add_style(m_object, (lv_style_t *)style.style(), style_selector);
+  Derived &add_style(const Style &style, Selector selector = Selector()) {
+    api()->obj_add_style(m_object, (lv_style_t *)style.style(), selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &remove_style(const Style &style, lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, style.style(), style_selector);
+  Derived &remove_style(const Style &style, Selector selector = Selector()) {
+    api()->obj_remove_style(m_object, style.style(), selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &remove_style(Part part) {
-    api()->obj_remove_style(m_object, nullptr, static_cast<lv_style_selector_t>(part));
+  Derived &remove_style(Selector selector) {
+    api()->obj_remove_style(m_object, nullptr, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &remove_style(lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, nullptr, style_selector);
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &refresh_style(Part part, lv_style_selector_t style_selector) {
-    api()->obj_remove_style(m_object, static_cast<lv_part_t>(part), style_selector);
-    return static_cast<Derived &>(*this);
-  }
 
   Derived &clean() {
     api()->obj_clean(m_object);
@@ -312,549 +303,565 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_min_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_minimum_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_MIN_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_MIN_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_max_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_maximum_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_MAX_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_MAX_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_min_height(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_minimum_height(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_MIN_HEIGHT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_MIN_HEIGHT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_max_height(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_maximum_height(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_MAX_HEIGHT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_MAX_HEIGHT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_align(Alignment value, lv_style_selector_t selector = 0) {
+  Derived &set_align(Alignment value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = lv_align_t(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ALIGN, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ALIGN, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_transform_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_transform_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_transform_height(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_transform_height(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_HEIGHT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_HEIGHT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_translate_x(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_translate_x(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSLATE_X, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSLATE_X, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_translate_y(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_translate_y(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSLATE_Y, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSLATE_Y, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_transform_zoom(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_transform_zoom(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ZOOM, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ZOOM, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_transform_angle(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_transform_angle(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ANGLE, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ANGLE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_top_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_top_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_TOP, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_TOP, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_bottom_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_bottom_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_BOTTOM, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_BOTTOM, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_vertical_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
-    return set_top_padding(value, selector).set_bottom_padding(value, selector);
+  Derived &set_vertical_padding(lv_coord_t value, Selector selector = Selector()) {
+    return set_top_padding(value, selector.value()).set_bottom_padding(value, selector.value());
   }
 
-  Derived &set_left_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_left_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_LEFT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_LEFT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_right_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_right_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_RIGHT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_RIGHT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_horizontal_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_horizontal_padding(lv_coord_t value, Selector selector = Selector()) {
     return set_left_padding(value, selector).set_right_padding(value, selector);
   }
 
-  Derived &set_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_padding(lv_coord_t value, Selector selector = Selector()) {
     return set_vertical_padding(value, selector).set_horizontal_padding(value, selector);
   }
 
-  Derived &set_row_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_row_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_ROW, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_ROW, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_column_padding(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_column_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_COLUMN, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_COLUMN, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_radius(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_radius(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_RADIUS, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_RADIUS, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_clip_corner(bool value, lv_style_selector_t selector = 0) {
+  Derived &set_clip_corner(bool value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_CLIP_CORNER, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_CLIP_CORNER, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_color_filter_descriptor(
     const lv_color_filter_dsc_t *value,
-    lv_style_selector_t selector = 0) {
+    Selector selector = Selector()) {
     lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_DSC, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_DSC, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_color_filter_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_color_filter_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_anim_time(uint32_t value, lv_style_selector_t selector = 0) {
+  Derived &set_anim_time(uint32_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_TIME, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_TIME, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_anim_speed(uint32_t value, lv_style_selector_t selector = 0) {
+  Derived &set_anim_speed(uint32_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_SPEED, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_SPEED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_transition(
     const lv_style_transition_dsc_t *value,
-    lv_style_selector_t selector = 0) {
+    Selector selector = Selector()) {
     lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSITION, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSITION, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_blend_mode(lv_blend_mode_t value, lv_style_selector_t selector = 0) {
+  Derived &set_blend_mode(lv_blend_mode_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BLEND_MODE, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BLEND_MODE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_layout(uint16_t value, lv_style_selector_t selector = 0) {
+  Derived &set_layout(uint16_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LAYOUT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LAYOUT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_base_dir(BaseDirection value, lv_style_selector_t selector = 0) {
+  Derived &set_base_dir(BaseDirection value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BASE_DIR, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BASE_DIR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_bg_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR, v, selector);
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_bg_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR_FILTERED, v, selector);
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_bg_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_OPA, v, selector);
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_bg_grad_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_COLOR, v, selector);
+  Derived &set_background_color(const Color &value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &
-  set_bg_grad_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
+  set_background_color_filtered(const Color &value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR_FILTERED, v, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_background_opacity(const Color &value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_OPA, v, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &
+  set_background_gradient_color(const Color &value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_COLOR, v, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_background_gradient_color_filtered(
+    const Color &value,
+    Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BG_GRAD_COLOR_FILTERED, v, selector);
+      m_object, LV_STYLE_BG_GRAD_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_bg_grad_dir(GradientDirection value, lv_style_selector_t selector = 0) {
+  Derived &set_background_gradient_direction(GradientDirection value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_DIR, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_DIR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_bg_main_stop(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_background_main_stop(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_MAIN_STOP, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_DIR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_bg_grad_stop(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_bg_main_stop(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_STOP, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_MAIN_STOP, v, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_background_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
+    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_STOP, v, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &set_bg_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
+    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_STOP, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &
-  set_background_image_source(const void *value, lv_style_selector_t selector = 0) {
+  set_background_image_source(const void *value, Selector selector = Selector()) {
     lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_SRC, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_SRC, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_background_image_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_background_image_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &
-  set_background_image_recolor(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR, v, selector);
+  set_background_image_recolor(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_background_image_recolor_filtered(
-    lv_color_t value,
-    lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
+    Color value,
+    Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BG_IMG_RECOLOR_FILTERED, v, selector);
+      m_object, LV_STYLE_BG_IMG_RECOLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &
-  set_background_image_recolor_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  set_background_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_background_image_tiled(bool value, lv_style_selector_t selector = 0) {
+  Derived &set_background_image_tiled(bool value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_TILED, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_TILED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_COLOR, v, selector);
+  Derived &set_border_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
+  Derived &set_border_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BORDER_COLOR_FILTERED, v, selector);
+      m_object, LV_STYLE_BORDER_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_border_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_border_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_side(BorderSide value, lv_style_selector_t selector = 0) {
+  Derived &set_border_side(BorderSide value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_SIDE, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_SIDE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_border_post(bool value, lv_style_selector_t selector = 0) {
+  Derived &set_border_post(bool value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_POST, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_POST, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR, v, selector);
+  Derived &set_text_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR_FILTERED, v, selector);
+  Derived &set_text_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_text_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_font(const Font &value, lv_style_selector_t selector = 0) {
+  Derived &set_text_font(const Font &value, Selector selector = Selector()) {
     lv_style_value_t v = {.ptr = value.font()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_FONT, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_FONT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_letter_space(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_text_font(const Font::Info &value, Selector selector = Selector()) {
+    return set_text_font(value.get_font(), selector);
+  }
+
+
+  Derived &set_text_letter_space(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LETTER_SPACE, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LETTER_SPACE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_line_space(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_text_line_space(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LINE_SPACE, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LINE_SPACE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_decor(TextDecoration value, lv_style_selector_t selector = 0) {
+  Derived &set_text_decor(TextDecoration value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_DECOR, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_DECOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_text_align(TextAlignment value, lv_style_selector_t selector = 0) {
+  Derived &set_text_alignment(TextAlignment value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_ALIGN, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_ALIGN, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_img_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_text_align(TextAlignment value, Selector selector = Selector()) {
+    return set_text_alignment(value, selector);
+  }
+
+  Derived &set_image_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_img_recolor(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR, v, selector);
+  Derived &set_image_recolor(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_img_recolor_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_FILTERED, v, selector);
+  Derived &set_image_recolor_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_img_recolor_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_outline_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_outline_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_outline_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_COLOR, v, selector);
+  Derived &set_outline_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &
-  set_outline_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
+  set_outline_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_OUTLINE_COLOR_FILTERED, v, selector);
+      m_object, LV_STYLE_OUTLINE_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_outline_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_outline_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_outline_pad(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_outline_padding(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_PAD, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_PAD, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_shadow_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_ofs_x(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_shadow_x_offset(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_X, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_X, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_ofs_y(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_shadow_y_offset(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_Y, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_Y, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_spread(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_shadow_spread(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_SPREAD, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_SPREAD, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_COLOR, v, selector);
+  Derived &set_shadow_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
+  Derived &set_shadow_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
     api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_SHADOW_COLOR_FILTERED, v, selector);
+      m_object, LV_STYLE_SHADOW_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_shadow_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_shadow_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_line_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_dash_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_line_dash_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_dash_gap(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_line_dash_gap(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_GAP, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_GAP, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_rounded(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_line_rounded(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_ROUNDED, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_ROUNDED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR, v, selector);
+  Derived &set_line_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR_FILTERED, v, selector);
+  Derived &set_line_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_line_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_line_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_width(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_arc_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_WIDTH, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_rounded(lv_coord_t value, lv_style_selector_t selector = 0) {
+  Derived &set_arc_rounded(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_ROUNDED, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_ROUNDED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_color(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR, v, selector);
+  Derived &set_arc_color(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_color_filtered(lv_color_t value, lv_style_selector_t selector = 0) {
-    lv_style_value_t v = {.color = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR_FILTERED, v, selector);
+  Derived &set_arc_color_filtered(Color value, Selector selector = Selector()) {
+    lv_style_value_t v = {.color = value.get_color()};
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR_FILTERED, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_opa(lv_opa_t value, lv_style_selector_t selector = 0) {
+  Derived &set_arc_opacity(lv_opa_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_OPA, v, selector);
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_OPA, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_arc_img_src(const void *value, lv_style_selector_t selector = 0) {
+  Derived &set_arc_image_source(const void *value, Selector selector = Selector()) {
     lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_IMG_SRC, v, selector);
-    return static_cast<Derived &>(*this);
-  }
-
-  template <typename ChildClass> Derived &add(const typename ChildClass::Create &create) {
-    ChildClass child(*this, create);
-    if (create.initialize()) {
-      create.initialize()(child);
-    }
+    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_IMG_SRC, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
@@ -866,19 +873,6 @@ public:
     }
     return static_cast<Derived &>(*this);
   }
-
-#if 0
-  template <typename ChildClass> Derived &add(const ChildClass & child) {
-    ChildClass new_child(*this, child);
-    new_child.set_name(child.initial_name());
-    if (child.initialize()) {
-      child.initialize()(new_child);
-    }
-    return static_cast<Derived &>(*this);
-  }
-#endif
-
-  static u32 object_type() { return reinterpret_cast<size_t>(object_type); }
 
   Derived &send_alert(Object receiver) {
     api()->event_send(receiver.object(), LV_EVENT_READY, this);
@@ -909,7 +903,7 @@ private:
   class Container;                                                                       \
   class Window;                                                                          \
   class Button;                                                                          \
-  class MessageBox;                                                                          \
+  class MessageBox;                                                                      \
   class TileView
 
 #define OBJECT_ACCESS_FRIENDS()                                                          \
@@ -917,7 +911,7 @@ private:
   friend class ObjectAccess<Window>;                                                     \
   friend class ObjectAccess<TileView>;                                                   \
   friend class ObjectAccess<Button>;                                                     \
-  friend class ObjectAccess<MessageBox>;                                                     \
+  friend class ObjectAccess<MessageBox>;                                                 \
   friend class Object;
 
 } // namespace lvgl

@@ -1,7 +1,7 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
 
-#include "Style.hpp"
+#include "Types.hpp"
 
 namespace lvgl {
 
