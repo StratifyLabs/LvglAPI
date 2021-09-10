@@ -1,6 +1,8 @@
 #ifndef LVGLAPI_LVGL_CHART_HPP
 #define LVGLAPI_LVGL_CHART_HPP
 
+#include <var/View.hpp>
+
 #include "Bar.hpp"
 #include "Color.hpp"
 #include "ObjectAccess.hpp"
@@ -9,6 +11,23 @@ namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Chart : public ObjectAccess<Chart> {
+
+  template <typename Type> class Feature {
+  public:
+    Feature() = default;
+    Feature(lv_obj_t * object, Type *series) : m_chart(object), m_value(series) {}
+
+    bool is_valid() const { return m_value; }
+
+    const Type *value() const { return m_value; }
+
+    Type *value() { return m_value; }
+
+  protected:
+    lv_obj_t * m_chart = nullptr;
+    Type *m_value = nullptr;
+  };
+
 public:
   enum class Type {
     none = LV_CHART_TYPE_NONE,
@@ -29,23 +48,141 @@ public:
     secondary_x = LV_CHART_AXIS_SECONDARY_X
   };
 
-  class Series {
+  class Cursor : public Feature<lv_chart_cursor_t> {
   public:
+    Cursor() = default;
+    Cursor(lv_obj_t * chart, lv_chart_cursor_t *value) : Feature(chart, value) {}
 
-    Series(lv_chart_series_t * series) : m_series(series) {}
-
-    const lv_chart_series_t * series() const {
-      return m_series;
+    Cursor &set_position(const Point &point) {
+      API_ASSERT(is_valid());
+      Point tmp(point);
+      api()->chart_set_cursor_pos(m_chart, m_value, tmp.point());
+      return *this;
     }
 
-    lv_chart_series_t * series() {
-      return m_series;
+    Point get_point() const {
+      API_ASSERT(is_valid());
+      return Point(api()->chart_get_cursor_point(m_chart, m_value));
     }
-  private:
-    lv_chart_series_t * m_series;
+
   };
 
-  explicit Chart(const char * name) : ObjectAccess(name){}
+  class Series : public Feature<lv_chart_series_t> {
+  public:
+    Series() = default;
+    Series(lv_obj_t *chart, lv_chart_series_t *series)
+      : Feature(chart, series) {}
+
+    var::View get_x_values() const {
+      API_ASSERT(is_valid());
+      return var::View(
+        Chart::api()->chart_get_x_array(m_chart, m_value),
+        get_point_count() * sizeof(lv_coord_t));
+    }
+
+    var::View get_y_values() const {
+      API_ASSERT(is_valid());
+      return var::View(
+        Chart::api()->chart_get_y_array(m_chart, m_value),
+        get_point_count() * sizeof(lv_coord_t));
+    }
+
+    u16 get_point_count() const {
+      API_ASSERT(is_valid());
+      return Chart::api()->chart_get_point_count(m_chart);
+    }
+
+    Series &set_external_x_values(var::View values) {
+      API_ASSERT(values.count<lv_coord_t>() >= get_point_count() * sizeof(lv_coord_t));
+      Chart::api()->chart_set_ext_x_array(m_chart, m_value, values.to<lv_coord_t>());
+      return *this;
+    }
+
+    Series &set_external_y_values(var::View values) {
+      API_ASSERT(values.count<lv_coord_t>() >= get_point_count() * sizeof(lv_coord_t));
+      Chart::api()->chart_set_ext_y_array(m_chart, m_value, values.to<lv_coord_t>());
+      return *this;
+    }
+
+    u16 get_x_start_point() const {
+      return api()->chart_get_x_start_point(m_chart, m_value);
+    }
+
+    Point get_point_by_id(u16 id) {
+      Point result;
+      api()->chart_get_point_pos_by_id(m_chart, m_value, id, result.point());
+      return result;
+    }
+
+    Series &remove_series() {
+      API_ASSERT(is_valid());
+      api()->chart_remove_series(m_chart, m_value);
+      return *this;
+    }
+
+    Series &hide_series() {
+      API_ASSERT(is_valid());
+      api()->chart_hide_series(m_chart, m_value, true);
+      return *this;
+    }
+
+    Series &show_series() {
+      API_ASSERT(is_valid());
+      api()->chart_hide_series(m_chart, m_value, false);
+      return *this;
+    }
+
+    Series &set_series_color(Color color) {
+      API_ASSERT(is_valid());
+      api()->chart_set_series_color(m_chart, m_value, color.get_color());
+      return *this;
+    }
+
+    Series &set_x_start_point(u16 id) {
+      API_ASSERT(is_valid());
+      api()->chart_set_x_start_point(m_chart, m_value, id);
+      return *this;
+    }
+
+    Series get_next_series() const {
+      API_ASSERT(is_valid());
+      return Series(m_chart, api()->chart_get_series_next(m_chart, m_value));
+    }
+
+    Series &set_cursor_point(Cursor cursor, u16 id) {
+      API_ASSERT(cursor.is_valid());
+      api()->chart_set_cursor_point(m_chart, cursor.value(), m_value, id);
+      return *this;
+    }
+
+    Series &set_all_values(lv_coord_t value) {
+      api()->chart_set_all_value(m_chart, m_value, value);
+      return *this;
+    }
+
+    Series &set_next_value(lv_coord_t value) {
+      api()->chart_set_next_value(m_chart, m_value, value);
+      return *this;
+    }
+
+    Series &set_next_value(const Point &value) {
+      api()->chart_set_next_value2(m_chart, m_value, value.x(), value.y());
+      return *this;
+    }
+
+    Series &set_value_by_id(u16 id, lv_coord_t value) {
+      api()->chart_set_value_by_id(m_chart, m_value, id, value);
+      return *this;
+    }
+
+    Series &set_value_by_id(u16 id, const Point &value) {
+      api()->chart_set_value_by_id2(m_chart, m_value, id, value.x(), value.y());
+      return *this;
+    }
+
+  };
+
+  explicit Chart(const char *name) : ObjectAccess(name) {}
 
   Chart &set_type(Type value) {
     api()->chart_set_type(object(), static_cast<lv_chart_type_t>(value));
@@ -104,126 +241,35 @@ public:
     return *this;
   }
 
-  Type get_type() const {
-    return Type(api()->chart_get_type(object()));
-  }
+  Type get_type() const { return Type(api()->chart_get_type(object())); }
 
-  u16 get_point_count() const {
-    return api()->chart_get_point_count(object());
-  }
+  u16 get_point_count() const { return api()->chart_get_point_count(object()); }
 
-  u16 get_x_start_point(Series series) const {
-    return api()->chart_get_x_start_point(object(), series.series());
-  }
 
-  Point get_point_by_id(Series series, u16 id){
-    Point result;
-    api()->chart_get_point_pos_by_id(object(), series.series(), id, result.point());
-    return result;
-  }
-
-  Chart & refresh(){
+  Chart &refresh() {
     api()->chart_refresh(object());
     return *this;
   }
 
-  Series add_series(Color color, Axis axis){
-    return Series(api()->chart_add_series(object(), color.get_color(), static_cast<lv_chart_axis_t>(axis)));
+  Series add_series(Color color, Axis axis) {
+    return Series(
+      object(), api()->chart_add_series(
+                  object(), color.get_color(), static_cast<lv_chart_axis_t>(axis)));
   }
 
-  Chart & remove_series(Series series){
-    api()->chart_remove_series(object(), series.series());
+  u32 get_pressed_point() const { return api()->chart_get_pressed_point(object()); }
+
+  Chart &add_cursor(Color color, Direction direction) {
+    api()->chart_add_cursor(
+      object(), color.get_color(), static_cast<lv_dir_t>(direction));
     return *this;
   }
 
-  Chart & hide_series(Series series){
-    api()->chart_hide_series(object(), series.series(), true);
-    return *this;
-  }
-
-  Chart & show_series(Series series){
-    api()->chart_hide_series(object(), series.series(), false);
-    return *this;
-  }
-
-  Chart& set_series_color(Series series, Color color){
-    api()->chart_set_series_color(object(), series.series(), color.get_color());
-    return *this;
-  }
-
-  Chart & set_x_start_point(Series series, u16 id){
-    api()->chart_set_x_start_point(object(), series.series(), id);
-    return *this;
-  }
-
-  Series get_next_series(Series series) const {
-    return Series(api()->chart_get_series_next(object(), series.series()));
-  }
-
-  Chart & add_cursor(Color color, Direction direction){
-    api()->chart_add_cursor(object(), color.get_color(), static_cast<lv_dir_t>(direction));
-    return *this;
-  }
-
-  Chart & set_cursor_position(lv_chart_cursor_t * cursor, const Point & point){
-    Point tmp(point);
-    api()->chart_set_cursor_pos(object(), cursor, tmp.point());
-    return *this;
-  }
-
-  Chart & set_cursor_point(lv_chart_cursor_t * cursor, Series series, u16 id){
-    api()->chart_set_cursor_point(object(), cursor, series.series(), id);
-    return *this;
-  }
-
-  Point get_cursor_point(lv_chart_cursor_t * cursor) const {
-    return Point(api()->chart_get_cursor_point(m_object, cursor));
-  }
-
-  Chart & set_all_value(Series series, lv_coord_t value){
-    api()->chart_set_all_value(object(), series.series(), value);
-    return *this;
-  }
-
-  Chart & set_next_value(Series series, lv_coord_t value){
-    api()->chart_set_next_value(object(), series.series(), value);
-    return *this;
-  }
-
-  Chart & set_next_value(Series series, const Point & value){
-    api()->chart_set_next_value2(object(), series.series(), value.x(), value.y());
-    return *this;
-  }
-
-  Chart & set_value_by_id(Series series, u16 id, lv_coord_t value){
-    api()->chart_set_value_by_id(object(), series.series(), id, value);
-    return *this;
-  }
-
-  Chart & set_value_by_id(Series series, u16 id, const Point & value){
-    api()->chart_set_value_by_id2(object(), series.series(), id, value.x(), value.y());
-    return *this;
-  }
-
-  Chart & set_external_y_array(Series series, lv_coord_t array[]){
-    api()->chart_set_ext_y_array(object(), series.series(), array);
-    return *this;
-  }
-
-  Chart & set_external_x_array(Series series, lv_coord_t array[]){
-    api()->chart_set_ext_x_array(object(), series.series(), array);
-    return *this;
-  }
-
-  u32 get_pressed_point() const {
-    return api()->chart_get_pressed_point(object());
-  }
 
 private:
   OBJECT_ACCESS_FRIENDS();
-  explicit Chart(lv_obj_t * object){ m_object = object; }
+  explicit Chart(lv_obj_t *object) { m_object = object; }
   Chart(Object parent, const Chart &);
-
 };
 
 } // namespace lvgl
