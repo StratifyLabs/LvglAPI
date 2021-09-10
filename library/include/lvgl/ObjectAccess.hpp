@@ -449,13 +449,13 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_anim_time(uint32_t value, Selector selector = Selector()) {
+  Derived &set_animation_time(uint32_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_TIME, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_anim_speed(uint32_t value, Selector selector = Selector()) {
+  Derived &set_animation_speed(uint32_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_SPEED, v, selector.value());
     return static_cast<Derived &>(*this);

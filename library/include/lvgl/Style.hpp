@@ -177,13 +177,13 @@ public:
     return *this;
   }
 
-  Style &set_anim_time(uint32_t value) {
+  Style &set_animation_time(uint32_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_ANIM_TIME, v);
     return *this;
   }
 
-  Style &set_anim_speed(uint32_t value) {
+  Style &set_animation_speed(uint32_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_ANIM_SPEED, v);
     return *this;
