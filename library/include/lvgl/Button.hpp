@@ -2,6 +2,7 @@
 #define LVGLAPI_LVGL_BUTTON_HPP
 
 #include "ObjectAccess.hpp"
+#include "Label.hpp"
 
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
@@ -10,6 +11,13 @@ class Button : public ObjectAccess<Button> {
 public:
 
   explicit Button(const char * name) : ObjectAccess(name){}
+
+
+  Button & add_label(const char * label_name = ""){
+    return add(Label(label_name).configure([](Label & label){
+      label.set_alignment(Alignment::center).set_text(label.get_parent().name());
+    }));
+  }
 
 private:
   OBJECT_ACCESS_FRIENDS();

@@ -884,6 +884,14 @@ public:
     return static_cast<const Derived &>(*this);
   }
 
+  Derived & remove_children(){
+    const auto child_count = get_child_count();
+    for(s32 i=0; i < child_count; i++){
+      get_child(i).remove();
+    }
+    return static_cast<Derived &>(*this);
+  }
+
   using Callback = void (*)(Derived &);
   Callback initialize() const { return m_initialize; }
 

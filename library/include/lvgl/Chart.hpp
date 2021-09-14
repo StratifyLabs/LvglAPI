@@ -230,7 +230,7 @@ public:
     API_AF(Tick, lv_coord_t, major_count, 5);
     API_AF(Tick, lv_coord_t, minor_count, 10);
     API_AB(Tick, labels_enabled, true);
-    API_AF(Tick, lv_coord_t, draw_size, 10);
+    API_AF(Tick, lv_coord_t, draw_size, 20);
   };
 
   Chart &set_tick(Axis axis, const Tick &tick) {
