@@ -208,9 +208,7 @@ public:
     return reinterpret_cast<ReinterpretedClass *>(this);
   }
 
-  template <class TargetClass> TargetClass get() {
-    return TargetClass(object());
-  }
+  template <class TargetClass> TargetClass get() { return TargetClass(object()); }
 
   bool is_editable() const { return api()->obj_is_editable(m_object); }
 
@@ -226,14 +224,18 @@ public:
 
   Object() = default;
 
-  void remove(){
-    api()->obj_del(m_object);
-    m_object = nullptr;
+  void remove() {
+    if (m_object) {
+      api()->obj_del(m_object);
+      m_object = nullptr;
+    }
   }
 
-  void async_remove(){
-    api()->obj_del_async(m_object);
-    m_object = nullptr;
+  void async_remove() {
+    if (m_object) {
+      api()->obj_del_async(m_object);
+      m_object = nullptr;
+    }
   }
 
 protected:

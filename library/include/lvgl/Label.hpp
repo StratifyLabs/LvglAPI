@@ -19,6 +19,15 @@ public:
 
   explicit Label(const char * name) : ObjectAccess(name){}
 
+  static void configure_name_as_text(Label & label){
+    label.set_text(label.name());
+  }
+
+  static void configure_name_as_text_centered(Label & label){
+    configure_name_as_text(label);
+    label.set_text_alignment(TextAlignment::center);
+  }
+
   Label & set_text(const char * value){
     api()->label_set_text(m_object, value);
     return *this;
