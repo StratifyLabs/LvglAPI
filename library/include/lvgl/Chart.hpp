@@ -221,7 +221,6 @@ public:
   }
 
   u16 get_zoom_x() const { return api()->chart_get_zoom_x(object()); }
-
   u16 get_zoom_y() const { return api()->chart_get_zoom_y(object()); }
 
   class Tick {
@@ -244,7 +243,6 @@ public:
   Type get_type() const { return Type(api()->chart_get_type(object())); }
 
   u16 get_point_count() const { return api()->chart_get_point_count(object()); }
-
 
   Chart &refresh() {
     api()->chart_refresh(object());
