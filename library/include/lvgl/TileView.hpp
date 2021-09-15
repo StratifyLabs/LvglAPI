@@ -25,9 +25,8 @@ public:
     void (*add)(Container &container) = nullptr) {
     Container obj(api()->tileview_add_tile(
       m_object, location.column(), location.row(),
-      static_cast<lv_dir_t>(location.direction())));
+      lv_dir_t(location.direction())));
     obj.set_name(name);
-    //obj.m_object->user_data = (void*)name;
     if (add) {
       add(obj);
     }
