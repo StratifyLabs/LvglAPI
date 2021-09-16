@@ -10,6 +10,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class List : public ObjectAccess<List> {
 public:
   explicit List(const char * name) : ObjectAccess(name){}
+  explicit List(const Context & context) : ObjectAccess((const char*)(&context)){}
 
   List &add_button(const char *symbol, const char *text) {
     auto object = api()->list_add_btn(m_object, symbol, text);
@@ -32,6 +33,14 @@ public:
       configure(button);
     }
     return *this;
+  }
+
+  List &add_button(
+    const Context & context,
+    const char *symbol,
+    const char *text,
+    void (*configure)(Button &) = nullptr) {
+    return add_button((const char *)&context, symbol, text, configure);
   }
 
   List &add_text(const char *text) {

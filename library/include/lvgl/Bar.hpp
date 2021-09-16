@@ -36,6 +36,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived & set_start_value(s16 start_value, IsAnimate is_animate = IsAnimate::yes){
+    Object::api()->bar_set_start_value(Object::object(), start_value, lv_anim_enable_t(is_animate));
+    return static_cast<Derived &>(*this);
+  }
+
   Derived &set_value(s16 value, IsAnimate is_animate = IsAnimate::yes) {
     Object::api()->bar_set_value(
       Object::object(), value, static_cast<lv_anim_enable_t>(is_animate));

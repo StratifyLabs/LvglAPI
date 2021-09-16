@@ -7,6 +7,8 @@
 #include "lvgl.h"
 #include "lvgl_api.h"
 
+const lvgl_api_font_descriptor_t * lvgl_api_get_font(int offset);
+
 const lvgl_api_t lvgl_api = {
   .sos_api =
     {
@@ -793,9 +795,38 @@ const lvgl_api_t lvgl_api = {
   .theme_default_init = lv_theme_default_init,
   .theme_mono_init = lv_theme_mono_init,
   .theme_basic_init = lv_theme_basic_init,
+
+  //system
+  .get_font = lvgl_api_get_font
 };
 
+#if defined __StratifyOS__
+#include <sos/sos.h>
+#endif
+
+
 #include <stdio.h>
+#include <sdk/types.h>
+
+#if defined __link
+const lvgl_api_font_descriptor_t * (*lvgl_api_get_font_callback)(int) = NULL;
+void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t * (*callback)(int)){
+  lvgl_api_get_font_callback = callback;
+}
+#endif
+
+const lvgl_api_font_descriptor_t * lvgl_api_get_font(int offset){
+#if defined __StratifyOS__
+  lvgl_api_font_request_t request = { .offset = offset };
+  kernel_request(LVGL_REQUEST_GET_FONT, &request);
+  return request.descriptor;
+#else
+  if( lvgl_api_get_font_callback ){
+    return lvgl_api_get_font_callback(offset);
+  }
+  return NULL;
+#endif
+}
 
 static bool lvgl_api_fs_ready_cb(struct _lv_fs_drv_t *drv) {
   MCU_UNUSED_ARGUMENT(drv);

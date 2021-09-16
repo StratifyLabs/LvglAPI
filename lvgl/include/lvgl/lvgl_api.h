@@ -12,6 +12,11 @@ extern "C" {
 #define LVGL_API_VERSION 8
 
 typedef struct {
+  const char *name;
+  const lv_font_t * font;
+} lvgl_api_font_descriptor_t;
+
+typedef struct {
   api_t sos_api;
 
   uint32_t (*timer_handler)();
@@ -813,6 +818,10 @@ typedef struct {
   lv_theme_t * (*theme_mono_init)(lv_disp_t * disp, bool dark_bg, const lv_font_t * font);
   lv_theme_t * (*theme_basic_init)(lv_disp_t * disp);
 
+  //system
+  const lvgl_api_font_descriptor_t * (*get_font)(int offset);
+
+
 } lvgl_api_t;
 
 extern const lvgl_api_t lvgl_api;
@@ -821,6 +830,7 @@ void lvgl_api_initialize_filesystem();
 
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)
+void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t * (*callback)(int));
 #else
 #define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
 #define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'o')
@@ -828,14 +838,10 @@ void lvgl_api_initialize_filesystem();
 #define LVGL_REQUEST_GET_FONT MCU_API_REQUEST_CODE('l', 'f', 'n', 't')
 
 typedef struct {
-  const char *name;
-  const lv_font_t * font;
-} lvgl_api_font_descriptor_t;
-
-typedef struct {
   u16 offset;
   const lvgl_api_font_descriptor_t * descriptor;
 } lvgl_api_font_request_t;
+
 
 
 #endif

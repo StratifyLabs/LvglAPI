@@ -128,16 +128,14 @@ Font::Info::Info(const char *path) {
   }(parts.at(1));
 }
 
-#if defined __StratifyOS__
-
 Font::Info Font::find_best_fit(const Info &info) {
 
   const auto count = []() {
-    lvgl_api_font_request_t font_request = {};
-    while (sos::Sos().request(LVGL_REQUEST_GET_FONT, &font_request) == 0) {
-      font_request.offset++;
+    int offset = 0;
+    while (api()->get_font(offset) != nullptr) {
+      offset++;
     }
-    return font_request.offset;
+    return offset;
   }();
 
   if (count == 0) {
@@ -146,10 +144,8 @@ Font::Info Font::find_best_fit(const Info &info) {
 
   const lvgl_api_font_descriptor_t *descriptor_list[count];
   {
-    lvgl_api_font_request_t font_request = {};
-    while (sos::Sos().request(LVGL_REQUEST_GET_FONT, &font_request) == 0) {
-      descriptor_list[font_request.offset] = font_request.descriptor;
-      font_request.offset++;
+    for(int offset = 0; offset < count; offset++){
+      descriptor_list[offset] = api()->get_font(offset);
     }
   }
 
@@ -179,4 +175,3 @@ Font::Info Font::find_best_fit(const Info &info) {
     .set_font(descriptor_list[best_offset]->font);
 }
 
-#endif

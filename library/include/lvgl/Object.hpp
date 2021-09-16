@@ -42,16 +42,50 @@ public:
 
   using Flags = ObjectFlags;
 
+  enum class Editable {
+    inherit = LV_OBJ_CLASS_EDITABLE_INHERIT,
+    yes = LV_OBJ_CLASS_EDITABLE_TRUE,
+    no = LV_OBJ_CLASS_EDITABLE_FALSE
+  };
+
+  class Context {
+  public:
+    explicit Context(const char *name, void *context = nullptr)
+      : m_name(name), m_context(context) {}
+
+    const char *name() const { return m_name ? m_name : "unnamed"; }
+
+    template <typename Type> Type *cast() const {
+      return reinterpret_cast<Type *>(m_context);
+    }
+
+  private:
+    friend Object;
+
+    static Context *get_context(void *user_data) {
+      auto *context = reinterpret_cast<Context *>(user_data);
+      return context->m_magic == reinterpret_cast<void *>(magic_function) ? context                                                                          : nullptr;
+    }
+
+    static void magic_function() {}
+    const void *m_magic = reinterpret_cast<void *>(magic_function);
+    const char *m_name = nullptr;
+    void *m_context = nullptr;
+  };
+
   class Class {
+  public:
+    u16 width() const { return m_class->width_def; }
+
+    u16 height() const { return m_class->height_def; }
+
+    Editable editable() const { return Editable(m_class->editable); }
 
   private:
     friend class Object;
-    lv_obj_class_t m_class;
+    Class(const lv_obj_class_t *value) : m_class(value) {}
+    const lv_obj_class_t *m_class;
   };
-
-  template <class ChildClass, typename... Args> ChildClass add_child(Args... args) {
-    return ChildClass(*this, args...);
-  }
 
   static void initialize() { lv_init(); }
   static void finalize() {
@@ -83,19 +117,14 @@ public:
   }
 
   bool check_type(const Class &value) const {
-    return api()->obj_check_type(m_object, &value.m_class);
+    return api()->obj_check_type(m_object, value.m_class);
   }
 
   bool is_class(const Class &value) const {
-    return api()->obj_has_class(m_object, &value.m_class);
+    return api()->obj_has_class(m_object, value.m_class);
   }
 
-  Class get_class() const {
-    // this is wrong
-    Class result;
-    api()->obj_get_class(m_object);
-    return result;
-  }
+  Class get_class() const { return Class(api()->obj_get_class(m_object)); }
 
   bool is_valid() const { return api()->obj_is_valid(m_object); }
 
@@ -184,7 +213,12 @@ public:
     return Object();
   }
 
-  template <bool isAssertOnFail = true> Object find(const char *name) const {
+  enum class IsAssertOnFail {
+    no,
+    yes
+  };
+
+  template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes> Object find(const char *name) const {
     // recursively find the child
     auto get = get_child(name);
     if (get.object() != nullptr) {
@@ -193,12 +227,12 @@ public:
     const auto count = get_child_count();
     for (u32 i = 0; i < count; i++) {
       const auto child = get_child(i);
-      auto result = child.find<false>(name);
+      auto result = child.find<IsAssertOnFail::no>(name);
       if (result.m_object != nullptr) {
         return result;
       }
     }
-    if (isAssertOnFail) {
+    if (isAssertOnFail == IsAssertOnFail::yes) {
       API_ASSERT(false);
     }
     return Object();
@@ -217,9 +251,20 @@ public:
 
   const char *name() const {
     API_ASSERT(m_object != nullptr);
+    if( m_object->user_data == nullptr ){
+      return "unnamed";
+    }
+    if(auto * context = Context::get_context(m_object->user_data); context != nullptr ){
+      return context->name();
+    }
+    return reinterpret_cast<const char *>(m_object->user_data);
+  }
 
-    return m_object->user_data ? reinterpret_cast<const char *>(m_object->user_data)
-                               : "unnamed";
+  Context * context() const {
+    if(auto * context = Context::get_context(m_object->user_data); context != nullptr ){
+      return context;
+    }
+    return nullptr;
   }
 
   Object() = default;
@@ -245,6 +290,11 @@ protected:
   void set_name(const char *name) {
     API_ASSERT(m_object != nullptr);
     m_object->user_data = (void *)name;
+  }
+
+  void set_context(Context * context){
+    API_ASSERT(m_object != nullptr);
+    m_object->user_data = reinterpret_cast<void*>(context);
   }
 
   static bool is_name_matched(const Object &child, const char *name) {

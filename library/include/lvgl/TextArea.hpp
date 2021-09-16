@@ -94,6 +94,11 @@ public:
     return *this;
   }
 
+  TextArea & set_text_static(const char * value){
+    Label(reinterpret_cast<lv_textarea_t*>(object())->label).set_text_static(value);
+    return *this;
+  }
+
   const char * get_text() const {
     return api()->textarea_get_text(object());
   }

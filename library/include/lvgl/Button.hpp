@@ -11,6 +11,7 @@ class Button : public ObjectAccess<Button> {
 public:
 
   explicit Button(const char * name) : ObjectAccess(name){}
+  explicit Button(const Context & context) : ObjectAccess((const char*)(&context)){}
 
 
   Button & add_label(const char * label_name = ""){
