@@ -385,7 +385,7 @@ public:
   Selector(State state) : m_selector(lv_style_selector_t(state)){}
 
 
-  Selector(Part part, State state = State::default_)
+  Selector(Part part, State state)
     : m_selector(lv_style_selector_t(part) | lv_style_selector_t(state)) {}
   lv_style_selector_t value() const { return m_selector; }
 
