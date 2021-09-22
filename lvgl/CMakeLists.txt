@@ -1,13 +1,5 @@
 cmake_minimum_required (VERSION 3.12)
 
-if(NOT SOS_SDK_PATH)
-	set(SOS_SDK_PATH $ENV{SOS_SDK_PATH})
-endif()
-
-set(CMAKE_MODULE_PATH ${SOS_SDK_PATH}/cmake)
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_MODULE_PATH}/sos-toolchain.cmake)
-include(sos-sdk)
-
 set(GIT_REPOSITORY "https://github.com/lvgl/lvgl.git")
 set(GIT_BRANCH "release/v8.0")
 if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
@@ -27,7 +19,6 @@ endif()
 project(lvgl C)
 
 set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
-
 
 set(PRIVATE_SOURCELIST
 	${LVGL_CONFIG_PATH}/lv_conf.h
@@ -302,6 +293,7 @@ target_include_directories(${RELEASE_TARGET}
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+	$<BUILD_INTERFACE:${LVGL_CONFIG_PATH}>
 	PRIVATE
 	)
 

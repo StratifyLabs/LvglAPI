@@ -12,9 +12,17 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
+set(CMAKE_MODULE_PATH ${LVGL_QT_PATH})
+
+if(NOT LVGL_QT_PATH)
+	message(FATAL_ERROR "LVGL_QT_PATH must be defined")
+endif()
+
+find_package(QT
+	NAMES Qt6
+	COMPONENTS Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}
-  COMPONENTS
+	COMPONENTS
     Quick
     Widgets
   REQUIRED

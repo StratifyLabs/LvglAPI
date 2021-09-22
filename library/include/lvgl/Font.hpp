@@ -76,7 +76,6 @@ public:
     API_AC(Info,var::NameString,name);
   };
 
-#if defined __StratifyOS__
 
   static Info find_best_fit(const Info & info);
 
@@ -87,8 +86,6 @@ public:
   static Info find(size_t point_size, Style style = Style::any){
     return find_best_fit(Info().set_point_size(point_size).set_style(style));
   }
-
-#endif
 
 private:
   const lv_font_t *m_font = nullptr;
