@@ -22,7 +22,6 @@ public:
   }
 
   Runtime& loop();
-
   Runtime& refresh();
 
 

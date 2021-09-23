@@ -22,6 +22,7 @@ public:
   };
 
   explicit Keyboard(const char * name) : ObjectAccess(name){}
+  explicit Keyboard(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Keyboard & set_text_area(TextArea text_area){
     api()->keyboard_set_textarea(object(), text_area.object());

@@ -183,6 +183,7 @@ public:
   };
 
   explicit Chart(const char *name) : ObjectAccess(name) {}
+  explicit Chart(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Chart &set_type(Type value) {
     api()->chart_set_type(object(), static_cast<lv_chart_type_t>(value));

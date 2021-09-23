@@ -11,6 +11,7 @@ class Spinner : public ObjectAccess<Spinner>
 public:
 
   explicit Spinner(const char * name) : ObjectAccess(name){}
+  explicit Spinner(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 
 private:

@@ -50,13 +50,18 @@ public:
 
   class Context {
   public:
-    explicit Context(const char *name, void *context = nullptr)
-      : m_name(name), m_context(context) {}
+    explicit Context(const char *name = "") : m_name(name) {}
 
     const char *name() const { return m_name ? m_name : "unnamed"; }
 
     template <typename Type> Type *cast() const {
-      return reinterpret_cast<Type *>(m_context);
+      return reinterpret_cast<Type *>(const_cast<Context *>(this));
+    }
+
+    const char *cast_as_name() const { return reinterpret_cast<const char *>(this); }
+
+    void *cast_as_void() const {
+      return reinterpret_cast<void *>(const_cast<Context *>(this));
     }
 
   private:
@@ -64,13 +69,13 @@ public:
 
     static Context *get_context(void *user_data) {
       auto *context = reinterpret_cast<Context *>(user_data);
-      return context->m_magic == reinterpret_cast<void *>(magic_function) ? context                                                                          : nullptr;
+      return context->m_magic == reinterpret_cast<void *>(magic_function) ? context
+                                                                          : nullptr;
     }
 
     static void magic_function() {}
     const void *m_magic = reinterpret_cast<void *>(magic_function);
     const char *m_name = nullptr;
-    void *m_context = nullptr;
   };
 
   class Class {
@@ -213,12 +218,10 @@ public:
     return Object();
   }
 
-  enum class IsAssertOnFail {
-    no,
-    yes
-  };
+  enum class IsAssertOnFail { no, yes };
 
-  template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes> Object find(const char *name) const {
+  template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  Object find(const char *name) const {
     // recursively find the child
     auto get = get_child(name);
     if (get.object() != nullptr) {
@@ -251,18 +254,18 @@ public:
 
   const char *name() const {
     API_ASSERT(m_object != nullptr);
-    if( m_object->user_data == nullptr ){
+    if (m_object->user_data == nullptr) {
       return "unnamed";
     }
-    if(auto * context = Context::get_context(m_object->user_data); context != nullptr ){
+    if (auto *context = Context::get_context(m_object->user_data); context != nullptr) {
       return context->name();
     }
     return reinterpret_cast<const char *>(m_object->user_data);
   }
 
-  Context * context() const {
-    if(auto * context = Context::get_context(m_object->user_data); context != nullptr ){
-      return context;
+  template<class ContextClass> ContextClass *context() const {
+    if (auto *context = Context::get_context(m_object->user_data); context != nullptr) {
+      return reinterpret_cast<ContextClass*>(context);
     }
     return nullptr;
   }
@@ -292,9 +295,9 @@ protected:
     m_object->user_data = (void *)name;
   }
 
-  void set_context(Context * context){
+  void set_context(Context *context) {
     API_ASSERT(m_object != nullptr);
-    m_object->user_data = reinterpret_cast<void*>(context);
+    m_object->user_data = reinterpret_cast<void *>(context);
   }
 
   static bool is_name_matched(const Object &child, const char *name) {

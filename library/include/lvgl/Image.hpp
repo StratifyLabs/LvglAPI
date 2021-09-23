@@ -12,6 +12,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Image : public ObjectAccess<Image> {
 public:
   explicit Image(const char * name) : ObjectAccess(name){}
+  explicit Image(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Image &set_source(const var::StringView src) {
     api()->img_set_src(m_object, var::PathString(src).cstring());

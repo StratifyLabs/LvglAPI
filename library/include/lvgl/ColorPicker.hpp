@@ -10,6 +10,7 @@ class ColorPicker : public ObjectAccess<ColorPicker>
 {
 public:
   explicit ColorPicker(const char * name) : ObjectAccess(name){}
+  explicit ColorPicker(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

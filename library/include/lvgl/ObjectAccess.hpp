@@ -382,7 +382,7 @@ public:
   }
 
   Derived &set_vertical_padding(lv_coord_t value, Selector selector = Selector()) {
-    return set_top_padding(value, selector.value()).set_bottom_padding(value, selector.value());
+    return set_top_padding(value, selector).set_bottom_padding(value, selector);
   }
 
   Derived &set_left_padding(lv_coord_t value, Selector selector = Selector()) {

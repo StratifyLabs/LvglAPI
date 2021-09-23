@@ -33,6 +33,13 @@ public:
     return *this;
   }
 
+  TileView &add_tile(
+    const Context & context,
+    const Location &location,
+    void (*add)(Container &container) = nullptr) {
+    return add_tile(context.cast_as_name(), location, add);
+  }
+
 
   Object get_active_tile() const {
     return Object(api()->tileview_get_tile_act(m_object));

@@ -10,6 +10,7 @@ class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
   explicit DropDownList(const char * name) : ObjectAccess(name){}
+  explicit DropDownList(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

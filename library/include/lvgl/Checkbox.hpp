@@ -10,6 +10,7 @@ class Checkbox : public ObjectAccess<Checkbox>{
 public:
 
   explicit Checkbox(const char * name) : ObjectAccess(name){}
+  explicit Checkbox(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Checkbox & set_text(const char * text){
     api()->checkbox_set_text(object(), text);

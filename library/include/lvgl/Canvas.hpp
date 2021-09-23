@@ -10,6 +10,7 @@ class Canvas : public ObjectAccess<Canvas> {
 public:
 
   explicit Canvas(const char * name) : ObjectAccess(name){}
+  explicit Canvas(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

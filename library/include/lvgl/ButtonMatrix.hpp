@@ -10,6 +10,7 @@ class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
 
   explicit ButtonMatrix(const char * name) : ObjectAccess(name){}
+  explicit ButtonMatrix(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   u16 get_selected_button() const { return api()->btnmatrix_get_selected_btn(object()); }
 

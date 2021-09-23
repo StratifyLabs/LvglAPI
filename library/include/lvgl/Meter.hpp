@@ -35,6 +35,7 @@ public:
   };
 
   explicit Meter(const char * name) : ObjectAccess(name){}
+  explicit Meter(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Scale add_scale() { return Scale(api()->meter_add_scale(object())); }
 

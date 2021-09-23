@@ -24,6 +24,10 @@ public:
     return *this;
   }
 
+  Window &add_button(const Context & context, const void *icon, lv_coord_t width, void (*add)(Button &) = nullptr) {
+    return add_button(context.cast_as_name(), icon, width, add);
+  }
+
   Window &add_title(const char *name, const char * text, void (*add)(Label &) = nullptr) {
     auto object = api()->win_add_title(m_object, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
@@ -35,8 +39,11 @@ public:
     return *this;
   }
 
-  Container get_header() const { return Container(api()->win_get_header(m_object)); }
+  Window &add_title(const Context & context, const char * text, void (*add)(Label &) = nullptr) {
+    return add_title(context.cast_as_name(), text, add);
+  }
 
+  Container get_header() const { return Container(api()->win_get_header(m_object)); }
   Container get_content() const { return Container(api()->win_get_content(m_object)); }
 
 private:

@@ -10,7 +10,8 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Container : public ObjectAccess<Container> {
 public:
-  Container(const char *name) : ObjectAccess(name) {}
+  explicit Container(const char *name) : ObjectAccess(name) {}
+  explicit Container(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   static Container active_screen() {
     Container result(Api::api()->disp_get_scr_act(nullptr));

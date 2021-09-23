@@ -9,6 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Line : public ObjectAccess<Line> {
 public:
   explicit Line(const char * name) : ObjectAccess(name){}
+  explicit Line(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

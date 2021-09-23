@@ -20,7 +20,11 @@ public:
     return *this;
   }
 
-  TabView &add_content(size_t tab, void (*add)(Container &container) = nullptr) {
+  TabView &add_tab(const Context & context, void (*add)(Container &container) = nullptr) {
+    return add_tab(context.cast_as_name(), add);
+  }
+
+  TabView &add_content(size_t tab, void (*add)(Container &container)) {
     API_ASSERT(add != nullptr);
     Container container(get_tab(tab).object());
     if( add ){

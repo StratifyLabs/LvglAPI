@@ -11,6 +11,7 @@ public:
 
 
   explicit Calendar(const char * name) : ObjectAccess(name){}
+  explicit Calendar(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 
 private:

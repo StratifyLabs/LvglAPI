@@ -10,6 +10,7 @@ class ImageButton : public ObjectAccess<ImageButton>
 {
 public:
   explicit ImageButton(const char * name) : ObjectAccess(name){}
+  explicit ImageButton(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

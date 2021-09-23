@@ -16,6 +16,7 @@ public:
   };
 
   explicit Slider(const char * name) : BarAccess(name){}
+  explicit Slider(const Context & context) : BarAccess(context.cast_as_name()){}
 
 
   Slider & set_mode(Mode value){

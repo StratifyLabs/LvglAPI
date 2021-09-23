@@ -70,6 +70,7 @@ class Bar : public BarAccess<Bar> {
 public:
 
   explicit Bar(const char * name) : BarAccess(name){}
+  explicit Bar(const Context & context) : BarAccess(context.cast_as_name()){}
 
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,
