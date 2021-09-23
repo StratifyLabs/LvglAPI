@@ -11,7 +11,8 @@ namespace printer {
 Printer &operator<<(Printer &printer, const lvgl::Font::Info &a) {
   return printer.key("name", a.name())
     .key("pointSize", var::NumberString(a.point_size()))
-    .key("style", lvgl::Font::to_cstring(a.style()));
+    .key("style", lvgl::Font::to_cstring(a.style()))
+    .key("font", var::NumberString(a.font(), "%p"));
 }
 } // namespace printer
 
@@ -21,7 +22,7 @@ using namespace lvgl;
   case Style::x:                                                                         \
     return MCU_STRINGIFY(x)
 
-const char * Font::to_cstring(Style style) {
+const char *Font::to_cstring(Style style) {
   switch (style) {
     STYLE_CASE(any);
     STYLE_CASE(thin);
@@ -144,7 +145,7 @@ Font::Info Font::find_best_fit(const Info &info) {
 
   const lvgl_api_font_descriptor_t *descriptor_list[count];
   {
-    for(int offset = 0; offset < count; offset++){
+    for (int offset = 0; offset < count; offset++) {
       descriptor_list[offset] = api()->get_font(offset);
     }
   }
@@ -174,4 +175,3 @@ Font::Info Font::find_best_fit(const Info &info) {
   return Info(descriptor_list[best_offset]->name)
     .set_font(descriptor_list[best_offset]->font);
 }
-
