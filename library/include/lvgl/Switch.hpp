@@ -11,6 +11,7 @@ class Switch : public ObjectAccess<Switch>
 {
 public:
   explicit Switch(const char * name) : ObjectAccess(name){}
+  explicit Switch(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 private:
   OBJECT_ACCESS_FRIENDS();

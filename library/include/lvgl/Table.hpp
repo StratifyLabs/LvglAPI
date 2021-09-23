@@ -18,6 +18,7 @@ public:
   };
 
   explicit Table(const char * name) : ObjectAccess(name){}
+  explicit Table(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 
   class Cell {

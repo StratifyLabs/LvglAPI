@@ -10,6 +10,16 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class TabView : public ObjectAccess<TabView> {
 public:
   explicit TabView(const char * name) : ObjectAccess(name){}
+  explicit TabView(const Context & context) : ObjectAccess(context.cast_as_name()){}
+
+  TabView &add_tab(const char *name, const char *title, void (*add)(Container &container) = nullptr) {
+    Container obj(api()->tabview_add_tab(m_object, title));
+    obj.set_name(name);
+    if (add) {
+      add(obj);
+    }
+    return *this;
+  }
 
   TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
@@ -18,6 +28,10 @@ public:
       add(obj);
     }
     return *this;
+  }
+
+  TabView &add_tab(const Context & context, const char * title, void (*add)(Container &container) = nullptr) {
+    return add_tab(context.cast_as_name(), title, add);
   }
 
   TabView &add_tab(const Context & context, void (*add)(Container &container) = nullptr) {

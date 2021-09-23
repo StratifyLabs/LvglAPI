@@ -11,6 +11,7 @@ class TextArea : public ObjectAccess<TextArea>
 {
 public:
   explicit TextArea(const char * name) : ObjectAccess(name){}
+  explicit TextArea(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   TextArea & set_password_mode(bool value = true){
     api()->textarea_set_password_mode(object(), value);

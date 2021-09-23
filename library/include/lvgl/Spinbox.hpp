@@ -10,6 +10,7 @@ class Spinbox : public ObjectAccess<Spinbox>
 {
 public:
   explicit Spinbox(const char * name) : ObjectAccess(name){}
+  explicit Spinbox(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
 
 private:

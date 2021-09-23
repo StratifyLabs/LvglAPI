@@ -12,6 +12,7 @@ class Window : public ObjectAccess<Window> {
 public:
 
   explicit Window(const char * name) : ObjectAccess(name){}
+  explicit Window(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   Window &add_button(const char *name, const void *icon, lv_coord_t width, void (*add)(Button &) = nullptr) {
     auto object = api()->win_add_btn(m_object, icon, width);

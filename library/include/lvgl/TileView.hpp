@@ -11,6 +11,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class TileView : public ObjectAccess<TileView> {
 public:
   TileView(const char * name) : ObjectAccess(name){}
+  TileView(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
   class Location {
     API_AF(Location, uint8_t, row, 0);
