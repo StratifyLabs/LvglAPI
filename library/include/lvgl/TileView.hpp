@@ -7,11 +7,10 @@ namespace lvgl {
 
 OBJECT_ACCESS_FORWARD_FRIENDS();
 
-
 class TileView : public ObjectAccess<TileView> {
 public:
-  TileView(const char * name) : ObjectAccess(name){}
-  TileView(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  TileView(const char *name) : ObjectAccess(name) {}
+  TileView(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
   class Location {
     API_AF(Location, uint8_t, row, 0);
@@ -21,13 +20,17 @@ public:
   };
 
   TileView &add_tile(
-    const char * name,
+    const char *name,
     const Location &location,
     void (*add)(Container &container) = nullptr) {
     Container obj(api()->tileview_add_tile(
-      m_object, location.column(), location.row(),
-      lv_dir_t(location.direction())));
+      m_object, location.column(), location.row(), lv_dir_t(location.direction())));
     obj.set_name(name);
+
+    if( api()->tileview_get_tile_act(m_object) == nullptr ){
+      api()->obj_set_tile(m_object, obj.object(), LV_ANIM_OFF);
+    }
+
     if (add) {
       add(obj);
     }
@@ -35,15 +38,23 @@ public:
   }
 
   TileView &add_tile(
-    const Context & context,
+    const Context &context,
     const Location &location,
     void (*add)(Container &container) = nullptr) {
     return add_tile(context.cast_as_name(), location, add);
   }
 
-
   Object get_active_tile() const {
     return Object(api()->tileview_get_tile_act(m_object));
+  }
+
+  Object get_tile(const Location & location) const;
+
+  Location get_active_tile_location() const {
+    auto object = get_active_tile();
+    return Location()
+      .set_column(object.get_x() / get_content_width())
+      .set_row(object.get_y() / get_content_height());
   }
 
   TileView &set_tile(const Location &location) {
@@ -53,11 +64,21 @@ public:
     return *this;
   }
 
+  // must create the TileView with NavigationContext for these to work
+  TileView &go_forward(const char * name, void (*configure)(Container &));
+  TileView &go_forward(const Context & context, void (*configure)(Container &)){
+    return go_forward(context.cast_as_name(), configure);
+  }
+  TileView &go_forward(){
+    return go_forward("", nullptr);
+  }
+
+  TileView &go_backward();
+
 private:
   OBJECT_ACCESS_FRIENDS();
-  explicit TileView(lv_obj_t * object){ m_object = object; }
+  explicit TileView(lv_obj_t *object) { m_object = object; }
   TileView(Object parent, const TileView &);
-
 };
 
 } // namespace lvgl
