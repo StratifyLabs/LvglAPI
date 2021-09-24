@@ -19,6 +19,11 @@ public:
     return *this;
   }
 
+  Image &set_source(const void * data_source) {
+    api()->img_set_src(m_object, data_source);
+    return *this;
+  }
+
   Image &set_offset_x(lv_coord_t value) {
     api()->img_set_offset_x(m_object, value);
     return *this;
