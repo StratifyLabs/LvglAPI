@@ -11,6 +11,7 @@ set(SOURCES
 	Font.cpp
 	MessageBox.cpp
 	Spinbox.cpp
+	Group.cpp
 	TileView.cpp
 	ButtonMatrix.cpp
 	DropDownList.cpp

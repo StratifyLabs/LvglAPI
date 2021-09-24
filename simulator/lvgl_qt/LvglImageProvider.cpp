@@ -7,18 +7,32 @@
 
 static void mouseRead(lv_indev_drv_t *device, lv_indev_data_t *data);
 
+static void keyboardRead(lv_indev_drv_t *device, lv_indev_data_t *data);
+
 LvglImageProvider::LvglImageProvider(LvglRenderer &renderer)
-    : QQuickImageProvider(QQuickImageProvider::Pixmap), m_renderer{renderer},
-      m_mouse_area{nullptr}, m_mouse_driver{}, m_mouse_device{nullptr} {
+  : QQuickImageProvider(QQuickImageProvider::Pixmap), m_renderer{renderer} {
   lv_indev_drv_init(&m_mouse_driver);
   m_mouse_driver.type = LV_INDEV_TYPE_POINTER;
   m_mouse_driver.user_data = this;
   m_mouse_driver.read_cb = mouseRead;
   m_mouse_device = lv_indev_drv_register(&m_mouse_driver);
+
+
+  m_group = lvgl::Group::create();
+
+  lv_indev_drv_init(&m_keyboard_driver);
+  m_keyboard_driver.type = LV_INDEV_TYPE_KEYPAD;
+  m_keyboard_driver.user_data = this;
+  m_keyboard_driver.read_cb = keyboardRead;
+  m_keyboard_device = lv_indev_drv_register(&m_keyboard_driver);
+
+  lv_indev_set_group(m_keyboard_device, m_group.group());
 }
 
-QPixmap LvglImageProvider::requestPixmap(const QString &, QSize *size,
-                                         const QSize &requestedSize) {
+QPixmap LvglImageProvider::requestPixmap(
+  const QString &,
+  QSize *size,
+  const QSize &requestedSize) {
   if (size != nullptr) {
     *size = {LvglRenderer::max_width, LvglRenderer::max_height};
   }
@@ -27,23 +41,17 @@ QPixmap LvglImageProvider::requestPixmap(const QString &, QSize *size,
   lv_task_handler();
 
   return m_renderer.pixmap().scaled(
-      requestedSize.width() > 0 ? requestedSize.width()
-                                : LvglRenderer::max_width,
-      requestedSize.height() > 0 ? requestedSize.height()
-                                 : LvglRenderer::max_height);
+    requestedSize.width() > 0 ? requestedSize.width() : LvglRenderer::max_width,
+    requestedSize.height() > 0 ? requestedSize.height() : LvglRenderer::max_height);
 }
 
-void LvglImageProvider::setMouseArea(QObject *mouse_area) {
-  m_mouse_area = mouse_area;
-}
+void LvglImageProvider::setMouseArea(QObject *mouse_area) { m_mouse_area = mouse_area; }
 
 QPointF LvglImageProvider::mousePosition() const {
   QPointF position{};
   if (m_mouse_area != nullptr) {
-    auto xScale =
-        LvglRenderer::max_width / m_mouse_area->property("width").toFloat();
-    auto yScale =
-        LvglRenderer::max_height / m_mouse_area->property("height").toFloat();
+    auto xScale = LvglRenderer::max_width / m_mouse_area->property("width").toFloat();
+    auto yScale = LvglRenderer::max_height / m_mouse_area->property("height").toFloat();
     position.setX(m_mouse_area->property("mouseX").toFloat() * xScale);
     position.setY(m_mouse_area->property("mouseY").toFloat() * yScale);
   }
@@ -60,8 +68,18 @@ bool LvglImageProvider::isMousePressed() const noexcept {
 
 static void mouseRead(lv_indev_drv_t *device, lv_indev_data_t *data) {
   auto *view = static_cast<LvglImageProvider *>(device->user_data);
-  auto mouse_point = view->mousePosition();
+  const auto mouse_point = view->mousePosition();
   data->point.x = mouse_point.x();
   data->point.y = mouse_point.y();
   data->state = view->isMousePressed() ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+}
+
+static void keyboardRead(lv_indev_drv_t *device, lv_indev_data_t *data) {
+  auto *view = static_cast<LvglImageProvider *>(device->user_data);
+  *data = (lv_indev_data_t){};
+  auto event = view->key_press_eater()->get_last_key();
+  data->key = event.key;
+  data->state =
+    (event.key == QEvent::KeyPress) ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+  data->continue_reading = (event.key != 0);
 }

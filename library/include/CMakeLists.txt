@@ -13,6 +13,7 @@ set(SOURCES
 	lvgl/PeriodicTimer.hpp
 	lvgl/Font.hpp
 	lvgl/Event.hpp
+	lvgl/Group.hpp
 	lvgl/Spinbox.hpp
 	lvgl/TileView.hpp
 	lvgl/ButtonMatrix.hpp

@@ -15,6 +15,7 @@ namespace lvgl {}
 #include "lvgl/Draw.hpp"
 #include "lvgl/Event.hpp"
 #include "lvgl/Font.hpp"
+#include "lvgl/Group.hpp"
 #include "lvgl/Image.hpp"
 #include "lvgl/Keyboard.hpp"
 #include "lvgl/Label.hpp"
