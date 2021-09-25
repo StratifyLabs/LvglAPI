@@ -26,7 +26,6 @@ protected:
       thread::Mutex::Scope mutex_scope(mutex);
       QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
       m_event_queue.push({keyEvent->key(), event->type()});
-      qDebug("Ate key press %d - %d", keyEvent->key(), m_event_queue.count());
       return true;
     } else {
       // standard event processing

@@ -78,8 +78,28 @@ static void keyboardRead(lv_indev_drv_t *device, lv_indev_data_t *data) {
   auto *view = static_cast<LvglImageProvider *>(device->user_data);
   *data = (lv_indev_data_t){};
   auto event = view->key_press_eater()->get_last_key();
-  data->key = event.key;
+  data->key = [](int key) -> int {
+    if( key == Qt::Key_PageUp ) { return LV_KEY_NEXT; }
+    if( key == Qt::Key_PageDown ) { return LV_KEY_PREV; }
+    if( key == Qt::Key_Return ) { return LV_KEY_ENTER; }
+    if( key == Qt::Key_Enter ) { return LV_KEY_ENTER; }
+    if( key == Qt::Key_Up ) { return LV_KEY_UP; }
+    if( key == Qt::Key_Down ) { return LV_KEY_DOWN; }
+    if( key == Qt::Key_Right ) { return LV_KEY_RIGHT; }
+    if( key == Qt::Key_Left ) { return LV_KEY_LEFT; }
+    if( key == Qt::Key_Direction_R ) { return LV_KEY_RIGHT; }
+    if( key == Qt::Key_Direction_L ) { return LV_KEY_LEFT; }
+    if( key == Qt::Key_Escape ) { return LV_KEY_ESC; }
+    if( key == Qt::Key_Delete ) { return LV_KEY_DEL; }
+    if( key == Qt::Key_Backspace ) { return LV_KEY_BACKSPACE; }
+    if( key == Qt::Key_Home ) { return LV_KEY_HOME; }
+    if( key == Qt::Key_End ) { return LV_KEY_END; }
+    if( key >= 'A' && key <= 'Z' ){
+      key = key - 'A' + 'a';
+    }
+    return key;
+  }(event.key);
   data->state =
-    (event.key == QEvent::KeyPress) ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+    (event.state == QEvent::KeyPress) ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
   data->continue_reading = (event.key != 0);
 }

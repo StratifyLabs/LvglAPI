@@ -30,7 +30,7 @@ private:
       m_object = api()->obj_create(parent.object());
     } else {
       m_object = api()->label_create(parent.object());
-      api()->label_set_text(m_object, "");
+      api()->label_set_text_static(m_object, "");
     }
   }
 

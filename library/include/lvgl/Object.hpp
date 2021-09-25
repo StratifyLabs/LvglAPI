@@ -311,6 +311,7 @@ protected:
 private:
   friend class Event;
   friend class TileView;
+  friend class Group;
   explicit Object(lv_obj_t *obj) : m_object(obj) {}
 };
 
