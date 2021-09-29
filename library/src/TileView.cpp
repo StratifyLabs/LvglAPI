@@ -33,12 +33,11 @@ TileView &TileView::go_forward(const char *name, void (*configure)(Container &))
       tile_to_remove.remove();
     }
 
-    add_tile(
-      name, Location(active_location).set_column(active_location.column() + 1),
-      configure);
+    //layout is updated and position refreshed so that set_tile() will work correctly
+    add_tile(name, next_location, configure).update_layout().refresh_position();
   }
 
-  set_tile(next_location).update_layout();
+  set_tile(next_location);
   Event::send(get_active_tile(), EventCode::focused);
   return *this;
 }
