@@ -1,5 +1,5 @@
-import QtQuick 2
-import QtQuick.Window 2
+import QtQuick 2.0
+import QtQuick.Window 2.0
 
 Window {
     id: window
