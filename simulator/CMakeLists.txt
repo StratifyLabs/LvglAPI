@@ -29,4 +29,3 @@ find_package(Qt${QT_VERSION_MAJOR}
 )
 
 add_subdirectory(lvgl_qt)
-add_subdirectory(lvgl_qt_quick)
