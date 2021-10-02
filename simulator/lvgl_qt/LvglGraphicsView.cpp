@@ -6,12 +6,7 @@
 // Local
 #include "LvglGraphicsView.hpp"
 
-static void read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data);
-static uint32_t toAscii(Qt::Key key);
-static void read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data);
-
-LvglGraphicsView::LvglGraphicsView(QWidget *parent)
-  : QGraphicsView(parent) {
+LvglGraphicsView::LvglGraphicsView(QWidget *parent) : QGraphicsView(parent) {
   initialize_devices();
 }
 
@@ -20,14 +15,12 @@ LvglGraphicsView::LvglGraphicsView(QGraphicsScene *scene, QWidget *parent)
   initialize_devices();
 }
 
-void LvglGraphicsView::initialize_devices(){
+void LvglGraphicsView::initialize_devices() {
   lv_indev_drv_init(&m_keyboard_driver);
   m_keyboard_driver.type = LV_INDEV_TYPE_KEYPAD;
   m_keyboard_driver.user_data = this;
   m_keyboard_driver.read_cb = read_keyboard;
   m_keyboard_device = lv_indev_drv_register(&m_keyboard_driver);
-
-
 
   lv_indev_drv_init(&m_mouse_driver);
   m_mouse_driver.type = LV_INDEV_TYPE_POINTER;
@@ -47,7 +40,6 @@ void LvglGraphicsView::tick() {
   fitInView(item);
 }
 
-
 Qt::Key LvglGraphicsView::key() const noexcept { return m_key; }
 
 QPointF LvglGraphicsView::mousePosition() const {
@@ -57,13 +49,11 @@ QPointF LvglGraphicsView::mousePosition() const {
 bool LvglGraphicsView::isMousePressed() const noexcept { return m_is_mouse_pressed; }
 
 void LvglGraphicsView::keyPressEvent(QKeyEvent *event) {
-  m_key = static_cast<Qt::Key>(event->key());
-  QGraphicsView::keyPressEvent(event);
+  key_event_queue.push({KeyEvent::State::pressed, event->key()});
 }
 
 void LvglGraphicsView::keyReleaseEvent(QKeyEvent *event) {
-  m_key = {};
-  QGraphicsView::keyReleaseEvent(event);
+  key_event_queue.push({KeyEvent::State::released, event->key()});
 }
 
 void LvglGraphicsView::mousePressEvent(QMouseEvent *event) {
@@ -76,56 +66,91 @@ void LvglGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-static void read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data) {
-  auto *view = static_cast<LvglGraphicsView *>(device->user_data);
-  data->key = toAscii(view->key());
-  data->state = (data->key == 0) ? LV_INDEV_STATE_REL : LV_INDEV_STATE_PR;
-}
+void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data) {
+  auto *view = reinterpret_cast<LvglGraphicsView *>(device->user_data);
 
-static uint32_t toAscii(Qt::Key key) {
-  uint32_t ascii = 0;
-  switch (key) {
-  case Qt::Key_Up:
-    ascii = LV_KEY_UP;
-    break;
-  case Qt::Key_Down:
-    ascii = LV_KEY_DOWN;
-    break;
-  case Qt::Key_Right:
-    ascii = LV_KEY_RIGHT;
-    break;
-  case Qt::Key_Left:
-    ascii = LV_KEY_LEFT;
-    break;
-  case Qt::Key_Escape:
-    ascii = LV_KEY_ESC;
-    break;
-  case Qt::Key_Delete:
-    ascii = LV_KEY_DEL;
-    break;
-  case Qt::Key_Backspace:
-    ascii = LV_KEY_BACKSPACE;
-    break;
-  case Qt::Key_Enter:
-    ascii = LV_KEY_ENTER;
-    break;
-  case Qt::Key_Tab:
-    ascii = LV_KEY_NEXT;
-    break;
-  case Qt::Key_Home:
-    ascii = LV_KEY_HOME;
-    break;
-  case Qt::Key_End:
-    ascii = (LV_KEY_END); // lack of parens breaks clang-format for some reason...
-    break;
-  default:
-    ascii = key;
-    break;
+  auto &keys = view->key_event_queue;
+
+  if (keys.count()) {
+    const auto &event = keys.front();
+    data->state = event.state == KeyEvent::State::pressed ? LV_INDEV_STATE_PRESSED
+                                                          : LV_INDEV_STATE_RELEASED;
+
+    if( event.state == KeyEvent::State::pressed ){
+      if( event.key == Qt::Key_Shift ){
+        view->set_shift();
+      }
+    } else {
+      if( event.key == Qt::Key_Shift ){
+        view->set_shift(false);
+      }
+    }
+
+    data->key = [&](int key) -> int {
+      if (key == Qt::Key_PageUp) {
+        return LV_KEY_NEXT;
+      }
+      if (key == Qt::Key_PageDown) {
+        return LV_KEY_PREV;
+      }
+      if (key == Qt::Key_Return) {
+        return LV_KEY_ENTER;
+      }
+      if (key == Qt::Key_Enter) {
+        return LV_KEY_ENTER;
+      }
+      if (key == Qt::Key_Up) {
+        return LV_KEY_UP;
+      }
+      if (key == Qt::Key_Down) {
+        return LV_KEY_DOWN;
+      }
+      if (key == Qt::Key_Right) {
+        return LV_KEY_RIGHT;
+      }
+      if (key == Qt::Key_Left) {
+        return LV_KEY_LEFT;
+      }
+      if (key == Qt::Key_Direction_R) {
+        return LV_KEY_RIGHT;
+      }
+      if (key == Qt::Key_Direction_L) {
+        return LV_KEY_LEFT;
+      }
+      if (key == Qt::Key_Escape) {
+        return LV_KEY_ESC;
+      }
+      if (key == Qt::Key_Delete) {
+        return LV_KEY_DEL;
+      }
+      if (key == Qt::Key_Backspace) {
+        return LV_KEY_BACKSPACE;
+      }
+      if (key == Qt::Key_Home) {
+        return LV_KEY_HOME;
+      }
+      if (key == Qt::Key_End) {
+        return LV_KEY_END;
+      }
+      if (key == Qt::Key_Shift) {
+        return 0;
+      }
+
+      if ((view->is_shift() == false) && key >= 'A' && key <= 'Z') {
+        key = key - 'A' + 'a';
+      }
+      return key;
+    }(event.key);
+
+    data->continue_reading = true;
+    keys.pop();
+  } else {
+    data->continue_reading = false;
   }
-  return ascii;
+
 }
 
-static void read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data) {
+void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data) {
   auto *view = static_cast<LvglGraphicsView *>(device->user_data);
   auto mouse_point = view->mousePosition();
   data->point.x = mouse_point.x();
