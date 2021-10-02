@@ -1,11 +1,14 @@
 // Local
 #include "LvglRenderer.hpp"
 
-static void lvglFlushCallback(
+static void flush_callback(
   lv_disp_drv_t *display_driver,
   const lv_area_t *area,
-  lv_color_t *colors);
-static void loadColorTable(QImage &image);
+  lv_color_t *colors) {
+  auto *renderer = reinterpret_cast<LvglRenderer *>(display_driver->user_data);
+  renderer->flush(display_driver, area, colors);
+  lv_disp_flush_ready(display_driver);
+}
 
 LvglRenderer::LvglRenderer()
   : m_image(
@@ -13,17 +16,21 @@ LvglRenderer::LvglRenderer()
     sizeof(*m_current_frame) / sizeof(**m_current_frame),
     sizeof(m_current_frame) / sizeof(*m_current_frame),
     image_format) {
-  loadColorTable(m_image);
+
   lv_init();
+
   lv_disp_draw_buf_init(
     &m_display_buffer, m_display_frame1, m_display_frame2,
     sizeof(m_display_frame1) / sizeof(*m_display_frame1));
+
   lv_disp_drv_init(&m_display_driver);
+
   m_display_driver.hor_res = max_width;
   m_display_driver.ver_res = max_height;
   m_display_driver.draw_buf = &m_display_buffer;
-  m_display_driver.flush_cb = &lvglFlushCallback;
+  m_display_driver.flush_cb = flush_callback;
   m_display_driver.user_data = this;
+
   lv_disp_drv_register(&m_display_driver);
 }
 
@@ -37,6 +44,7 @@ void LvglRenderer::flush(
   const auto y2 = area->y2;
   const auto width = x2 - x1 + 1;
 
+  printf("flush\n");
   for (auto y = y1; y <= y2; ++y) {
     memcpy(&m_current_frame[y][x1], colors, sizeof(*colors) * width);
     colors += (width);
@@ -45,34 +53,4 @@ void LvglRenderer::flush(
 
 QPixmap LvglRenderer::pixmap() const { return QPixmap::fromImage(m_image); }
 
-static void lvglFlushCallback(
-  lv_disp_drv_t *display_driver,
-  const lv_area_t *area,
-  lv_color_t *colors) {
-  auto *renderer = reinterpret_cast<LvglRenderer *>(display_driver->user_data);
-  renderer->flush(display_driver, area, colors);
-  lv_disp_flush_ready(display_driver);
-}
 
-static void loadColorTable(QImage &image) {
-#if (LV_COLOR_DEPTH == 8)
-  static QVector<QRgb> Color_Table;
-  Color_Table.reserve(256);
-  for (auto i = 0; i < 256; ++i) {
-    lv_color8_t truncated{};
-    truncated.full = i;
-    // Shift bitfields by remaining bits in a uint8_t to give their representation maximum
-    // impact
-    Color_Table.push_back(
-      qRgb(truncated.ch.red << 5, truncated.ch.green << 5, truncated.ch.blue << 6));
-  }
-  Color_Table[255] = ~0;
-  image.setColorTable(Color_Table);
-#elif (LV_COLOR_DEPTH == 1)
-  static QVector<QRgb> Color_Table(256, 0);
-  Color_Table[LV_COLOR_WHITE.full] = ~0;
-  image.setColorTable(Color_Table);
-#else
-  static_cast<void>(image);
-#endif
-}

@@ -3,8 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 add_library(lvgl_qt
   LvglRenderer.cpp
   LvglRenderer.hpp
-	LvglImageProvider.cpp
-	LvglImageProvider.hpp
+	LvglGraphicsView.cpp
+	LvglGraphicsView.hpp
+	MainWindow.cpp
+	MainWindow.hpp
 )
 
 set_property(TARGET lvgl_qt PROPERTY CXX_STANDARD 17)
@@ -21,8 +23,7 @@ target_include_directories(lvgl_qt
 
 target_link_libraries(lvgl_qt
   PUBLIC
-	Qt${QT_VERSION_MAJOR}::Gui
-	Qt${QT_VERSION_MAJOR}::Quick
+	Qt${QT_VERSION_MAJOR}::Widgets
 	LvglAPI_release_link
 	lvgl_release_link
 )
