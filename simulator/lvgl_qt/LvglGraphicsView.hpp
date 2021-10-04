@@ -43,6 +43,8 @@ private:
   };
 
   API_AB(LvglGraphicsView,shift,false);
+  API_AB(LvglGraphicsView,control,false);
+  API_AB(LvglGraphicsView,meta,false);
   var::Queue<KeyEvent> key_event_queue;
 
   void keyPressEvent(QKeyEvent *event) override;

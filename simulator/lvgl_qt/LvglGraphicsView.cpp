@@ -76,13 +76,21 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
     data->state = event.state == KeyEvent::State::pressed ? LV_INDEV_STATE_PRESSED
                                                           : LV_INDEV_STATE_RELEASED;
 
-    if( event.state == KeyEvent::State::pressed ){
-      if( event.key == Qt::Key_Shift ){
+    if (event.state == KeyEvent::State::pressed) {
+      if (event.key == Qt::Key_Shift) {
         view->set_shift();
+      } else if (event.key == Qt::Key_Control) {
+        view->set_control();
+      } else if (event.key == Qt::Key_Meta) {
+        view->set_meta();
       }
     } else {
-      if( event.key == Qt::Key_Shift ){
+      if (event.key == Qt::Key_Shift) {
         view->set_shift(false);
+      } else if (event.key == Qt::Key_Control) {
+        view->set_control(false);
+      } else if (event.key == Qt::Key_Meta) {
+        view->set_meta(false);
       }
     }
 
@@ -132,7 +140,7 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
       if (key == Qt::Key_End) {
         return LV_KEY_END;
       }
-      if (key == Qt::Key_Shift) {
+      if ((key == Qt::Key_Shift) || (key == Qt::Key_Control) || (key == Qt::Key_Meta)) {
         return 0;
       }
 
@@ -147,7 +155,6 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
   } else {
     data->continue_reading = false;
   }
-
 }
 
 void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data) {
