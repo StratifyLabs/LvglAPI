@@ -321,6 +321,12 @@ enum class FlexAlign {
   space_between = LV_FLEX_ALIGN_SPACE_BETWEEN
 };
 
+class SetFlexAlign {
+  API_AF(SetFlexAlign, FlexAlign, main, FlexAlign::space_around);
+  API_AF(SetFlexAlign, FlexAlign, cross, FlexAlign::center);
+  API_AF(SetFlexAlign, FlexAlign, track_cross, FlexAlign::space_around);
+};
+
 enum class State {
   default_ = LV_STATE_DEFAULT,
   checked = LV_STATE_CHECKED,

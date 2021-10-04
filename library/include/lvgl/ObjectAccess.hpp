@@ -289,12 +289,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  class SetFlexAlign {
-    API_AF(SetFlexAlign, FlexAlign, main, FlexAlign::space_around);
-    API_AF(SetFlexAlign, FlexAlign, cross, FlexAlign::center);
-    API_AF(SetFlexAlign, FlexAlign, track_cross, FlexAlign::space_around);
-  };
-
   Derived &set_flex_align(const SetFlexAlign &options) {
     api()->obj_set_flex_align(
       m_object, static_cast<lv_flex_align_t>(options.main()),

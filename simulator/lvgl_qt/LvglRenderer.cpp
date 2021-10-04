@@ -44,7 +44,6 @@ void LvglRenderer::flush(
   const auto y2 = area->y2;
   const auto width = x2 - x1 + 1;
 
-  printf("flush\n");
   for (auto y = y1; y <= y2; ++y) {
     memcpy(&m_current_frame[y][x1], colors, sizeof(*colors) * width);
     colors += (width);

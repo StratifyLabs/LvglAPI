@@ -15,11 +15,8 @@ class Font;
 
 class Style : public Api {
 public:
-
   Style() { api()->style_init(&m_style); }
-  ~Style(){
-    api()->style_reset(&m_style);
-  }
+  ~Style() { api()->style_reset(&m_style); }
 
   Style &set_width(lv_coord_t value) {
     lv_style_value_t v = {.num = value};
@@ -70,7 +67,7 @@ public:
   }
 
   Style &set_align(Alignment value) {
-    lv_style_value_t v = {.num = lv_align_t(value) };
+    lv_style_value_t v = {.num = lv_align_t(value)};
     api()->style_set_prop(&m_style, LV_STYLE_ALIGN, v);
     return *this;
   }
@@ -204,6 +201,32 @@ public:
   Style &set_layout(uint16_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_LAYOUT, v);
+    return *this;
+  }
+
+  Style &set_flex_layout() { return set_layout(*api()->layout_flex); }
+
+  Style &set_flex_flow(FlexFlow value) {
+    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
+    api()->style_set_prop(&m_style, LV_STYLE_FLEX_FLOW, v);
+    return set_flex_layout();
+  }
+
+  Style &set_flex_grow(u8 value) {
+    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
+    api()->style_set_prop(&m_style, LV_STYLE_FLEX_GROW, v);
+    return *this;
+  }
+
+
+  Style &set_flex_align(const SetFlexAlign &value) {
+    const lv_style_value_t main = {.num = static_cast<int32_t>(value.main())};
+    const lv_style_value_t cross = {.num = static_cast<int32_t>(value.cross())};
+    const lv_style_value_t track_cross = {
+      .num = static_cast<int32_t>(value.track_cross())};
+    api()->style_set_prop(&m_style, LV_STYLE_FLEX_MAIN_PLACE, main);
+    api()->style_set_prop(&m_style, LV_STYLE_FLEX_CROSS_PLACE, cross);
+    api()->style_set_prop(&m_style, LV_STYLE_FLEX_TRACK_PLACE, track_cross);
     return *this;
   }
 
@@ -351,7 +374,7 @@ public:
     return *this;
   }
 
-  Style &set_text_font(const Font & value);
+  Style &set_text_font(const Font &value);
 
   Style &set_text_letter_space(lv_coord_t value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
