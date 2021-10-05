@@ -120,7 +120,12 @@ enum class EventCode {
   size_changed = LV_EVENT_SIZE_CHANGED,
   style_changed = LV_EVENT_STYLE_CHANGED,
   layout_changed = LV_EVENT_LAYOUT_CHANGED,
-  get_self_size = LV_EVENT_GET_SELF_SIZE
+  get_self_size = LV_EVENT_GET_SELF_SIZE,
+
+  //These are user defined signals that are not part of LVGL
+  notified,
+  entered,
+  exited
 };
 
 enum class TextDecoration {
