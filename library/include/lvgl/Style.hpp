@@ -394,7 +394,7 @@ public:
     return *this;
   }
 
-  Style &set_text_align(TextAlignment value) {
+  Style &set_text_alignment(TextAlignment value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
     api()->style_set_prop(&m_style, LV_STYLE_TEXT_ALIGN, v);
     return *this;

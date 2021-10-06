@@ -77,6 +77,7 @@ public:
 
 private:
   OBJECT_ACCESS_FRIENDS();
+  friend class DropDownList;
   explicit List(lv_obj_t * object){ m_object = object; }
   List(Object parent, const List &);
 

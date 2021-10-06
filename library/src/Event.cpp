@@ -60,6 +60,9 @@ const char *  Event::to_cstring(EventCode code){
     CODE_CASE(style_changed);
     CODE_CASE(layout_changed);
     CODE_CASE(get_self_size);
+    CODE_CASE(notified);
+    CODE_CASE(entered);
+    CODE_CASE(exited);
   }
 
   return "unknown";
