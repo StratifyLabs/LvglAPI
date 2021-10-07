@@ -41,6 +41,9 @@ public:
   Style() { api()->style_init(&m_style); }
   ~Style() { api()->style_reset(&m_style); }
 
+  static const char * to_cstring(Property property);
+  static Property property_from_cstring(const char * value);
+
   PropertyValue get_property_value(Property property) const {
     PropertyValue result;
     api()->style_get_prop(
