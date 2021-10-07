@@ -39,6 +39,7 @@ enum class ObjectFlags {
 class Object : public Api {
 public:
   static constexpr lv_coord_t content_size = LV_SIZE_CONTENT;
+  static constexpr lv_coord_t size_from_content = LV_SIZE_CONTENT;
 
   using Flags = ObjectFlags;
 

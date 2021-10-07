@@ -184,13 +184,13 @@ public:
 
   Style &set_flex_flow(FlexFlow value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->style_set_prop(&m_style, LV_STYLE_FLEX_FLOW, v);
+    api()->style_set_prop(&m_style, *api()->style_flex_flow, v);
     return set_flex_layout();
   }
 
   Style &set_flex_grow(u8 value) {
     lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->style_set_prop(&m_style, LV_STYLE_FLEX_GROW, v);
+    api()->style_set_prop(&m_style, *api()->style_flex_grow, v);
     return *this;
   }
 
@@ -199,9 +199,9 @@ public:
     const lv_style_value_t cross = {.num = static_cast<int32_t>(value.cross())};
     const lv_style_value_t track_cross = {
       .num = static_cast<int32_t>(value.track_cross())};
-    api()->style_set_prop(&m_style, LV_STYLE_FLEX_MAIN_PLACE, main);
-    api()->style_set_prop(&m_style, LV_STYLE_FLEX_CROSS_PLACE, cross);
-    api()->style_set_prop(&m_style, LV_STYLE_FLEX_TRACK_PLACE, track_cross);
+    api()->style_set_prop(&m_style, *api()->style_flex_main_place, main);
+    api()->style_set_prop(&m_style, *api()->style_flex_cross_place, cross);
+    api()->style_set_prop(&m_style, *api()->style_flex_track_place, track_cross);
     return *this;
   }
 

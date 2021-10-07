@@ -1,7 +1,3 @@
-#if defined __StratifyOS__
-#include <sos.hpp>
-#endif
-
 #include <printer/Printer.hpp>
 #include <var/StackString.hpp>
 
