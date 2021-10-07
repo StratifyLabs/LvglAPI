@@ -828,7 +828,9 @@ extern const lvgl_api_t lvgl_api;
 
 void lvgl_api_initialize_filesystem();
 
+#if _LVGL_HAS_STRATIFY_OS
 void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t* drv, char letter);
+#endif
 
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)

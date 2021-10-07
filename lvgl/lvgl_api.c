@@ -3,8 +3,10 @@
 #include <sdk/types.h>
 #include <unistd.h>
 
-#include <sos/dev/display.h>
+//#include <sos/dev/display.h>
+#if _LVGL_HAS_STRATIFY_OS
 #include <sos/fs/drive_assetfs.h>
+#endif
 
 #include "lvgl.h"
 #include "lvgl_api.h"
@@ -958,7 +960,7 @@ void lvgl_api_initialize_filesystem() {
 
 }
 
-
+#if _LVGL_HAS_STRATIFY_OS
 typedef struct {
   const drive_assetfs_dirent_t * entry;
   size_t seek_offset;
@@ -1083,6 +1085,7 @@ static bool lvgl_api_assetfs_ready_cb(struct _lv_fs_drv_t *drv) {
   return true;
 }
 
+
 void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t * drv, char letter){
   lv_fs_drv_init(drv); /*Basic initialization*/
 
@@ -1101,6 +1104,7 @@ void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t * drv, ch
   drv->dir_close_cb = lvgl_api_assetfs_dir_close_cb; /*Callback to close a directory */
 
   drv->user_data = (void*)assetfs; /*Any custom data if required*/
-
   lv_fs_drv_register(drv); /*Finally register the drive*/
 }
+#endif
+

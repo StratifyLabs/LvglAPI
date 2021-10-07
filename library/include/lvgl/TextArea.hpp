@@ -85,7 +85,7 @@ public:
     return *this;
   }
 
-  TextArea & set_alignment(TextAlignment value){
+  TextArea & set_text_alignment(TextAlignment value){
     api()->textarea_set_align(object(), lv_text_align_t(value));
     return *this;
   }

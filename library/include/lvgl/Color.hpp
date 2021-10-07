@@ -1,4 +1,4 @@
-#ifndef COLOR_HPP
+﻿#ifndef COLOR_HPP
 #define COLOR_HPP
 
 #include "Types.hpp"
@@ -105,6 +105,7 @@ public:
 private:
   lv_color_t m_color;
 };
+
 
 } // namespace lvgl
 

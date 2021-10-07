@@ -9,6 +9,9 @@ namespace lvgl {
 
 class Event {
 public:
+
+  using Callback = void (*)(lv_event_t*);
+
   Event(lv_event_t *event);
 
   EventCode code() const { return EventCode(m_event->code); }

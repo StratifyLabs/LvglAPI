@@ -1,5 +1,5 @@
 
-set(LIBRARIES SosAPI FsAPI ChronoAPI VarAPI)
+set(LIBRARIES FsAPI ChronoAPI VarAPI)
 if(SOS_IS_LINK)
 	list(APPEND LIBRARIES lvgl)
 endif()

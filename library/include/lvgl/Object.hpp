@@ -141,6 +141,7 @@ public:
   lv_coord_t get_y2() const { return api()->obj_get_y2(m_object); }
   lv_coord_t get_width() const { return api()->obj_get_width(m_object); }
   lv_coord_t get_height() const { return api()->obj_get_height(m_object); }
+
   Size get_size() const { return Size(get_width(), get_height()); }
 
   Area get_content_area() const {
@@ -150,9 +151,7 @@ public:
   }
 
   lv_coord_t get_self_width() const { return api()->obj_get_self_width(m_object); }
-
   lv_coord_t get_self_height() const { return api()->obj_get_self_height(m_object); }
-
   lv_coord_t get_content_width() const { return api()->obj_get_content_width(m_object); }
 
   lv_coord_t get_content_height() const {
@@ -182,16 +181,34 @@ public:
   }
 
   lv_coord_t get_scroll_x() const { return api()->obj_get_scroll_x(m_object); }
-
   lv_coord_t get_scroll_y() const { return api()->obj_get_scroll_y(m_object); }
-
   lv_coord_t get_scroll_top() const { return api()->obj_get_scroll_top(m_object); }
-
   lv_coord_t get_scroll_bottom() const { return api()->obj_get_scroll_bottom(m_object); }
-
   lv_coord_t get_scroll_left() const { return api()->obj_get_scroll_left(m_object); }
-
   lv_coord_t get_scroll_right() const { return api()->obj_get_scroll_right(m_object); }
+
+  lv_coord_t get_left_padding(Selector selector = Selector()) const {
+    return get_local_style_as_coord(Property::left_padding, selector);
+  }
+
+  lv_coord_t get_right_padding(Selector selector = Selector()) const {
+    return get_local_style_as_coord(Property::right_padding, selector);
+  }
+
+  lv_coord_t get_top_padding(Selector selector = Selector()) const {
+    return get_local_style_as_coord(Property::top_padding, selector);
+  }
+
+  lv_coord_t get_bottom_padding(Selector selector = Selector()) const {
+    return get_local_style_as_coord(Property::bottom_padding, selector);
+  }
+
+  PropertyValue get_property_value(Property property, Selector selector = Selector()) {
+    PropertyValue result;
+    api()->obj_get_local_style_prop(
+      m_object, lv_style_prop_t(property), &result.m_value, selector.value());
+    return result;
+  }
 
   Point get_scroll_end() const {
     Point result;
@@ -263,9 +280,9 @@ public:
     return reinterpret_cast<const char *>(m_object->user_data);
   }
 
-  template<class ContextClass> ContextClass *context() const {
+  template <class ContextClass> ContextClass *context() const {
     if (auto *context = Context::get_context(m_object->user_data); context != nullptr) {
-      return reinterpret_cast<ContextClass*>(context);
+      return reinterpret_cast<ContextClass *>(context);
     }
     return nullptr;
   }
@@ -306,6 +323,20 @@ protected:
       return true;
     }
     return false;
+  }
+
+  lv_coord_t get_local_style_as_coord(Property property, Selector selector) const {
+    lv_style_value_t value;
+    api()->obj_get_local_style_prop(
+      m_object, lv_style_prop_t(property), &value, selector.value());
+    return value.num;
+  }
+
+  Color get_local_style_as_color(Property property, Selector selector) const {
+    lv_style_value_t value;
+    api()->obj_get_local_style_prop(
+      m_object, lv_style_prop_t(property), &value, selector.value());
+    return Color(value.color);
   }
 
 private:
