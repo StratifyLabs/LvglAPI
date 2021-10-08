@@ -242,7 +242,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-
   Derived &clean() {
     api()->obj_clean(m_object);
     return static_cast<Derived &>(*this);
@@ -329,13 +328,15 @@ public:
 
   Derived &set_transform_width(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_WIDTH, v, selector.value());
+    api()->obj_set_local_style_prop(
+      m_object, LV_STYLE_TRANSFORM_WIDTH, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_transform_height(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_HEIGHT, v, selector.value());
+    api()->obj_set_local_style_prop(
+      m_object, LV_STYLE_TRANSFORM_HEIGHT, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
@@ -353,13 +354,15 @@ public:
 
   Derived &set_transform_zoom(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ZOOM, v, selector.value());
+    api()->obj_set_local_style_prop(
+      m_object, LV_STYLE_TRANSFORM_ZOOM, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
   Derived &set_transform_angle(lv_coord_t value, Selector selector = Selector()) {
     lv_style_value_t v = {.num = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSFORM_ANGLE, v, selector.value());
+    api()->obj_set_local_style_prop(
+      m_object, LV_STYLE_TRANSFORM_ANGLE, v, selector.value());
     return static_cast<Derived &>(*this);
   }
 
@@ -399,464 +402,317 @@ public:
     return set_vertical_padding(value, selector).set_horizontal_padding(value, selector);
   }
 
-  Derived &set_row_padding(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_ROW, v, selector.value());
+  Derived &
+  set_property(Property property, PropertyValue value, Selector selector = Selector()) {
+    api()->obj_set_local_style_prop(
+      m_object, lv_style_prop_t(property), *value.style_value(), selector.value());
     return static_cast<Derived &>(*this);
+  }
+
+  PropertyValue get_property(Property property, Selector selector = Selector()) const {
+    PropertyValue result;
+    api()->obj_get_local_style_prop(
+      m_object, lv_style_prop_t(property), result.style_value(), selector.value());
+    return result;
+  }
+
+  Derived &set_row_padding(lv_coord_t value, Selector selector = Selector()) {
+    return set_property(Property::row_padding, value, selector);
   }
 
   Derived &set_column_padding(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_PAD_COLUMN, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::column_padding, value, selector);
   }
 
   Derived &set_radius(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_RADIUS, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::radius, value, selector);
   }
 
   Derived &set_clip_corner(bool value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_CLIP_CORNER, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::clip_corner, value, selector);
   }
 
   Derived &set_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::opacity, value, selector);
   }
 
   Derived &set_color_filter_descriptor(
     const lv_color_filter_dsc_t *value,
     Selector selector = Selector()) {
-    lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_DSC, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::color_filter_dsc, PropertyValue(value), selector);
   }
 
   Derived &set_color_filter_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_COLOR_FILTER_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::color_filter_opacity, value, selector);
   }
 
-  Derived &set_animation_time(const chrono::MicroTime value, Selector selector = Selector()) {
-    const lv_style_value_t v = {.num = static_cast<int32_t>(value.milliseconds())};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_TIME, v, selector.value());
-    return static_cast<Derived &>(*this);
+  Derived &
+  set_animation_time(const chrono::MicroTime value, Selector selector = Selector()) {
+    return set_property(Property::animation_time, value, selector);
   }
 
   Derived &set_animation_speed(uint32_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ANIM_SPEED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::animation_speed, value, selector);
   }
 
-  Derived &set_transition(
-    const lv_style_transition_dsc_t *value,
-    Selector selector = Selector()) {
-    lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TRANSITION, v, selector.value());
-    return static_cast<Derived &>(*this);
+  Derived &
+  set_transition(const lv_style_transition_dsc_t *value, Selector selector = Selector()) {
+    return set_property(Property::transition, value, selector);
   }
 
   Derived &set_blend_mode(lv_blend_mode_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BLEND_MODE, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::blend_mode, value, selector);
   }
 
   Derived &set_layout(uint16_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LAYOUT, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::layout, value, selector);
   }
 
   Derived &set_base_dir(BaseDirection value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BASE_DIR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::base_direction, value, selector);
   }
 
   Derived &set_background_color(const Color &value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_color, value, selector);
   }
 
   Derived &
   set_background_color_filtered(const Color &value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_color_filtered, value, selector);
   }
 
   Derived &set_background_opacity(const Color &value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_opacity, value, selector);
   }
 
   Derived &
   set_background_gradient_color(const Color &value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_gradient_color, value, selector);
   }
 
   Derived &set_background_gradient_color_filtered(
     const Color &value,
     Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BG_GRAD_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_gradient_color_filtered, value, selector);
   }
 
-  Derived &set_background_gradient_direction(GradientDirection value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_DIR, v, selector.value());
-    return static_cast<Derived &>(*this);
+  Derived &set_background_gradient_direction(
+    GradientDirection value,
+    Selector selector = Selector()) {
+    return set_property(Property::background_gradient_direction, value, selector);
   }
 
   Derived &set_background_main_stop(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_DIR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_main_stop, value, selector);
   }
 
-  Derived &set_bg_main_stop(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_MAIN_STOP, v, selector.value());
-    return static_cast<Derived &>(*this);
+  Derived &
+  set_background_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
+    return set_property(Property::background_gradient_stop, value, selector);
   }
 
-  Derived &set_background_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_STOP, v, selector.value());
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_bg_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_GRAD_STOP, v, selector.value());
-    return static_cast<Derived &>(*this);
-  }
 
   Derived &
   set_background_image_source(const void *value, Selector selector = Selector()) {
-    lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_SRC, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_image_source, value, selector);
   }
 
   Derived &set_background_image_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_image_opacity, value, selector);
+  }
+
+  Derived &set_background_image_recolor(Color value, Selector selector = Selector()) {
+    return set_property(Property::background_image_recolor, value, selector);
   }
 
   Derived &
-  set_background_image_recolor(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_background_image_recolor_filtered(
-    Color value,
-    Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BG_IMG_RECOLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+  set_background_image_recolor_filtered(Color value, Selector selector = Selector()) {
+    return set_property(Property::background_image_recolor_filtered, value, selector);
   }
 
   Derived &
   set_background_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_RECOLOR_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_image_recolor_opacity, value, selector);
   }
 
   Derived &set_background_image_tiled(bool value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BG_IMG_TILED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::background_image_tiled, value, selector);
   }
 
   Derived &set_border_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_color, value, selector);
   }
 
   Derived &set_border_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_BORDER_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_color_filtered, value, selector);
   }
 
   Derived &set_border_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_opacity, value, selector);
   }
 
   Derived &set_border_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_width, value, selector);
   }
 
   Derived &set_border_side(BorderSide value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_SIDE, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_side, value, selector);
   }
 
   Derived &set_border_post(bool value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_BORDER_POST, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::border_post, value, selector);
   }
 
   Derived &set_text_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_color, value, selector);
   }
 
   Derived &set_text_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_color_filtered, value, selector);
   }
 
   Derived &set_text_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_opacity, value, selector);
   }
 
   Derived &set_text_font(const Font &value, Selector selector = Selector()) {
-    lv_style_value_t v = {.ptr = value.font()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_FONT, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_font, PropertyValue(value.font()), selector);
   }
 
   Derived &set_text_font(const Font::Info &value, Selector selector = Selector()) {
     return set_text_font(value.get_font(), selector);
   }
 
-
   Derived &set_text_letter_space(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LETTER_SPACE, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_letter_spacing, value, selector);
   }
 
   Derived &set_text_line_space(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_LINE_SPACE, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_line_spacing, value, selector);
   }
 
   Derived &set_text_decor(TextDecoration value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_DECOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::text_decoration, value, selector);
   }
 
   Derived &set_text_alignment(TextAlignment value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_TEXT_ALIGN, v, selector.value());
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived &set_text_align(TextAlignment value, Selector selector = Selector()) {
-    return set_text_alignment(value, selector);
+    return set_property(Property::text_alignment, s32(value), selector);
   }
 
   Derived &set_image_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::image_opacity, value, selector);
   }
 
   Derived &set_image_recolor(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::image_recolor, value, selector);
   }
 
   Derived &set_image_recolor_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::image_recolor_filtered, value, selector);
   }
 
   Derived &set_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_IMG_RECOLOR_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::image_recolor_opacity, value, selector);
   }
 
   Derived &set_outline_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::outline_width, value, selector);
   }
 
   Derived &set_outline_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::outline_color, value, selector);
   }
 
-  Derived &
-  set_outline_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_OUTLINE_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+  Derived &set_outline_color_filtered(Color value, Selector selector = Selector()) {
+    return set_property(Property::outline_color_filtered, value, selector);
   }
 
   Derived &set_outline_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::outline_opacity, value, selector);
   }
 
   Derived &set_outline_padding(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_OUTLINE_PAD, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::outline_padding, value, selector);
   }
 
   Derived &set_shadow_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_width, value, selector);
   }
 
   Derived &set_shadow_x_offset(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_X, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_x_offset, value, selector);
   }
 
   Derived &set_shadow_y_offset(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OFS_Y, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_y_offset, value, selector);
   }
 
   Derived &set_shadow_spread(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_SPREAD, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_spread, value, selector);
   }
 
   Derived &set_shadow_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_color, value, selector);
   }
 
   Derived &set_shadow_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(
-      m_object, LV_STYLE_SHADOW_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_color_filtered, value, selector);
   }
 
   Derived &set_shadow_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_SHADOW_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::shadow_opacity, value, selector);
   }
 
   Derived &set_line_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_width, value, selector);
   }
 
   Derived &set_line_dash_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_dash_width, value, selector);
   }
 
   Derived &set_line_dash_gap(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_DASH_GAP, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_dash_gap, value, selector);
   }
 
   Derived &set_line_rounded(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_ROUNDED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_rounded, value, selector);
   }
 
   Derived &set_line_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_color, value, selector);
   }
 
   Derived &set_line_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_color_filtered, value, selector);
   }
 
   Derived &set_line_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_LINE_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::line_opacity, value, selector);
   }
 
   Derived &set_arc_width(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_WIDTH, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_width, value, selector);
   }
 
   Derived &set_arc_rounded(lv_coord_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_ROUNDED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_rounded, value, selector);
   }
 
   Derived &set_arc_color(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_color, value, selector);
   }
 
   Derived &set_arc_color_filtered(Color value, Selector selector = Selector()) {
-    lv_style_value_t v = {.color = value.get_color()};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_COLOR_FILTERED, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_color_filtered, value, selector);
   }
 
   Derived &set_arc_opacity(lv_opa_t value, Selector selector = Selector()) {
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_OPA, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_opacity, value, selector);
   }
 
   Derived &set_arc_image_source(const void *value, Selector selector = Selector()) {
-    lv_style_value_t v = {.ptr = value};
-    api()->obj_set_local_style_prop(m_object, LV_STYLE_ARC_IMG_SRC, v, selector.value());
-    return static_cast<Derived &>(*this);
+    return set_property(Property::arc_image_source, value, selector);
   }
 
   template <typename ChildClass> Derived &add(const ChildClass &child) {
@@ -878,9 +734,9 @@ public:
     return static_cast<const Derived &>(*this);
   }
 
-  Derived & remove_children(){
+  Derived &remove_children() {
     const auto child_count = get_child_count();
-    for(s32 i=0; i < child_count; i++){
+    for (s32 i = 0; i < child_count; i++) {
       get_child(i).remove();
     }
     return static_cast<Derived &>(*this);
@@ -895,6 +751,9 @@ public:
   }
 
   const char *initial_name() const { return m_initial_name; }
+  const Context *initial_context() const {
+    return reinterpret_cast<const Context *>(m_initial_name);
+  }
 
 private:
   Callback m_initialize = nullptr;

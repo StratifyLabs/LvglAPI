@@ -98,6 +98,12 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
       if (key == Qt::Key_PageUp) {
         return LV_KEY_NEXT;
       }
+      if (key == Qt::Key_Tab) {
+        if( view->is_shift() ){
+          return LV_KEY_PREV;
+        }
+        return LV_KEY_NEXT;
+      }
       if (key == Qt::Key_PageDown) {
         return LV_KEY_PREV;
       }

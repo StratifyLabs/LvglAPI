@@ -24,11 +24,15 @@ public:
   explicit PropertyValue(const void *pointer) { m_value.ptr = pointer; }
   PropertyValue(Color color) { m_value.color = color.get_color(); }
 
-  u32 number() const { return m_value.num; }
+  s32 number() const { return m_value.num; }
 
   const void *pointer() const { return m_value.ptr; }
 
   Color color() const { return Color(m_value.color); }
+
+  lv_style_value_t * style_value(){
+    return &m_value;
+  }
 
 private:
   friend class Object;
