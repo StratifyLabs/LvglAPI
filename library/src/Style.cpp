@@ -95,7 +95,7 @@ const char *Style::to_cstring(Property property) {
     PROPERTY_CASE(Property, radius);
     PROPERTY_CASE(Property, clip_corner);
     PROPERTY_CASE(Property, opacity);
-    PROPERTY_CASE(Property, color_filter_dsc);
+    PROPERTY_CASE(Property, color_filter_descriptor);
     PROPERTY_CASE(Property, color_filter_opacity);
     PROPERTY_CASE(Property, animation_time);
     PROPERTY_CASE(Property, animation_speed);
@@ -196,7 +196,7 @@ Property Style::property_from_cstring(const char *value) {
   PROPERTY_STRING_CASE(Property, radius)
   PROPERTY_STRING_CASE(Property, clip_corner)
   PROPERTY_STRING_CASE(Property, opacity)
-  PROPERTY_STRING_CASE(Property, color_filter_dsc)
+  PROPERTY_STRING_CASE(Property, color_filter_descriptor)
   PROPERTY_STRING_CASE(Property, color_filter_opacity)
   PROPERTY_STRING_CASE(Property, animation_time)
   PROPERTY_STRING_CASE(Property, animation_speed)

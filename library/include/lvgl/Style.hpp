@@ -203,7 +203,7 @@ public:
   }
 
   Style &set_color_filter_descriptor(const lv_color_filter_dsc_t *value) {
-    return set_property(Property::color_filter_dsc, PropertyValue(value));
+    return set_property(Property::color_filter_descriptor, PropertyValue(value));
   }
 
   Style &set_color_filter_opacity(lv_opa_t value) {
