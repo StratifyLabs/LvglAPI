@@ -20,6 +20,10 @@ public:
   explicit Label(const char * name) : ObjectAccess(name){}
   explicit Label(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->label_class;
+  }
+
   static void configure_name_as_text(Label & label){
     label.set_text(label.name());
   }

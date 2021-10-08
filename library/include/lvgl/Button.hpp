@@ -12,6 +12,10 @@ public:
   explicit Button(const char *name) : ObjectAccess(name) {}
   explicit Button(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->button_class;
+  }
+
   Button &add_label(const char *label_name = "") {
     return add(Label(label_name).configure([](Label &label) {
       const var::StringView name = label.name();

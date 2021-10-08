@@ -14,6 +14,9 @@ public:
   explicit DropDownList(const char * name) : ObjectAccess(name){}
   explicit DropDownList(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->dropdown_class;
+  }
 
   DropDownList& add_option(const char * option, u32 pos = LV_DROPDOWN_POS_LAST){
     api()->dropdown_add_option(m_object, option, pos);

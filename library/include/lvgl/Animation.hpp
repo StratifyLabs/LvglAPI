@@ -11,6 +11,7 @@ public:
   using ReadyCallback = void (*)(_lv_anim_t *);
   using GetValueCallback = s32 (*)(_lv_anim_t *);
 
+
   Animation() { api()->anim_init(&m_anim); }
 
   Animation &set_values(s32 start, s32 end) {

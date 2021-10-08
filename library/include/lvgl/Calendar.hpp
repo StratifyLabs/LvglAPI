@@ -13,6 +13,9 @@ public:
   explicit Calendar(const char * name) : ObjectAccess(name){}
   explicit Calendar(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->calendar_class;
+  }
 
 private:
   OBJECT_ACCESS_FRIENDS();

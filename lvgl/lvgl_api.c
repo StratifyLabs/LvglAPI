@@ -3,6 +3,8 @@
 #include <sdk/types.h>
 #include <unistd.h>
 
+
+
 //#include <sos/dev/display.h>
 #if _LVGL_HAS_STRATIFY_OS
 #include <sos/fs/drive_assetfs.h>
@@ -11,7 +13,7 @@
 #include "lvgl.h"
 #include "lvgl_api.h"
 
-const lvgl_api_font_descriptor_t * lvgl_api_get_font(int offset);
+const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset);
 
 const lvgl_api_t lvgl_api = {
   .sos_api =
@@ -800,32 +802,70 @@ const lvgl_api_t lvgl_api = {
   .theme_mono_init = lv_theme_mono_init,
   .theme_basic_init = lv_theme_basic_init,
 
-  //system
-  .get_font = lvgl_api_get_font
+  // system
+  .get_font = lvgl_api_get_font,
+
+  // class resolution
+  .obj_class = &lv_obj_class,
+  .animation_image_class = &lv_animimg_class,
+  .calendar_class = &lv_calendar_class,
+  .calendar_header_arrow_class = &lv_calendar_header_arrow_class,
+  .calendar_header_dropdown_class = &lv_calendar_header_dropdown_class,
+  .chart_class = &lv_chart_class,
+  .colorwheel_class = &lv_colorwheel_class,
+  .dropdown_class = &lv_dropdown_class,
+  .image_button_class = &lv_imgbtn_class,
+  .keyboard_class = &lv_keyboard_class,
+  .led_class = &lv_led_class,
+  .list_class = &lv_list_class,
+  .list_text_class = &lv_list_text_class,
+  .list_button_class = &lv_list_btn_class,
+  .meter_class = &lv_meter_class,
+  .spangroup_class = &lv_spangroup_class,
+  .spinbox_class = &lv_spinbox_class,
+  .spinner_class = &lv_spinner_class,
+  .tabview_class = &lv_tabview_class,
+  .tileview_class = &lv_tileview_class,
+  .tileview_tile_class = &lv_tileview_tile_class,
+  .window_class = &lv_win_class,
+  .arc_class = &lv_arc_class,
+  .bar_class = &lv_bar_class,
+  .button_class = &lv_btn_class,
+  .button_matrix_class = &lv_btnmatrix_class,
+  .canvas_class = &lv_canvas_class,
+  .checkbox_class = &lv_checkbox_class,
+  .image_class = &lv_img_class,
+  .line_class = &lv_line_class,
+  .label_class = &lv_label_class,
+  .message_box_class = &lv_msgbox_class,
+  .roller_class = &lv_roller_class,
+  .slider_class = &lv_slider_class,
+  .switch_class = &lv_switch_class,
+  .table_class = &lv_table_class,
+  .textarea_class = &lv_textarea_class
 };
 
 #if defined __StratifyOS__
 #include <sos/sos.h>
 #endif
 
-
-#include <stdio.h>
 #include <sdk/types.h>
+#include <stdio.h>
 
 #if defined __link
-const lvgl_api_font_descriptor_t * (*lvgl_api_get_font_callback)(int) = NULL;
-void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t * (*callback)(int)){
+const lvgl_api_font_descriptor_t *(*lvgl_api_get_font_callback)(int) = NULL;
+void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t *(*callback)(int)) {
   lvgl_api_get_font_callback = callback;
 }
 #endif
 
-const lvgl_api_font_descriptor_t * lvgl_api_get_font(int offset){
+const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset) {
 #if defined __StratifyOS__
-  lvgl_api_font_request_t request = { .offset = offset };
+  lvgl_api_font_request_t request = {.offset = offset};
   kernel_request(LVGL_REQUEST_GET_FONT, &request);
   return request.descriptor;
 #else
-  if( lvgl_api_get_font_callback ){
+  if (lvgl_api_get_font_callback) {
     return lvgl_api_get_font_callback(offset);
   }
   return NULL;
@@ -846,7 +886,8 @@ static bool lvgl_api_fs_ready_cb(struct _lv_fs_drv_t *drv) {
 static void *
 lvgl_api_fs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int f_mode = (mode == LV_FS_MODE_WR) ? OTHER_OPTIONS | O_RDWR : OTHER_OPTIONS | O_RDONLY;
+  const int f_mode =
+    (mode == LV_FS_MODE_WR) ? OTHER_OPTIONS | O_RDWR : OTHER_OPTIONS | O_RDONLY;
 
   long fd = open(path, f_mode);
   return (void *)fd;
@@ -935,7 +976,6 @@ static lv_fs_res_t lvgl_api_fs_dir_close_cb(struct _lv_fs_drv_t *drv, void *rddi
 
 static lv_fs_drv_t drv;
 
-
 void lvgl_api_initialize_filesystem() {
 
   lv_fs_drv_init(&drv); /*Basic initialization*/
@@ -957,24 +997,23 @@ void lvgl_api_initialize_filesystem() {
   drv.user_data = NULL; /*Any custom data if required*/
 
   lv_fs_drv_register(&drv); /*Finally register the drive*/
-
 }
 
 #if _LVGL_HAS_STRATIFY_OS
 typedef struct {
-  const drive_assetfs_dirent_t * entry;
+  const drive_assetfs_dirent_t *entry;
   size_t seek_offset;
 } lvgl_api_assetfs_file_t;
 
 static void *
 lvgl_api_assetfs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode) {
-  const drive_assetfs_header_t * config = drv->user_data;
-  for(size_t i=0; i < config->count; i++){
-    const drive_assetfs_dirent_t * entry = config->entries + i;
-    if( strncmp(path, entry->name, ASSETFS_NAME_MAX) == 0 ){
-      //it's a match
-      lvgl_api_assetfs_file_t * result = lv_mem_alloc(sizeof(lvgl_api_assetfs_file_t));
-      if( result == NULL ){
+  const drive_assetfs_header_t *config = drv->user_data;
+  for (size_t i = 0; i < config->count; i++) {
+    const drive_assetfs_dirent_t *entry = config->entries + i;
+    if (strncmp(path, entry->name, ASSETFS_NAME_MAX) == 0) {
+      // it's a match
+      lvgl_api_assetfs_file_t *result = lv_mem_alloc(sizeof(lvgl_api_assetfs_file_t));
+      if (result == NULL) {
         return NULL;
       }
       result->entry = entry;
@@ -985,10 +1024,9 @@ lvgl_api_assetfs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_
   return NULL;
 }
 
-
 static lv_fs_res_t lvgl_api_assetfs_close_cb(struct _lv_fs_drv_t *drv, void *file_p) {
   MCU_UNUSED_ARGUMENT(drv);
-  if( file_p != NULL ){
+  if (file_p != NULL) {
     lv_mem_free(file_p);
   }
   return LV_FS_RES_OK;
@@ -1001,9 +1039,9 @@ static lv_fs_res_t lvgl_api_assetfs_read_cb(
   uint32_t btr,
   uint32_t *br) {
   MCU_UNUSED_ARGUMENT(drv);
-  //const assetfs_dirent_t * entry = file_p;
-  lvgl_api_assetfs_file_t * file = file_p;
-  const char * start = (char*)(drv->user_data) + file->entry->start;
+  // const assetfs_dirent_t * entry = file_p;
+  lvgl_api_assetfs_file_t *file = file_p;
+  const char *start = (char *)(drv->user_data) + file->entry->start;
   const size_t offset = file->seek_offset;
 
   const size_t end = offset + btr;
@@ -1038,16 +1076,16 @@ static lv_fs_res_t lvgl_api_assetfs_seek_cb(
 
   MCU_UNUSED_ARGUMENT(drv);
 
-  lvgl_api_assetfs_file_t * file = file_p;
-  if( whence == LV_FS_SEEK_CUR ){
+  lvgl_api_assetfs_file_t *file = file_p;
+  if (whence == LV_FS_SEEK_CUR) {
     file->seek_offset += pos;
-  } else if( whence == LV_FS_SEEK_SET ){
+  } else if (whence == LV_FS_SEEK_SET) {
     file->seek_offset = pos;
   } else {
     file->seek_offset = file->entry->size;
   }
 
-  if( file->seek_offset > file->entry->size ){
+  if (file->seek_offset > file->entry->size) {
     file->seek_offset = file->entry->size;
   }
 
@@ -1056,7 +1094,7 @@ static lv_fs_res_t lvgl_api_assetfs_seek_cb(
 static lv_fs_res_t
 lvgl_api_assetfs_tell_cb(struct _lv_fs_drv_t *drv, void *file_p, uint32_t *pos_p) {
   MCU_UNUSED_ARGUMENT(drv);
-  lvgl_api_assetfs_file_t * file = file_p;
+  lvgl_api_assetfs_file_t *file = file_p;
   *pos_p = file->seek_offset;
   return LV_FS_RES_OK;
 }
@@ -1074,7 +1112,8 @@ lvgl_api_assetfs_dir_read_cb(struct _lv_fs_drv_t *drv, void *rddir_p, char *fn) 
   return LV_FS_RES_NOT_IMP;
 }
 
-static lv_fs_res_t lvgl_api_assetfs_dir_close_cb(struct _lv_fs_drv_t *drv, void *rddir_p) {
+static lv_fs_res_t
+lvgl_api_assetfs_dir_close_cb(struct _lv_fs_drv_t *drv, void *rddir_p) {
   MCU_UNUSED_ARGUMENT(drv);
   MCU_UNUSED_ARGUMENT(rddir_p);
   return LV_FS_RES_NOT_IMP;
@@ -1085,12 +1124,12 @@ static bool lvgl_api_assetfs_ready_cb(struct _lv_fs_drv_t *drv) {
   return true;
 }
 
-
-void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t * drv, char letter){
+void lvgl_api_mount_asset_filesystem(const void *assetfs, lv_fs_drv_t *drv, char letter) {
   lv_fs_drv_init(drv); /*Basic initialization*/
 
-  drv->letter = letter;                    /*An uppercase letter to identify the drive */
-  drv->ready_cb = lvgl_api_assetfs_ready_cb; /*Callback to tell if the drive is ready to use */
+  drv->letter = letter; /*An uppercase letter to identify the drive */
+  drv->ready_cb =
+    lvgl_api_assetfs_ready_cb; /*Callback to tell if the drive is ready to use */
   drv->open_cb = lvgl_api_assetfs_open_cb;   /*Callback to open a file */
   drv->close_cb = lvgl_api_assetfs_close_cb; /*Callback to close a file */
   drv->read_cb = lvgl_api_assetfs_read_cb;   /*Callback to read a file */
@@ -1100,11 +1139,11 @@ void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t * drv, ch
 
   drv->dir_open_cb =
     lvgl_api_assetfs_dir_open_cb; /*Callback to open directory to read its content */
-  drv->dir_read_cb = lvgl_api_assetfs_dir_read_cb;   /*Callback to read a directory's content */
+  drv->dir_read_cb =
+    lvgl_api_assetfs_dir_read_cb; /*Callback to read a directory's content */
   drv->dir_close_cb = lvgl_api_assetfs_dir_close_cb; /*Callback to close a directory */
 
-  drv->user_data = (void*)assetfs; /*Any custom data if required*/
-  lv_fs_drv_register(drv); /*Finally register the drive*/
+  drv->user_data = (void *)assetfs; /*Any custom data if required*/
+  lv_fs_drv_register(drv);          /*Finally register the drive*/
 }
 #endif
-

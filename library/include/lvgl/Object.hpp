@@ -82,7 +82,6 @@ public:
   class Class {
   public:
     u16 width() const { return m_class->width_def; }
-
     u16 height() const { return m_class->height_def; }
 
     Editable editable() const { return Editable(m_class->editable); }
@@ -130,7 +129,12 @@ public:
     return api()->obj_has_class(m_object, value.m_class);
   }
 
-  Class get_class() const { return Class(api()->obj_get_class(m_object)); }
+  Class get_instance_class() const { return Class(api()->obj_get_class(m_object)); }
+
+  static const lv_obj_class_t * get_class(){
+    return api()->obj_class;
+  }
+
 
   bool is_valid() const { return api()->obj_is_valid(m_object); }
 
@@ -218,11 +222,8 @@ public:
   }
 
   u32 get_child_count() const { return api()->obj_get_child_cnt(m_object); }
-
   u32 get_child_id() const { return api()->obj_get_child_id(m_object); }
-
   Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
-
   Object get_child(s32 id) const { return Object(api()->obj_get_child(m_object, id)); }
 
   Object get_child(const char *name) const {
@@ -264,6 +265,14 @@ public:
   }
 
   template <class TargetClass> TargetClass get() { return TargetClass(object()); }
+
+  template <class TargetClass> bool is_class() const {
+    return api()->obj_get_class(m_object) == TargetClass::get_class();
+  }
+
+  ClassType get_class_type() const;
+  static const char * to_cstring(ClassType value);
+  static ClassType class_type_from_cstring(const char * value);
 
   bool is_editable() const { return api()->obj_is_editable(m_object); }
 

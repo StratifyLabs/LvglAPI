@@ -587,6 +587,46 @@ private:
   lv_coord_t m_value;
 };
 
+enum class ClassType {
+  object,
+  animation_image,
+  calendar,
+  calendar_header_arrow,
+  calendar_header_dropdown,
+  chart,
+  colorwheel,
+  dropdown,
+  image_button,
+  keyboard,
+  led,
+  list,
+  list_text,
+  list_button,
+  meter,
+  spangroup,
+  spinbox,
+  spinner,
+  tabview,
+  tileview,
+  tileview_tile,
+  window,
+  arc,
+  bar,
+  button,
+  button_matrix,
+  canvas,
+  checkbox,
+  image,
+  line,
+  label,
+  message_box,
+  roller,
+  slider,
+  switch_,
+  table,
+  textarea
+};
+
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);
 }

@@ -13,6 +13,11 @@ public:
   explicit List(const char *name) : ObjectAccess(name) {}
   explicit List(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
+
+  static const lv_obj_class_t * get_class(){
+    return api()->list_class;
+  }
+
   List &add_button(const char *symbol, const char *text) {
     auto object = api()->list_add_btn(m_object, symbol, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
@@ -161,6 +166,10 @@ public:
 
   explicit CheckList(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->list_class;
+  }
+
   static constexpr auto check_symbol_name = "CheckSymbol";
 
   CheckList &add_item(const char *name, const char *text) {
@@ -224,6 +233,10 @@ public:
 
   explicit FormList(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->list_class;
+  }
+
   static constexpr auto value_name = "FormValue";
 
   enum class ItemType {
@@ -236,7 +249,7 @@ public:
   class ItemContext : public Object::Context {
   public:
 
-    using Callback = void (*)(ItemContext * item_context);
+    using Callback = void (*)(ItemContext * item_context, lv_event_t*);
 
     explicit ItemContext(const char *name) : Object::Context(name) {}
 

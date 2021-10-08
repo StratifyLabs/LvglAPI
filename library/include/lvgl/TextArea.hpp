@@ -13,6 +13,10 @@ public:
   explicit TextArea(const char * name) : ObjectAccess(name){}
   explicit TextArea(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->textarea_class;
+  }
+
   TextArea & set_password_mode(bool value = true){
     api()->textarea_set_password_mode(object(), value);
     return *this;

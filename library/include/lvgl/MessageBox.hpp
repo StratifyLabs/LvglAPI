@@ -1,48 +1,53 @@
 #ifndef LVGLAPI_LVGL_MESSAGEBOX_HPP
 #define LVGLAPI_LVGL_MESSAGEBOX_HPP
 
-#include "ObjectAccess.hpp"
 #include "Label.hpp"
+#include "ObjectAccess.hpp"
 
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
 
-class MessageBox  : public ObjectAccess<MessageBox> {
+class MessageBox : public ObjectAccess<MessageBox> {
 public:
-  explicit MessageBox(const char * name) : ObjectAccess(name){}
-  explicit MessageBox(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  class Construct {
+  public:
 
-  const char * get_active_button_text() const {
+    Construct &set_button_list(const char *list[]) {
+      m_button_list = list;
+      return *this;
+    }
+
+  private:
+    friend MessageBox;
+    API_AF(Construct, const char *, title, "");
+    API_AF(Construct, const char *, message, "");
+    API_AB(Construct, add_close_button, true);
+    API_AB(Construct, modal, false);
+
+    const char **m_button_list = nullptr;
+  };
+
+  explicit MessageBox(const char *name, const Construct &options)
+    : ObjectAccess(name), m_construct(&options) {}
+  explicit MessageBox(const Context &context, const Construct &options)
+    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+
+  static const lv_obj_class_t *get_class() { return api()->message_box_class; }
+
+  const char *get_active_button_text() const {
     return api()->msgbox_get_active_btn_text(m_object);
   }
 
-  Label get_text() const {
-    return Label(api()->msgbox_get_text(m_object));
-  }
+  Label get_text() const { return Label(api()->msgbox_get_text(m_object)); }
 
-  void close(){
-    api()->msgbox_close(object());
-  }
-
-
-  //only used during construction
-  MessageBox& set_initial_button_list(const char * list[]){
-    API_ASSERT(m_object == nullptr);
-    m_button_list = list;
-    return *this;
-  }
+  void close() { api()->msgbox_close(object()); }
 
 private:
   OBJECT_ACCESS_FRIENDS();
-  explicit MessageBox(lv_obj_t * object){ m_object = object; }
-  MessageBox(Object parent, const MessageBox & options);
+  explicit MessageBox(lv_obj_t *object) { m_object = object; }
+  MessageBox(Object parent, const MessageBox &options);
 
-  API_AF(MessageBox,const char*, initial_title, "");
-  API_AF(MessageBox,const char*, initial_message, "");
-  API_AB(MessageBox,initial_add_close_button,true);
-  API_AB(MessageBox, initial_modal, false);
-
-  const char ** m_button_list = nullptr;
+  const Construct *m_construct = nullptr;
 
 };
 

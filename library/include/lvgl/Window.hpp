@@ -14,6 +14,10 @@ public:
   explicit Window(const char * name) : ObjectAccess(name){}
   explicit Window(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->window_class;
+  }
+
   Window &add_button(const char *name, const void *icon, lv_coord_t width, void (*add)(Button &) = nullptr) {
     auto object = api()->win_add_btn(m_object, icon, width);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);

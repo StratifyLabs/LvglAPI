@@ -12,6 +12,10 @@ public:
   explicit ButtonMatrix(const char * name) : ObjectAccess(name){}
   explicit ButtonMatrix(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->button_matrix_class;
+  }
+
   u16 get_selected_button() const { return api()->btnmatrix_get_selected_btn(object()); }
 
   const char *get_button_text(u16 id) const {

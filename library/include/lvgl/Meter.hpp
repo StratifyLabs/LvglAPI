@@ -37,6 +37,10 @@ public:
   explicit Meter(const char * name) : ObjectAccess(name){}
   explicit Meter(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->meter_class;
+  }
+
   Scale add_scale() { return Scale(api()->meter_add_scale(object())); }
 
   class Tick {

@@ -12,6 +12,10 @@ public:
   TileView(const char *name) : ObjectAccess(name) {}
   TileView(const Context &context) : ObjectAccess(context.cast_as_name()) {}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->tileview_class;
+  }
+
   class Location {
     API_AF(Location, uint8_t, row, 0);
     API_AF(Location, uint8_t, column, 0);

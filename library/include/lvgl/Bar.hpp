@@ -72,6 +72,10 @@ public:
   explicit Bar(const char * name) : BarAccess(name){}
   explicit Bar(const Context & context) : BarAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_class(){
+    return api()->bar_class;
+  }
+
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,
     symmetrical = LV_BAR_MODE_SYMMETRICAL,

@@ -12,6 +12,9 @@ public:
   explicit Spinbox(const char * name) : ObjectAccess(name){}
   explicit Spinbox(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->spinbox_class;
+  }
 
 private:
   OBJECT_ACCESS_FRIENDS();

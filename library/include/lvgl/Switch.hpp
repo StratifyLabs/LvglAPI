@@ -13,6 +13,10 @@ public:
   explicit Switch(const char * name) : ObjectAccess(name){}
   explicit Switch(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->switch_class;
+  }
+
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Switch(lv_obj_t * object){ m_object = object; }

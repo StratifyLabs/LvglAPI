@@ -821,6 +821,45 @@ typedef struct {
   //system
   const lvgl_api_font_descriptor_t * (*get_font)(int offset);
 
+  const lv_obj_class_t * obj_class;
+  const lv_obj_class_t * animation_image_class;
+  const lv_obj_class_t * calendar_class;
+  const lv_obj_class_t * calendar_header_arrow_class;
+  const lv_obj_class_t * calendar_header_dropdown_class;
+  const lv_obj_class_t * chart_class;
+  const lv_obj_class_t * colorwheel_class;
+  const lv_obj_class_t * dropdown_class;
+  const lv_obj_class_t * image_button_class;
+  const lv_obj_class_t * keyboard_class;
+  const lv_obj_class_t * led_class;
+  const lv_obj_class_t * list_class;
+  const lv_obj_class_t * list_text_class;
+  const lv_obj_class_t * list_button_class;
+  const lv_obj_class_t * meter_class;
+  const lv_obj_class_t * spangroup_class;
+  const lv_obj_class_t * spinbox_class;
+  const lv_obj_class_t * spinner_class;
+  const lv_obj_class_t * tabview_class;
+  const lv_obj_class_t * tileview_class;
+  const lv_obj_class_t * tileview_tile_class;
+  const lv_obj_class_t * window_class;
+  const lv_obj_class_t * arc_class;
+  const lv_obj_class_t * bar_class;
+  const lv_obj_class_t * button_class;
+  const lv_obj_class_t * button_matrix_class;
+  const lv_obj_class_t * canvas_class;
+  const lv_obj_class_t * checkbox_class;
+  const lv_obj_class_t * image_class;
+  const lv_obj_class_t * line_class;
+  const lv_obj_class_t * label_class;
+  const lv_obj_class_t * message_box_class;
+  //const lv_obj_class_t * templ_class;
+  const lv_obj_class_t * roller_class;
+  const lv_obj_class_t * slider_class;
+  const lv_obj_class_t * switch_class;
+  const lv_obj_class_t * table_class;
+  const lv_obj_class_t * textarea_class;
+
 
 } lvgl_api_t;
 

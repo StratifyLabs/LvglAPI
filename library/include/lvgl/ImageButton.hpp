@@ -12,6 +12,11 @@ public:
   explicit ImageButton(const char * name) : ObjectAccess(name){}
   explicit ImageButton(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+
+  static const lv_obj_class_t * get_class(){
+    return api()->image_button_class;
+  }
+
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit ImageButton(lv_obj_t * object){ m_object = object; }

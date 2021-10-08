@@ -11,6 +11,11 @@ public:
   explicit Line(const char * name) : ObjectAccess(name){}
   explicit Line(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+
+  static const lv_obj_class_t * get_class(){
+    return api()->line_class;
+  }
+
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Line(lv_obj_t * object){ m_object = object; }

@@ -15,6 +15,10 @@ public:
     symmetrical = LV_ARC_MODE_SYMMETRICAL
   };
 
+  static const lv_obj_class_t * get_class(){
+    return api()->arc_class;
+  }
+
   explicit Arc(const char * name) : ObjectAccess(name){}
 
   Arc & set_start_angle(u16 value){

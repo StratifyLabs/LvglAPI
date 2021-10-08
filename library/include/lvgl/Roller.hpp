@@ -13,6 +13,10 @@ public:
   explicit Roller(const char * name) : ObjectAccess(name){}
   explicit Roller(const Context & context) : ObjectAccess(context.cast_as_name()){}
 
+  static const lv_obj_class_t * get_object_class(){
+    return api()->roller_class;
+  }
+
   Roller &set_options(const char *options, Mode mode = Mode::normal) {
     api()->roller_set_options(object(), options, static_cast<lv_roller_mode_t>(mode));
     return *this;
