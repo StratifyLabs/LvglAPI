@@ -439,7 +439,7 @@ public:
   Derived &set_color_filter_descriptor(
     const lv_color_filter_dsc_t *value,
     Selector selector = Selector()) {
-    return set_property(Property::color_filter_dsc, PropertyValue(value), selector);
+    return set_property(Property::color_filter_descriptor, PropertyValue(value), selector);
   }
 
   Derived &set_color_filter_opacity(lv_opa_t value, Selector selector = Selector()) {

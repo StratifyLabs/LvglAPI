@@ -222,8 +222,8 @@ public:
     return set_property(Property::transition, PropertyValue(value));
   }
 
-  Style &set_blend_mode(lv_blend_mode_t value) {
-    return set_property(Property::blend_mode, value);
+  Style &set_blend_mode(BlendMode value) {
+    return set_property(Property::blend_mode, s32(value));
   }
 
   Style &set_layout(uint16_t value) {
