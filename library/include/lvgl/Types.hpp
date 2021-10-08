@@ -191,7 +191,7 @@ enum class Alignment {
   center = LV_ALIGN_CENTER,
 
   out_top_left = LV_ALIGN_OUT_TOP_LEFT,
-  out_top_mid = LV_ALIGN_OUT_TOP_MID,
+  out_top_middle = LV_ALIGN_OUT_TOP_MID,
   out_top_right = LV_ALIGN_OUT_TOP_RIGHT,
   out_bottom_left = LV_ALIGN_OUT_BOTTOM_LEFT,
   out_bottom_middle = LV_ALIGN_OUT_BOTTOM_MID,

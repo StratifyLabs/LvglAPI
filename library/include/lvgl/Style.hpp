@@ -48,6 +48,52 @@ public:
   static const char * to_cstring(Property property);
   static Property property_from_cstring(const char * value);
 
+  static const char * to_cstring(TextDecoration value);
+  static TextDecoration text_decoration_from_cstring(const char * value);
+
+  static const char * to_cstring(TextAlignment value);
+  static TextAlignment text_alignment_from_cstring(const char * value);
+
+  static const char * to_cstring(BorderSide value);
+  static BorderSide border_side_from_cstring(const char * value);
+
+  static const char * to_cstring(GradientDirection value);
+  static GradientDirection gradient_direction_from_cstring(const char * value);
+
+  static const char * to_cstring(BaseDirection value);
+  static BaseDirection base_direction_from_cstring(const char * value);
+
+  static const char * to_cstring(Direction value);
+  static Direction direction_from_cstring(const char * value);
+
+  static const char * to_cstring(Alignment value);
+  static Alignment alignment_from_cstring(const char * value);
+
+  static const char * to_cstring(FlexFlow value);
+  static FlexFlow flex_flow_from_cstring(const char * value);
+
+  static const char * to_cstring(FlexAlign value);
+  static FlexAlign flex_align_from_cstring(const char * value);
+
+  static const char * to_cstring(State value);
+  static State state_from_cstring(const char * value);
+
+  static const char * to_cstring(ScrollBarMode value);
+  static ScrollBarMode scroll_bar_mode_from_cstring(const char * value);
+
+  static const char * to_cstring(ScrollSnap value);
+  static ScrollSnap scroll_snap_mode_from_cstring(const char * value);
+
+  static const char * to_cstring(IsAnimate value);
+  static IsAnimate is_animate_mode_from_cstring(const char * value);
+
+  static const char * to_cstring(Part value);
+  static Part part_mode_from_cstring(const char * value);
+
+  static const char * to_cstring(BlendMode value);
+  static BlendMode blend_mode_from_cstring(const char * value);
+
+
   PropertyValue get_property_value(Property property) const {
     PropertyValue result;
     api()->style_get_prop(
