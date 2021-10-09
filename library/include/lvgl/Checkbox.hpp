@@ -10,7 +10,7 @@ class Checkbox : public ObjectAccess<Checkbox>{
 public:
 
   explicit Checkbox(const char * name) : ObjectAccess(name){}
-  explicit Checkbox(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Checkbox(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_class(){
     return api()->checkbox_class;

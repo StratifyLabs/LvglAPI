@@ -11,14 +11,13 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Container : public ObjectAccess<Container> {
 public:
   explicit Container(const char *name) : ObjectAccess(name) {}
-  explicit Container(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit Container(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
   static Container active_screen() {
     Container result(Api::api()->disp_get_scr_act(nullptr));
     return result;
   }
 
-  // living dangerously
   Container(lv_obj_t *object) { m_object = object; }
   Container(Object &object) { m_object = object.object(); }
 
@@ -32,7 +31,7 @@ private:
 class NakedContainer : public ObjectAccess<Container> {
 public:
   explicit NakedContainer(const char *name) : ObjectAccess(name) {}
-  explicit NakedContainer(const Context &context)
+  explicit NakedContainer(const UserData &context)
     : ObjectAccess(context.cast_as_name()) {}
 
 private:
@@ -42,6 +41,11 @@ private:
     api()->label_set_text_static(m_object, "");
   }
 };
+
+inline Container screen(){
+  Container result(Api::api()->disp_get_scr_act(nullptr));
+  return result;
+}
 
 } // namespace lvgl
 

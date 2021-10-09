@@ -11,7 +11,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class List : public ObjectAccess<List> {
 public:
   explicit List(const char *name) : ObjectAccess(name) {}
-  explicit List(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit List(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
 
   static const lv_obj_class_t * get_class(){
@@ -21,7 +21,7 @@ public:
   List &add_button(const char *symbol, const char *text) {
     auto object = api()->list_add_btn(m_object, symbol, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
-    object->user_data = nullptr;
+    set_user_data(object, "");
     return *this;
   }
 
@@ -32,7 +32,8 @@ public:
     void (*configure)(Button &) = nullptr) {
     auto object = api()->list_add_btn(m_object, symbol, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
-    object->user_data = (void *)name;
+    set_user_data(object, name);
+
     if (configure) {
       Button button(object);
       configure(button);
@@ -41,7 +42,7 @@ public:
   }
 
   List &add_button(
-    const Context &context,
+    const UserData &context,
     const char *symbol,
     const char *text,
     void (*configure)(Button &) = nullptr) {
@@ -62,7 +63,7 @@ public:
     void (*configure)(Button &) = nullptr) {
     auto object = api()->list_add_btn(m_object, options.left_symbol(), options.text());
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
-    object->user_data = (void *)name;
+    set_user_data(object, name);
     if (configure) {
       Button button(object);
       configure(button);
@@ -107,7 +108,7 @@ public:
   }
 
   List &add_button(
-    const Context &context,
+    const UserData &context,
     const ListButton &options,
     void (*configure)(Button &) = nullptr) {
     return add_button(context.cast_as_name(), options, configure);
@@ -116,7 +117,7 @@ public:
   List &add_text(const char *text) {
     auto object = api()->list_add_text(m_object, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
-    object->user_data = nullptr;
+    set_user_data(object, "");
     return *this;
   }
 
@@ -126,7 +127,7 @@ public:
     void (*configure)(Label &label) = nullptr) {
     auto object = api()->list_add_text(m_object, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
-    object->user_data = (void *)name;
+    set_user_data(object, name);
     if (configure) {
       Label label(object);
       configure(label);
@@ -135,7 +136,7 @@ public:
   }
 
   List &add_text(
-    const Context &context,
+    const UserData &context,
     const char *text,
     void (*configure)(Label &label) = nullptr) {
     return add_text(context.cast_as_name(), text, configure);
@@ -154,17 +155,17 @@ private:
 
 class CheckList : public ObjectAccess<CheckList> {
 public:
-  class Context : public Object::Context {
+  class UserData : public lvgl::UserDataAccess<UserData> {
   public:
-    explicit Context(const char *name) : Object::Context(name) {}
+    explicit UserData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AB(Context, allow_multiple, false);
-    API_AF(Context, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(Context, const char *, not_checked_symbol, "");
+    API_AB(UserData, allow_multiple, false);
+    API_AF(UserData, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(UserData, const char *, not_checked_symbol, "");
   };
 
-  explicit CheckList(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit CheckList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
   static const lv_obj_class_t * get_class(){
     return api()->list_class;
@@ -174,7 +175,7 @@ public:
 
   CheckList &add_item(const char *name, const char *text) {
     auto object = api()->list_add_btn(m_object, "", text);
-    object->user_data = (void *)name;
+    set_user_data(object, name);
     auto button = Container(object).get<Button>();
     button.add_flag(Flags::event_bubble)
       .add(Label(check_symbol_name).configure([](Label &label) {
@@ -197,7 +198,7 @@ public:
   CheckList &set_checked(const char *name, bool value = true) {
     auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
     if (object.is_valid()) {
-      auto *c = context<Context>();
+      auto *c = user_data<UserData>();
       object.cast<Label>()->set_text_static(value ? c->checked_symbol() : c->not_checked_symbol());
     }
     return *this;
@@ -206,7 +207,7 @@ public:
   bool is_checked(const char *name) const {
     auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
     if (object.is_valid()) {
-      auto *c = context<Context>();
+      auto *c = user_data<UserData>();
       return var::StringView(object.cast<Label>()->get_text()) == c->checked_symbol();
     }
     return false;
@@ -221,17 +222,17 @@ private:
 
 class FormList : public ObjectAccess<FormList> {
 public:
-  class Context : public Object::Context {
+  class UserData : public ::lvgl::UserDataAccess<UserData> {
   public:
-    explicit Context(const char *name) : Object::Context(name) {}
+    explicit UserData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AB(Context, allow_multiple, false);
-    API_AF(Context, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(Context, const char *, not_checked_symbol, "");
+    API_AB(UserData, allow_multiple, false);
+    API_AF(UserData, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(UserData, const char *, not_checked_symbol, "");
   };
 
-  explicit FormList(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit FormList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
   static const lv_obj_class_t * get_class(){
     return api()->list_class;
@@ -246,20 +247,18 @@ public:
     navigation
   };
 
-  class ItemContext : public Object::Context {
+  class ItemUserData : public ::lvgl::UserDataAccess<ItemUserData> {
   public:
-
-    using Callback = void (*)(ItemContext * item_context, lv_event_t*);
-
-    explicit ItemContext(const char *name) : Object::Context(name) {}
+    using Callback = void (*)(lv_event_t*);
+    explicit ItemUserData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AF(ItemContext, ItemType, type, ItemType::boolean);
-    API_AC(ItemContext, var::KeyString, value);
-    API_AF(ItemContext, Callback, edit_callback, nullptr);
+    API_AF(ItemUserData, ItemType, type, ItemType::boolean);
+    API_AC(ItemUserData, var::KeyString, value);
+    API_AF(ItemUserData, Callback, clicked_callback, nullptr);
   };
 
-  FormList &add_item(const ItemContext & item_context);
+  FormList &add_item(const ItemUserData & item_context);
 
 
 private:

@@ -35,7 +35,7 @@ public:
   };
 
   explicit Meter(const char * name) : ObjectAccess(name){}
-  explicit Meter(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Meter(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_class(){
     return api()->meter_class;

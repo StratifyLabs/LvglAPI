@@ -10,7 +10,7 @@ class Canvas : public ObjectAccess<Canvas> {
 public:
 
   explicit Canvas(const char * name) : ObjectAccess(name){}
-  explicit Canvas(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Canvas(const UserData & context) : ObjectAccess(context.cast_as_name()){}
   static const lv_obj_class_t * get_class(){
     return api()->canvas_class;
   }

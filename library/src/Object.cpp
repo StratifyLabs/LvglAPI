@@ -1,18 +1,34 @@
 #include "lvgl/Object.hpp"
+#include "lvgl/Event.hpp"
 
 lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
 
-#define CLASS_TYPE_CASE(x, y)                                                       \
-if (class_value == api()->y##_class ) {                                            \
-    return x::y;                                                                         \
+
+void Object::set_user_data(lv_obj_t* obj, const char *name) {
+  API_ASSERT(obj != nullptr);
+  obj->user_data = (void *)name;
+  if( auto * user_data = UserData::get_user_data(obj->user_data); user_data && user_data->needs_free() ){
+    api()->obj_add_event_cb(obj, delete_user_data, LV_EVENT_DELETE, nullptr);
+  }
 }
 
+void Object::delete_user_data(lv_event_t *e) {
+  if (auto *value = UserData::get_user_data(e->target->user_data); value) {
+    printf("Delete user data %s\n", value->name());
+    delete value;
+  }
+}
 
-ClassType Object::get_class_type() const{
-  const auto * class_value = api()->obj_get_class(m_object);
-  //CLASS_TYPE_CASE(ClassType, animation_image);
+#define CLASS_TYPE_CASE(x, y)                                                            \
+  if (class_value == api()->y##_class) {                                                 \
+    return x::y;                                                                         \
+  }
+
+ClassType Object::get_class_type() const {
+  const auto *class_value = api()->obj_get_class(m_object);
+  // CLASS_TYPE_CASE(ClassType, animation_image);
   CLASS_TYPE_CASE(ClassType, calendar);
   CLASS_TYPE_CASE(ClassType, calendar_header_arrow);
   CLASS_TYPE_CASE(ClassType, calendar_header_dropdown);
@@ -45,24 +61,25 @@ ClassType Object::get_class_type() const{
   CLASS_TYPE_CASE(ClassType, message_box);
   CLASS_TYPE_CASE(ClassType, roller);
   CLASS_TYPE_CASE(ClassType, slider);
-  //CLASS_TYPE_CASE(ClassType, switch_);
-  if( class_value == api()->switch_class ){ return ClassType::switch_; }
+  // CLASS_TYPE_CASE(ClassType, switch_);
+  if (class_value == api()->switch_class) {
+    return ClassType::switch_;
+  }
   CLASS_TYPE_CASE(ClassType, table);
   CLASS_TYPE_CASE(ClassType, textarea);
   return ClassType::object;
 }
 
 #define PROPERTY_CASE(x, y)                                                              \
-case x::y:                                                                             \
-  return MCU_STRINGIFY(y)
+  case x::y:                                                                             \
+    return MCU_STRINGIFY(y)
 
 #define PROPERTY_STRING_CASE(x, y)                                                       \
-if (value_stringview == MCU_STRINGIFY(x)) {                                            \
+  if (value_stringview == MCU_STRINGIFY(x)) {                                            \
     return x::y;                                                                         \
-}
+  }
 
-
-const char * Object::to_cstring(ClassType value){
+const char *Object::to_cstring(ClassType value) {
   switch (value) {
     PROPERTY_CASE(ClassType, object);
     PROPERTY_CASE(ClassType, animation_image);
@@ -105,7 +122,7 @@ const char * Object::to_cstring(ClassType value){
   return "unknown";
 }
 
-ClassType Object::class_type_from_cstring(const char * value){
+ClassType Object::class_type_from_cstring(const char *value) {
   const var::StringView value_stringview = value;
   PROPERTY_STRING_CASE(ClassType, animation_image);
   PROPERTY_STRING_CASE(ClassType, calendar);

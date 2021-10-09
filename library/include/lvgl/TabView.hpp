@@ -21,7 +21,7 @@ public:
 
   explicit TabView(const char *name, const Construct &options)
     : ObjectAccess(name), m_construct(&options) {}
-  explicit TabView(const Context &context, const Construct &options)
+  explicit TabView(const UserData &context, const Construct &options)
     : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
 
   static const lv_obj_class_t *get_object_class() { return api()->tabview_class; }
@@ -31,7 +31,7 @@ public:
     const char *title,
     void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, title));
-    obj.set_name(name);
+    set_user_data(obj.object(), name);
     if (add) {
       add(obj);
     }
@@ -40,7 +40,7 @@ public:
 
   TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, name));
-    obj.set_name(name);
+    set_user_data(obj.object(), name);
     if (add) {
       add(obj);
     }
@@ -48,13 +48,13 @@ public:
   }
 
   TabView &add_tab(
-    const Context &context,
+    const UserData &context,
     const char *title,
     void (*add)(Container &container) = nullptr) {
     return add_tab(context.cast_as_name(), title, add);
   }
 
-  TabView &add_tab(const Context &context, void (*add)(Container &container) = nullptr) {
+  TabView &add_tab(const UserData &context, void (*add)(Container &container) = nullptr) {
     return add_tab(context.cast_as_name(), add);
   }
 

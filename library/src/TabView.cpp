@@ -8,8 +8,8 @@ TabView::TabView(Object parent, const TabView& options){
 
 
   auto tab_buttons = get_buttons();
-  tab_buttons.set_name("TabViewButtons");
+  tab_buttons.set_user_data(m_object, "TabViewButtons");
   auto content = get_content();
-  content.set_name("TabViewContent");
+  content.set_user_data(m_object, "TabViewContent");
 }
 

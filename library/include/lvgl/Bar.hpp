@@ -70,7 +70,7 @@ class Bar : public BarAccess<Bar> {
 public:
 
   explicit Bar(const char * name) : BarAccess(name){}
-  explicit Bar(const Context & context) : BarAccess(context.cast_as_name()){}
+  explicit Bar(const UserData & context) : BarAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_class(){
     return api()->bar_class;

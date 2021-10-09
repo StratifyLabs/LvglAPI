@@ -10,7 +10,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Button : public ObjectAccess<Button> {
 public:
   explicit Button(const char *name) : ObjectAccess(name) {}
-  explicit Button(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit Button(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
   static const lv_obj_class_t * get_class(){
     return api()->button_class;
@@ -24,22 +24,22 @@ public:
     }));
   }
 
-  class LabelContext : public Context {
+  class LabelUserData : public UserDataAccess<LabelUserData> {
   public:
-    LabelContext(const char * name = "") : Context(name){}
+    LabelUserData(const char * name = "") : UserDataBase(name){}
   private:
-    API_AF(LabelContext, Alignment, alignment, Alignment::center);
-    API_AF(LabelContext, u8, right_padding, 0);
-    API_AF(LabelContext, u8, left_padding, 0);
+    API_AF(LabelUserData, Alignment, alignment, Alignment::center);
+    API_AF(LabelUserData, u8, right_padding, 0);
+    API_AF(LabelUserData, u8, left_padding, 0);
   };
 
-  Button &add_label(const LabelContext &context) {
-    return add(Label(context).configure([](Label &label) {
+  Button &add_label(const LabelUserData &user_data) {
+    return add(Label(user_data).configure([](Label &label) {
       const var::StringView name = label.name();
-      const auto *context = label.context<LabelContext>();
-      label.set_alignment(context->alignment())
-        .set_left_padding(context->left_padding())
-        .set_right_padding(context->right_padding())
+      const auto *user_data = label.user_data<LabelUserData>();
+      label.set_alignment(user_data->alignment())
+        .set_left_padding(user_data->left_padding())
+        .set_right_padding(user_data->right_padding())
         .set_text(name.is_empty() ? label.get_parent().name() : label.name());
     }));
   }

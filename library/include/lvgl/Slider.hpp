@@ -16,7 +16,7 @@ public:
   };
 
   explicit Slider(const char * name) : BarAccess(name){}
-  explicit Slider(const Context & context) : BarAccess(context.cast_as_name()){}
+  explicit Slider(const UserData & context) : BarAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_object_class(){
     return api()->slider_class;

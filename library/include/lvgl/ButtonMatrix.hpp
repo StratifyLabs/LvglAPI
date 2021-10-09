@@ -10,7 +10,7 @@ class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
 
   explicit ButtonMatrix(const char * name) : ObjectAccess(name){}
-  explicit ButtonMatrix(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit ButtonMatrix(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_class(){
     return api()->button_matrix_class;

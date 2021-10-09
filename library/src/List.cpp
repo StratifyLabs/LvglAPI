@@ -17,7 +17,7 @@ CheckList::CheckList(Object parent, const CheckList &) {
 
     const char *button_name = event.target().name();
     auto checklist = event.current_target().get<CheckList>();
-    auto *c = checklist.context<Context>();
+    auto *c = checklist.user_data<UserData>();
     if (c->is_allow_multiple() == false) {
       checklist.clear_all();
       checklist.set_checked(button_name);
@@ -33,17 +33,16 @@ FormList::FormList(Object parent, const FormList &) {
   m_object = api()->list_create(parent.object());
 }
 
-FormList &FormList::add_item(const ItemContext &item_context) {
+FormList &FormList::add_item(const ItemUserData &item_context) {
   auto object = api()->list_add_btn(m_object, "", item_context.name());
-  object->user_data = item_context.cast_as_void();
-
+  set_user_data(object, item_context.cast_as_name());
   auto button = Container(object).get<Button>();
   button
     .add_event_callback(
       EventCode::clicked,
       [](lv_event_t *e) {
         const Event event(e);
-        auto *c = event.target().context<ItemContext>();
+        auto *c = event.target().user_data<ItemUserData>();
         auto button = event.target().get<Button>();
         auto label = button.find(value_name).get<Label>();
         if (c->type() == ItemType::boolean) {
@@ -53,8 +52,8 @@ FormList &FormList::add_item(const ItemContext &item_context) {
             label.set_text_static("");
           }
         } else {
-          API_ASSERT(c->edit_callback() != nullptr);
-          c->edit_callback()(c, e);
+          API_ASSERT(c->clicked_callback() != nullptr);
+          c->clicked_callback()(e);
           if( c->type() != ItemType::navigation ){
             label.set_text_static(c->value());
           }
@@ -64,7 +63,7 @@ FormList &FormList::add_item(const ItemContext &item_context) {
       label.set_width(size_from_content).set_alignment(Alignment::right_middle);
     }));
 
-  auto *c = button.context<ItemContext>();
+  auto *c = button.user_data<ItemUserData>();
   if( c->type() == ItemType::navigation ){
     button.find(value_name).cast<Label>()->set_text_static(LV_SYMBOL_RIGHT);
   } else {

@@ -11,7 +11,7 @@ public:
   enum class Mode { normal = LV_ROLLER_MODE_NORMAL, infinite = LV_ROLLER_MODE_INFINITE };
 
   explicit Roller(const char * name) : ObjectAccess(name){}
-  explicit Roller(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Roller(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_object_class(){
     return api()->roller_class;

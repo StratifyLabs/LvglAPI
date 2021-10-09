@@ -10,7 +10,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class TileView : public ObjectAccess<TileView> {
 public:
   TileView(const char *name) : ObjectAccess(name) {}
-  TileView(const Context &context) : ObjectAccess(context.cast_as_name()) {}
+  TileView(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
   static const lv_obj_class_t * get_object_class(){
     return api()->tileview_class;
@@ -29,7 +29,7 @@ public:
     void (*add)(Container &container) = nullptr) {
     Container obj(api()->tileview_add_tile(
       m_object, location.column(), location.row(), lv_dir_t(location.direction())));
-    obj.set_name(name);
+    set_user_data(obj.object(), name);
 
     if( api()->tileview_get_tile_act(m_object) == nullptr ){
       api()->obj_set_tile(m_object, obj.object(), LV_ANIM_OFF);
@@ -42,7 +42,7 @@ public:
   }
 
   TileView &add_tile(
-    const Context &context,
+    const UserData &context,
     const Location &location,
     void (*add)(Container &container) = nullptr) {
     return add_tile(context.cast_as_name(), location, add);
@@ -70,7 +70,7 @@ public:
 
   // must create the TileView with NavigationContext for these to work
   TileView &go_forward(const char * name, void (*configure)(Container &));
-  TileView &go_forward(const Context & context, void (*configure)(Container &)){
+  TileView &go_forward(const UserData & context, void (*configure)(Container &)){
     return go_forward(context.cast_as_name(), configure);
   }
   TileView &go_forward(){

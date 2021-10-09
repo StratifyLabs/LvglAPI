@@ -12,7 +12,7 @@ class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
   explicit DropDownList(const char * name) : ObjectAccess(name){}
-  explicit DropDownList(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit DropDownList(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
   static const lv_obj_class_t * get_class(){
     return api()->dropdown_class;

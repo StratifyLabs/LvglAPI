@@ -29,7 +29,7 @@ public:
 
   explicit MessageBox(const char *name, const Construct &options)
     : ObjectAccess(name), m_construct(&options) {}
-  explicit MessageBox(const Context &context, const Construct &options)
+  explicit MessageBox(const UserData &context, const Construct &options)
     : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
 
   static const lv_obj_class_t *get_class() { return api()->message_box_class; }

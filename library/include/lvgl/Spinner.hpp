@@ -15,7 +15,7 @@ public:
 
   explicit Spinner(const char *name, const Construct &options)
     : ObjectAccess(name), m_construct(&options) {}
-  explicit Spinner(const Context &context, const Construct &options)
+  explicit Spinner(const UserData &context, const Construct &options)
     : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
 
   static const lv_obj_class_t *get_object_class() { return api()->spinner_class; }

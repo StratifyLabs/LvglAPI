@@ -12,7 +12,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Image : public ObjectAccess<Image> {
 public:
   explicit Image(const char * name) : ObjectAccess(name){}
-  explicit Image(const Context & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Image(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
 
   static const lv_obj_class_t * get_class(){

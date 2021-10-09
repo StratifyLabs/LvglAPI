@@ -439,7 +439,8 @@ public:
   Derived &set_color_filter_descriptor(
     const lv_color_filter_dsc_t *value,
     Selector selector = Selector()) {
-    return set_property(Property::color_filter_descriptor, PropertyValue(value), selector);
+    return set_property(
+      Property::color_filter_descriptor, PropertyValue(value), selector);
   }
 
   Derived &set_color_filter_opacity(lv_opa_t value, Selector selector = Selector()) {
@@ -510,7 +511,6 @@ public:
   set_background_gradient_stop(lv_coord_t value, Selector selector = Selector()) {
     return set_property(Property::background_gradient_stop, value, selector);
   }
-
 
   Derived &
   set_background_image_source(const void *value, Selector selector = Selector()) {
@@ -717,7 +717,7 @@ public:
 
   template <typename ChildClass> Derived &add(const ChildClass &child) {
     ChildClass new_child(*this, child);
-    new_child.set_name(child.initial_name());
+    set_user_data(new_child.object(), child.initial_name());
     if (child.initialize()) {
       child.initialize()(new_child);
     }
@@ -751,8 +751,8 @@ public:
   }
 
   const char *initial_name() const { return m_initial_name; }
-  const Context *initial_context() const {
-    return reinterpret_cast<const Context *>(m_initial_name);
+  const UserData *initial_context() const {
+    return reinterpret_cast<const UserData *>(m_initial_name);
   }
 
 private:
