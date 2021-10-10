@@ -773,6 +773,7 @@ private:
   friend class ObjectAccess<TileView>;                                                   \
   friend class ObjectAccess<Button>;                                                     \
   friend class ObjectAccess<MessageBox>;                                                 \
+  friend class Tree;                                                                     \
   friend class Object;
 
 } // namespace lvgl

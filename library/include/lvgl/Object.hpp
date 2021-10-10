@@ -114,9 +114,7 @@ public:
 
     Editable editable() const { return Editable(m_class->editable); }
 
-    const lv_obj_class_t * class_() const{
-      return m_class;
-    }
+    const lv_obj_class_t *class_() const { return m_class; }
 
   private:
     friend class Object;
@@ -249,54 +247,6 @@ public:
   Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
   Object get_child(s32 id) const { return Object(api()->obj_get_child(m_object, id)); }
 
-  Object get_child(const char *name) const {
-    const auto count = get_child_count();
-    for (u32 i = 0; i < count; i++) {
-      auto child = get_child(i);
-      if (is_name_matched(child, name)) {
-        return child;
-      }
-    }
-    return Object();
-  }
-
-  enum class IsAssertOnFail { no, yes };
-
-  template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
-  Object find(const char *name) const {
-    // recursively find the child
-    auto get = get_child(name);
-    if (get.object() != nullptr) {
-      return get;
-    }
-    const auto count = get_child_count();
-    for (u32 i = 0; i < count; i++) {
-      const auto child = get_child(i);
-      auto result = child.find<IsAssertOnFail::no>(name);
-      if (result.m_object != nullptr) {
-        return result;
-      }
-    }
-    if (isAssertOnFail == IsAssertOnFail::yes) {
-      API_ASSERT(false);
-    }
-    return Object();
-  }
-
-  template <class TargetClass> TargetClass find_parent() {
-    auto current = get_parent();
-    while (1) {
-      if ( current.object() == nullptr ) {
-        API_ASSERT(false);
-      } else {
-        if (current.get_instance_class().class_() == TargetClass::get_class()) {
-          return current.get<TargetClass>();
-        }
-      }
-      current = current.get_parent();
-    }
-  }
-
   template <class TargetClass> TargetClass get() {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return TargetClass(object());
@@ -363,7 +313,9 @@ protected:
 
   static bool is_name_matched(const Object &child, const char *name) {
     const auto child_name = child.name();
-    if ((child_name != nullptr) && (var::StringView(child.name()) == name)) {
+    if (
+      (child_name != nullptr)
+      && ((child_name == name) || (var::StringView(child.name()) == name))) {
       return true;
     }
     return false;
@@ -386,6 +338,7 @@ protected:
   UserData *get_user_data() const { return UserData::get_user_data(m_object->user_data); }
 
 private:
+  friend class Tree;
   friend class Event;
   friend class TileView;
   friend class Group;

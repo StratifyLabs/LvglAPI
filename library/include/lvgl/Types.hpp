@@ -11,6 +11,9 @@ namespace lvgl {
 
 using LvglApi = api::Api<lvgl_api_t, LVGL_API_REQUEST>;
 
+enum class IsAssertOnFail { no, yes };
+
+
 class Api : public api::ExecutionContext {
 public:
   static LvglApi &api() { return m_api; }

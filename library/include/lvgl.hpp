@@ -32,6 +32,7 @@ namespace lvgl {}
 #include "lvgl/Table.hpp"
 #include "lvgl/Theme.hpp"
 #include "lvgl/TileView.hpp"
+#include "lvgl/Tree.hpp"
 #include "lvgl/Window.hpp"
 
 using namespace lvgl;

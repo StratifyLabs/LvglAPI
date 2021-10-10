@@ -4,6 +4,7 @@
 #include "Button.hpp"
 #include "Container.hpp"
 #include "Label.hpp"
+#include "Tree.hpp"
 
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
@@ -70,33 +71,37 @@ public:
       button.add(Label(right_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-      button.find(right_symbol_name).get<Label>().set_text_static(options.right_symbol());
+      Tree(button)
+        .find<Label>(right_symbol_name)
+        .set_text_static(options.right_symbol());
     }
     return *this;
   }
 
   List &set_right_symbol_static(const char *name, const char *value) {
-    auto object = find(name).find<IsAssertOnFail::no>(right_symbol_name);
-    if (object.object()) {
-      object.get<Label>().set_text_static(value);
+    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
+    printf("set right symbol %p\n", label.object());
+    if (label.object()) {
+      label.set_text_static(value);
     }
     return *this;
   }
 
   List &clear_right_symbols() {
     for (u32 i = 0; i < get_child_count(); i++) {
-      auto object = get_child(i).find<IsAssertOnFail::no>(right_symbol_name);
-      if (object.object()) {
-        object.get<Label>().set_text_static("");
+      auto label =
+        Tree(get_child(i)).find<Label, IsAssertOnFail::no>(right_symbol_name);
+      if (label.object()) {
+        label.set_text_static("");
       }
     }
     return *this;
   }
 
   List &set_right_symbol(const char *name, const char *value) {
-    auto object = find(name).find<IsAssertOnFail::no>(right_symbol_name);
-    if (object.object()) {
-      object.get<Label>().set_text(value);
+    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
+    if (label.object()) {
+      label.set_text(value);
     }
     return *this;
   }
@@ -149,14 +154,14 @@ private:
 
 class CheckList : public ObjectAccess<CheckList> {
 public:
-  class UserData : public lvgl::UserDataAccess<UserData> {
+  class CheckListData : public lvgl::UserDataAccess<CheckListData> {
   public:
-    explicit UserData(const char *name) : UserDataBase(name) {}
+    explicit CheckListData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AB(UserData, allow_multiple, false);
-    API_AF(UserData, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(UserData, const char *, not_checked_symbol, "");
+    API_AB(CheckListData, allow_multiple, false);
+    API_AF(CheckListData, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(CheckListData, const char *, not_checked_symbol, "");
   };
 
   explicit CheckList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
@@ -173,35 +178,35 @@ public:
       .add(Label(check_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-    button.find(check_symbol_name).get<Label>().set_text_static("");
+    Tree(button).find<Label>(check_symbol_name).set_text_static("");
     return *this;
   }
 
   CheckList &clear_all() {
     for (u32 i = 0; i < get_child_count(); i++) {
-      auto object = get_child(i).find<IsAssertOnFail::no>(check_symbol_name);
-      if (object.object()) {
-        object.get<Label>().set_text_static("");
+      auto label = Tree(get_child(i)).find<Label, IsAssertOnFail::no>(check_symbol_name);
+      if (label.object()) {
+        label.set_text_static("");
       }
     }
     return *this;
   }
 
   CheckList &set_checked(const char *name, bool value = true) {
-    auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
-    if (object.is_valid()) {
-      auto *c = user_data<UserData>();
-      object.get<Label>().set_text_static(
+    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
+    if (label.is_valid()) {
+      auto *c = user_data<CheckListData>();
+      label.set_text_static(
         value ? c->checked_symbol() : c->not_checked_symbol());
     }
     return *this;
   }
 
   bool is_checked(const char *name) const {
-    auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
-    if (object.is_valid()) {
-      auto *c = user_data<UserData>();
-      return var::StringView(object.get<Label>().get_text()) == c->checked_symbol();
+    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
+    if (label.is_valid()) {
+      auto *c = user_data<CheckListData>();
+      return var::StringView(label.get_text()) == c->checked_symbol();
     }
     return false;
   }
@@ -225,7 +230,7 @@ public:
     API_AF(FormData, const char *, not_checked_symbol, "");
   };
 
-  explicit FormList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit FormList(const UserData &user_data) : ObjectAccess(user_data.cast_as_name()) {}
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 

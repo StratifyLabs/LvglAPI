@@ -2,41 +2,42 @@
 
 set(SOURCES
 	Arc.cpp
-	Button.cpp
 	Bar.cpp
+	Button.cpp
+	ButtonMatrix.cpp
+	Calendar.cpp
+	Canvas.cpp
+	Chart.cpp
+	Checkbox.cpp
 	Color.cpp
 	ColorPicker.cpp
-	Label.cpp
+	DropDownList.cpp
 	Event.cpp
 	Font.cpp
-	MessageBox.cpp
-	Spinbox.cpp
 	Group.cpp
-	TileView.cpp
-	ButtonMatrix.cpp
-	DropDownList.cpp
-	PeriodicTimer.cpp
+	Image.cpp
+	ImageButton.cpp
+	Keyboard.cpp
+	Label.cpp
 	Line.cpp
+	List.cpp
+	MessageBox.cpp
+	Meter.cpp
 	Object.cpp
+	PeriodicTimer.cpp
+	Roller.cpp
 	Runtime.cpp
+	Slider.cpp
+	Spinbox.cpp
 	Spinner.cpp
 	Style.cpp
-	Window.cpp
-	Calendar.cpp
-	Meter.cpp
 	Switch.cpp
-	Canvas.cpp
-	Image.cpp
-	List.cpp
 	TabView.cpp
-	Chart.cpp
-	ImageButton.cpp
-	Roller.cpp
 	Table.cpp
-	Theme.cpp
-	Checkbox.cpp
-	Keyboard.cpp
-	Slider.cpp
 	TextArea.cpp
+	Theme.cpp
+	TileView.cpp
+	Tree.cpp
+	Window.cpp
 	PARENT_SCOPE
 	)

@@ -3,47 +3,48 @@
 set(SOURCES
 	lvgl/Animation.hpp
 	lvgl/Arc.hpp
-	lvgl/Button.hpp
 	lvgl/Bar.hpp
-	lvgl/Draw.hpp
+	lvgl/Button.hpp
+	lvgl/ButtonMatrix.hpp
+	lvgl/Calendar.hpp
+	lvgl/Canvas.hpp
+	lvgl/Chart.hpp
+	lvgl/Checkbox.hpp
 	lvgl/Color.hpp
 	lvgl/ColorPicker.hpp
-	lvgl/Label.hpp
-	lvgl/MessageBox.hpp
-	lvgl/PeriodicTimer.hpp
-	lvgl/Font.hpp
-	lvgl/Event.hpp
-	lvgl/Group.hpp
-	lvgl/Spinbox.hpp
-	lvgl/TileView.hpp
-	lvgl/ButtonMatrix.hpp
+	lvgl/Container.hpp
+	lvgl/Draw.hpp
 	lvgl/DropDownList.hpp
+	lvgl/Event.hpp
+	lvgl/Font.hpp
+	lvgl/Group.hpp
+	lvgl/Image.hpp
+	lvgl/ImageButton.hpp
+	lvgl/Keyboard.hpp
+	lvgl/Label.hpp
 	lvgl/Line.hpp
+	lvgl/List.hpp
+	lvgl/MessageBox.hpp
+	lvgl/Meter.hpp
 	lvgl/Object.hpp
 	lvgl/ObjectAccess.hpp
-	lvgl/Container.hpp
-	lvgl/Spinner.hpp
-	lvgl/Window.hpp
-	lvgl/Calendar.hpp
-	lvgl/Meter.hpp
-	lvgl/Switch.hpp
-	lvgl/Style.hpp
-	lvgl/macros.hpp
-	lvgl/Canvas.hpp
-	lvgl/Image.hpp
-	lvgl/List.hpp
-	lvgl/TabView.hpp
-	lvgl/Chart.hpp
-	lvgl/ImageButton.hpp
+	lvgl/PeriodicTimer.hpp
 	lvgl/Roller.hpp
-	lvgl/Table.hpp
 	lvgl/Runtime.hpp
-	lvgl/Theme.hpp
-	lvgl/Checkbox.hpp
-	lvgl/Keyboard.hpp
 	lvgl/Slider.hpp
+	lvgl/Spinbox.hpp
+	lvgl/Spinner.hpp
+	lvgl/Style.hpp
+	lvgl/Switch.hpp
+	lvgl/TabView.hpp
+	lvgl/Table.hpp
 	lvgl/TextArea.hpp
+	lvgl/Theme.hpp
+	lvgl/TileView.hpp
+	lvgl/Tree.hpp
 	lvgl/Types.hpp
+	lvgl/Window.hpp
+	lvgl/macros.hpp
 	lvgl.hpp
 	PARENT_SCOPE
 	)

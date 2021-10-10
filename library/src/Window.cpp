@@ -54,10 +54,9 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
               file_system_data->set_path(file_system_data->base_path());
             }
 
-            window.find(window_title_name)
-              .get<Label>()
+            Tree(window).find<Label>(window_title_name)
               .set_text_static(file_system_data->path());
-            event.current_target().find(tile_view_name).get<TileView>().go_backward();
+            Tree(event.current_target()).find<TileView>(tile_view_name).go_backward();
 
             const auto is_close = file_system_data->path() == file_system_data->base_path();
             set_back_button_label(
@@ -72,7 +71,7 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
       })
     .add(TileView(tile_view_name));
 
-  auto tile_view = window.find(tile_view_name).get<TileView>();
+  auto tile_view = Tree(window).find<TileView>(tile_view_name);
 
   tile_view.set_width(100_percent)
     .set_height(100_percent)
@@ -82,12 +81,12 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
 }
 
 void FileSystemWindow::set_back_button_label(const Window &window, const char *symbol) {
-  auto result = window.find(back_button_name).get_child(s32(0)).get<Image>();
+  auto result = Tree(window).find(back_button_name).get_child(0).get<Image>();
   result.set_source(symbol);
 }
 
 Label FileSystemWindow::get_title_label(const Window &window) {
-  return window.find(window_title_name).get<Label>();
+  return Tree(window).find<Label>(window_title_name);
 }
 
 void FileSystemWindow::configure_details(Container &container) {
@@ -191,7 +190,7 @@ void FileSystemWindow::configure_list(Container &container) {
             const auto info = fs::FileSystem().get_info(next_path);
 
             // clicked a directory or a file?
-            auto tile_view = screen().find(tile_view_name).get<TileView>();
+            auto tile_view = Tree(window).find<TileView>(tile_view_name);
             if (info.is_directory()) {
               file_browser_data->set_path(next_path);
               tile_view.go_forward(TileData::create(next_path), configure_list);
