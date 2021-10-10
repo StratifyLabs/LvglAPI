@@ -449,7 +449,7 @@ public:
 
   Derived &
   set_animation_time(const chrono::MicroTime value, Selector selector = Selector()) {
-    return set_property(Property::animation_time, value, selector);
+    return set_property(Property::animation_time, s32(value.milliseconds()), selector);
   }
 
   Derived &set_animation_speed(uint32_t value, Selector selector = Selector()) {
@@ -751,8 +751,8 @@ public:
   }
 
   const char *initial_name() const { return m_initial_name; }
-  const UserData *initial_context() const {
-    return reinterpret_cast<const UserData *>(m_initial_name);
+  UserData *initial_context() const {
+    return const_cast<UserData *>(reinterpret_cast<const UserData *>(m_initial_name));
   }
 
 private:

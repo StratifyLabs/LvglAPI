@@ -18,7 +18,7 @@ public:
   explicit Spinner(const UserData &context, const Construct &options)
     : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
 
-  static const lv_obj_class_t *get_object_class() { return api()->spinner_class; }
+  static const lv_obj_class_t *get_class() { return api()->spinner_class; }
 
 private:
   OBJECT_ACCESS_FRIENDS();

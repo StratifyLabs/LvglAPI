@@ -9,7 +9,7 @@ List::List(Object parent, const List &) {
 
 CheckList::CheckList(Object parent, const CheckList &) {
   m_object = api()->list_create(parent.object());
-  cast<CheckList>()->add_event_callback(EventCode::clicked, [](lv_event_t *e) {
+  get<CheckList>().add_event_callback(EventCode::clicked, [](lv_event_t *e) {
     const Event event(e);
     if (event.target().name() == event.current_target().name()) {
       return;
@@ -33,16 +33,17 @@ FormList::FormList(Object parent, const FormList &) {
   m_object = api()->list_create(parent.object());
 }
 
-FormList &FormList::add_item(const ItemUserData &item_context) {
-  auto object = api()->list_add_btn(m_object, "", item_context.name());
-  set_user_data(object, item_context.cast_as_name());
+FormList &FormList::add_item(const ItemData &item_data) {
+  auto object = api()->list_add_btn(m_object, item_data.symbol(), item_data.name());
+  set_user_data(object, item_data.cast_as_name());
   auto button = Container(object).get<Button>();
   button
+    .add_flag(Flags::event_bubble)
     .add_event_callback(
       EventCode::clicked,
       [](lv_event_t *e) {
         const Event event(e);
-        auto *c = event.target().user_data<ItemUserData>();
+        auto *c = event.target().user_data<ItemData>();
         auto button = event.target().get<Button>();
         auto label = button.find(value_name).get<Label>();
         if (c->type() == ItemType::boolean) {
@@ -52,9 +53,10 @@ FormList &FormList::add_item(const ItemUserData &item_context) {
             label.set_text_static("");
           }
         } else {
-          API_ASSERT(c->clicked_callback() != nullptr);
-          c->clicked_callback()(e);
-          if( c->type() != ItemType::navigation ){
+          if( c->clicked_callback() ){
+            c->clicked_callback()(e);
+          }
+          if (c->type() != ItemType::navigation) {
             label.set_text_static(c->value());
           }
         }
@@ -63,11 +65,11 @@ FormList &FormList::add_item(const ItemUserData &item_context) {
       label.set_width(size_from_content).set_alignment(Alignment::right_middle);
     }));
 
-  auto *c = button.user_data<ItemUserData>();
-  if( c->type() == ItemType::navigation ){
-    button.find(value_name).cast<Label>()->set_text_static(LV_SYMBOL_RIGHT);
+  auto *c = button.user_data<ItemData>();
+  if (c->type() == ItemType::navigation) {
+    button.find(value_name).get<Label>().set_text_static(LV_SYMBOL_RIGHT);
   } else {
-    button.find(value_name).cast<Label>()->set_text_static(c->value());
+    button.find(value_name).get<Label>().set_text_static(c->value());
   }
   return *this;
 }

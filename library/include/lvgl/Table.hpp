@@ -20,7 +20,7 @@ public:
   explicit Table(const char * name) : ObjectAccess(name){}
   explicit Table(const UserData & context) : ObjectAccess(context.cast_as_name()){}
 
-  static const lv_obj_class_t * get_object_class(){
+  static const lv_obj_class_t * get_class(){
     return api()->table_class;
   }
 

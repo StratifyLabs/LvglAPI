@@ -13,10 +13,7 @@ public:
   explicit List(const char *name) : ObjectAccess(name) {}
   explicit List(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
-
-  static const lv_obj_class_t * get_class(){
-    return api()->list_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->list_class; }
 
   List &add_button(const char *symbol, const char *text) {
     auto object = api()->list_add_btn(m_object, symbol, text);
@@ -73,36 +70,33 @@ public:
       button.add(Label(right_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-      button.find(right_symbol_name)
-        .cast<Label>()
-        ->set_text_static(options.right_symbol());
+      button.find(right_symbol_name).get<Label>().set_text_static(options.right_symbol());
     }
     return *this;
   }
 
   List &set_right_symbol_static(const char *name, const char *value) {
-    auto *label = find(name).find<IsAssertOnFail::no>(right_symbol_name).cast<Label>();
-    if (label) {
-      label->set_text_static(value);
+    auto object = find(name).find<IsAssertOnFail::no>(right_symbol_name);
+    if (object.object()) {
+      object.get<Label>().set_text_static(value);
     }
     return *this;
   }
 
   List &clear_right_symbols() {
     for (u32 i = 0; i < get_child_count(); i++) {
-      auto *label =
-        get_child(i).find<IsAssertOnFail::no>(right_symbol_name).cast<Label>();
-      if (label) {
-        label->set_text_static("");
+      auto object = get_child(i).find<IsAssertOnFail::no>(right_symbol_name);
+      if (object.object()) {
+        object.get<Label>().set_text_static("");
       }
     }
     return *this;
   }
 
   List &set_right_symbol(const char *name, const char *value) {
-    auto *label = find(name).find<IsAssertOnFail::no>(right_symbol_name).cast<Label>();
-    if (label) {
-      label->set_text(value);
+    auto object = find(name).find<IsAssertOnFail::no>(right_symbol_name);
+    if (object.object()) {
+      object.get<Label>().set_text(value);
     }
     return *this;
   }
@@ -167,9 +161,7 @@ public:
 
   explicit CheckList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
-  static const lv_obj_class_t * get_class(){
-    return api()->list_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->list_class; }
 
   static constexpr auto check_symbol_name = "CheckSymbol";
 
@@ -181,15 +173,15 @@ public:
       .add(Label(check_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-    button.find(check_symbol_name).cast<Label>()->set_text_static("");
+    button.find(check_symbol_name).get<Label>().set_text_static("");
     return *this;
   }
 
   CheckList &clear_all() {
     for (u32 i = 0; i < get_child_count(); i++) {
       auto object = get_child(i).find<IsAssertOnFail::no>(check_symbol_name);
-      if (object.is_valid()) {
-        object.cast<Label>()->set_text_static("");
+      if (object.object()) {
+        object.get<Label>().set_text_static("");
       }
     }
     return *this;
@@ -199,7 +191,8 @@ public:
     auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
     if (object.is_valid()) {
       auto *c = user_data<UserData>();
-      object.cast<Label>()->set_text_static(value ? c->checked_symbol() : c->not_checked_symbol());
+      object.get<Label>().set_text_static(
+        value ? c->checked_symbol() : c->not_checked_symbol());
     }
     return *this;
   }
@@ -208,7 +201,7 @@ public:
     auto object = find(name).find<IsAssertOnFail::no>(check_symbol_name);
     if (object.is_valid()) {
       auto *c = user_data<UserData>();
-      return var::StringView(object.cast<Label>()->get_text()) == c->checked_symbol();
+      return var::StringView(object.get<Label>().get_text()) == c->checked_symbol();
     }
     return false;
   }
@@ -222,44 +215,37 @@ private:
 
 class FormList : public ObjectAccess<FormList> {
 public:
-  class UserData : public ::lvgl::UserDataAccess<UserData> {
+  class FormData : public ::lvgl::UserDataAccess<UserData> {
   public:
-    explicit UserData(const char *name) : UserDataBase(name) {}
+    explicit FormData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AB(UserData, allow_multiple, false);
-    API_AF(UserData, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(UserData, const char *, not_checked_symbol, "");
+    API_AB(FormData, allow_multiple, false);
+    API_AF(FormData, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(FormData, const char *, not_checked_symbol, "");
   };
 
   explicit FormList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
 
-  static const lv_obj_class_t * get_class(){
-    return api()->list_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->list_class; }
 
   static constexpr auto value_name = "FormValue";
 
-  enum class ItemType {
-    boolean,
-    string,
-    number,
-    navigation
-  };
+  enum class ItemType { boolean, string, number, navigation };
 
-  class ItemUserData : public ::lvgl::UserDataAccess<ItemUserData> {
+  class ItemData : public ::lvgl::UserDataAccess<ItemData> {
   public:
-    using Callback = void (*)(lv_event_t*);
-    explicit ItemUserData(const char *name) : UserDataBase(name) {}
+    using Callback = void (*)(lv_event_t *);
+    explicit ItemData(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AF(ItemUserData, ItemType, type, ItemType::boolean);
-    API_AC(ItemUserData, var::KeyString, value);
-    API_AF(ItemUserData, Callback, clicked_callback, nullptr);
+    API_AF(ItemData, const char *, symbol, "");
+    API_AF(ItemData, ItemType, type, ItemType::boolean);
+    API_AC(ItemData, var::KeyString, value);
+    API_AF(ItemData, Callback, clicked_callback, nullptr);
   };
 
-  FormList &add_item(const ItemUserData & item_context);
-
+  FormList &add_item(const ItemData &item_data);
 
 private:
   OBJECT_ACCESS_FRIENDS();

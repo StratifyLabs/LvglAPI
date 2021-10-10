@@ -9,12 +9,11 @@
 namespace lvgl {
 
 class UserData {
-  void * operator new(size_t size){
-    return ::operator new(size);
-  }
+  void *operator new(size_t size) { return ::operator new(size); }
+
 public:
   explicit UserData(const char *name = "") : m_name(name) {}
-  virtual ~UserData(){}
+  virtual ~UserData() {}
 
   const char *name() const { return m_name ? m_name : "unnamed"; }
 
@@ -28,19 +27,16 @@ public:
     return reinterpret_cast<void *>(const_cast<UserData *>(this));
   }
 
-  bool needs_free() const {
-    return m_needs_free;
-  }
+  bool needs_free() const { return m_needs_free; }
 
 protected:
-  //dynamically allocate the UserData and have it live with the created object
-  //this will be freed when the associated object is removed
-  template<class Derived, typename ...Args> static Derived& create(Args...args){
-    auto * result = new Derived(args...);
+  // dynamically allocate the UserData and have it live with the created object
+  // this will be freed when the associated object is removed
+  template <class Derived, typename... Args> static Derived &create(Args... args) {
+    auto *result = new Derived(args...);
     result->m_needs_free = true;
     return *result;
   }
-
 
 private:
   friend class Object;
@@ -57,19 +53,17 @@ private:
   bool m_needs_free = false;
 };
 
-template<class Derived> class UserDataAccess : public UserData {
+template <class Derived> class UserDataAccess : public UserData {
 public:
   explicit UserDataAccess(const char *name = "") : UserData(name) {}
-  virtual ~UserDataAccess(){}
+  virtual ~UserDataAccess() {}
 
-  template<typename ...Args> static Derived& create(Args...args){
+  template <typename... Args> static Derived &create(Args... args) {
     return UserData::create<Derived>(args...);
   }
 
 protected:
-
   using UserDataBase = UserDataAccess<Derived>;
-
 };
 
 enum class ObjectFlags {
@@ -113,13 +107,16 @@ public:
     no = LV_OBJ_CLASS_EDITABLE_FALSE
   };
 
-
   class Class {
   public:
     u16 width() const { return m_class->width_def; }
     u16 height() const { return m_class->height_def; }
 
     Editable editable() const { return Editable(m_class->editable); }
+
+    const lv_obj_class_t * class_() const{
+      return m_class;
+    }
 
   private:
     friend class Object;
@@ -154,16 +151,13 @@ public:
     return api()->obj_check_type(m_object, value.m_class);
   }
 
-  bool is_class(const Class &value) const {
+  bool has_class(const Class &value) const {
     return api()->obj_has_class(m_object, value.m_class);
   }
 
   Class get_instance_class() const { return Class(api()->obj_get_class(m_object)); }
 
-  static const lv_obj_class_t * get_class(){
-    return api()->obj_class;
-  }
-
+  static const lv_obj_class_t *get_class() { return api()->obj_class; }
 
   bool is_valid() const { return api()->obj_is_valid(m_object); }
 
@@ -289,9 +283,18 @@ public:
     return Object();
   }
 
-  template <class TargetClass> TargetClass *cast() {
-    static_assert(std::is_base_of<Object, TargetClass>::value);
-    return reinterpret_cast<TargetClass *>(this);
+  template <class TargetClass> TargetClass find_parent() {
+    auto current = get_parent();
+    while (1) {
+      if ( current.object() == nullptr ) {
+        API_ASSERT(false);
+      } else {
+        if (current.get_instance_class().class_() == TargetClass::get_class()) {
+          return current.get<TargetClass>();
+        }
+      }
+      current = current.get_parent();
+    }
   }
 
   template <class TargetClass> TargetClass get() {
@@ -305,8 +308,8 @@ public:
   }
 
   ClassType get_class_type() const;
-  static const char * to_cstring(ClassType value);
-  static ClassType class_type_from_cstring(const char * value);
+  static const char *to_cstring(ClassType value);
+  static ClassType class_type_from_cstring(const char *value);
 
   Editable is_editable() const { return Editable(api()->obj_is_editable(m_object)); }
 
@@ -318,7 +321,8 @@ public:
     if (m_object->user_data == nullptr) {
       return "unnamed";
     }
-    if (auto *user_data = UserData::get_user_data(m_object->user_data); user_data != nullptr) {
+    if (auto *user_data = UserData::get_user_data(m_object->user_data);
+        user_data != nullptr) {
       return user_data->name();
     }
     return reinterpret_cast<const char *>(m_object->user_data);
@@ -326,12 +330,12 @@ public:
 
   template <class UserDataClass> UserDataClass *user_data() const {
     static_assert(std::is_base_of<UserData, UserDataClass>::value);
-    if (auto *user_data = UserData::get_user_data(m_object->user_data); user_data != nullptr) {
+    if (auto *user_data = UserData::get_user_data(m_object->user_data);
+        user_data != nullptr) {
       return reinterpret_cast<UserDataClass *>(user_data);
     }
     return nullptr;
   }
-
 
   Object() = default;
 
@@ -355,7 +359,7 @@ protected:
   friend class TabView;
 
   explicit Object(lv_obj_t *obj) : m_object(obj) {}
-  static void set_user_data(lv_obj_t * obj, const char *name);
+  static void set_user_data(lv_obj_t *obj, const char *name);
 
   static bool is_name_matched(const Object &child, const char *name) {
     const auto child_name = child.name();
@@ -379,17 +383,13 @@ protected:
     return Color(value.color);
   }
 
-  UserData *get_user_data() const {
-    return UserData::get_user_data(m_object->user_data);
-  }
-
-
+  UserData *get_user_data() const { return UserData::get_user_data(m_object->user_data); }
 
 private:
   friend class Event;
   friend class TileView;
   friend class Group;
-  static void delete_user_data(lv_event_t*);
+  static void delete_user_data(lv_event_t *);
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)
