@@ -213,6 +213,12 @@ public:
   lv_coord_t get_scroll_left() const { return api()->obj_get_scroll_left(m_object); }
   lv_coord_t get_scroll_right() const { return api()->obj_get_scroll_right(m_object); }
 
+  Point get_scroll_end() const {
+    Point result;
+    api()->obj_get_scroll_end(m_object, result.point());
+    return result;
+  }
+
   lv_coord_t get_left_padding(Selector selector = Selector()) const {
     return get_local_style_as_coord(Property::left_padding, selector);
   }
@@ -233,12 +239,6 @@ public:
     PropertyValue result;
     api()->obj_get_local_style_prop(
       m_object, lv_style_prop_t(property), &result.m_value, selector.value());
-    return result;
-  }
-
-  Point get_scroll_end() const {
-    Point result;
-    api()->obj_get_scroll_end(m_object, result.point());
     return result;
   }
 
