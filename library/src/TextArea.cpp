@@ -3,7 +3,6 @@
 #include "lvgl/Bar.hpp"
 #include "lvgl/Event.hpp"
 #include "lvgl/TextArea.hpp"
-#include "lvgl/Tree.hpp"
 
 using namespace lvgl;
 
@@ -32,8 +31,7 @@ FileTextArea::FileTextArea(Object parent, const FileTextArea &options) {
     const auto pages = file_size / data->m_buffer.size() + 1;
     data->set_progress_size(1000 / pages);
     data->set_progress_start(0);
-    Tree(parent)
-      .find<Bar>(progress_bar_name)
+    parent.find<Bar>(progress_bar_name)
       .set_mode(Bar::Mode::range)
       .set_start_value(0)
       .set_value(data->progress_size())
