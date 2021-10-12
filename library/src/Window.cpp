@@ -44,7 +44,7 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
         const Event event(lv_event);
         if (event.target().name() == back_button_name) {
 
-          auto window = event.current_target<Window>());
+          auto window = event.current_target<Window>();
           auto *file_system_data = window.user_data<FileSystemData>();
 
           if (file_system_data->path() != file_system_data->base_path()) {
