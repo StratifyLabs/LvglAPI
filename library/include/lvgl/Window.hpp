@@ -27,10 +27,10 @@ public:
     lv_coord_t width,
     void (*add)(Button &) = nullptr) {
     auto object = api()->win_add_btn(m_object, icon, width);
-    api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
     set_user_data(object, name);
+    Button button(object);
+    button.add_flag(Flags::event_bubble);
     if (add) {
-      Button button(object);
       add(button);
     }
     return *this;
