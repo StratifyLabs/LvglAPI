@@ -4,7 +4,6 @@
 #include "Button.hpp"
 #include "Container.hpp"
 #include "Label.hpp"
-#include "Tree.hpp"
 
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
