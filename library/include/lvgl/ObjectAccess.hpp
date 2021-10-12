@@ -762,6 +762,7 @@ private:
 
 #define OBJECT_ACCESS_FORWARD_FRIENDS()                                                  \
   class Container;                                                                       \
+  class NakedContainer;                                                                  \
   class Window;                                                                          \
   class Button;                                                                          \
   class MessageBox;                                                                      \
@@ -769,6 +770,7 @@ private:
 
 #define OBJECT_ACCESS_FRIENDS()                                                          \
   friend class ObjectAccess<Container>;                                                  \
+  friend class ObjectAccess<NakedContainer>;                                             \
   friend class ObjectAccess<Window>;                                                     \
   friend class ObjectAccess<TileView>;                                                   \
   friend class ObjectAccess<Button>;                                                     \

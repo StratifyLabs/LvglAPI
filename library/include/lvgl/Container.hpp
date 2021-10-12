@@ -28,7 +28,7 @@ private:
   }
 };
 
-class NakedContainer : public ObjectAccess<Container> {
+class NakedContainer : public ObjectAccess<NakedContainer> {
 public:
   explicit NakedContainer(const char *name) : ObjectAccess(name) {}
   explicit NakedContainer(const UserData &context)
