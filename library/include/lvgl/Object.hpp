@@ -107,21 +107,6 @@ public:
     no = LV_OBJ_CLASS_EDITABLE_FALSE
   };
 
-  class Class {
-  public:
-    u16 width() const { return m_class->width_def; }
-    u16 height() const { return m_class->height_def; }
-
-    Editable editable() const { return Editable(m_class->editable); }
-
-    const lv_obj_class_t *class_() const { return m_class; }
-
-  private:
-    friend class Object;
-    Class(const lv_obj_class_t *value) : m_class(value) {}
-    const lv_obj_class_t *m_class;
-  };
-
   static void initialize() { lv_init(); }
   static void finalize() {
 #if LV_ENABLE_GC || !LV_MEM_CUSTOM
@@ -131,33 +116,37 @@ public:
 
   enum class IsRecursive { no, yes };
 
-  bool is_flags(Flags flag) const {
-    return api()->obj_has_flag(m_object, static_cast<lv_obj_flag_t>(flag));
+  bool has_flag(Flags flag) const {
+    return api()->obj_has_flag(m_object, lv_obj_flag_t(flag));
   }
 
-  bool is_any_flag(Flags flag) const {
-    return api()->obj_has_flag_any(m_object, static_cast<lv_obj_flag_t>(flag));
+  bool has_any_flag(Flags flag) const {
+    return api()->obj_has_flag_any(m_object, lv_obj_flag_t(flag));
   }
 
   State get_state() const { return State(api()->obj_get_state(m_object)); }
 
-  bool is_state(State value) const {
-    return api()->obj_has_state(m_object, static_cast<lv_state_t>(value));
+  bool has_state(State value) const {
+    return api()->obj_has_state(m_object, lv_state_t(value));
   }
 
-  bool check_type(const Class &value) const {
-    return api()->obj_check_type(m_object, value.m_class);
+  template <class TargetClass> bool check_type() const {
+    return api()->obj_check_type(m_object, TargetClass::get_class());
   }
 
-  bool has_class(const Class &value) const {
-    return api()->obj_has_class(m_object, value.m_class);
+  template <class TargetClass> bool is_class() const {
+    static_assert(std::is_base_of<Object, TargetClass>::value);
+    return api()->obj_get_class(m_object) == TargetClass::get_class();
   }
 
-  Class get_instance_class() const { return Class(api()->obj_get_class(m_object)); }
+  template <class TargetClass> bool has_class() const {
+    return api()->obj_has_class(m_object, TargetClass::get_class());
+  }
 
   static const lv_obj_class_t *get_class() { return api()->obj_class; }
 
-  bool is_valid() const { return api()->obj_is_valid(m_object); }
+  bool is_findable() const { return api()->obj_is_valid(m_object); }
+  bool is_valid() const { return m_object != nullptr; }
 
   bool is_layout_positioned() const { return api()->obj_is_layout_positioned(m_object); }
 
@@ -252,9 +241,61 @@ public:
     return TargetClass(object());
   }
 
-  template <class TargetClass> bool is_class() const {
+  template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  Object find_object(const char *name) const {
+    auto result = find_object_worker(name);
+    if( (isAssertOnFail == IsAssertOnFail::yes) && !result.is_valid() ){
+      API_ASSERT(false);
+    }
+    return result;
+  }
+
+  template <class TargetClass = Object, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  TargetClass find(const char *name) const {
+    return TargetClass(find_object<isAssertOnFail>(name).object());
+  }
+
+  template <class TargetClass, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  TargetClass find_within(const char * top, const char * bottom) const {
+    return find_object(top).find<TargetClass, isAssertOnFail>(bottom);
+  }
+
+  template <class TargetClass, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  TargetClass find(const std::initializer_list<const char*> list) const {
+    auto current = *this;
+    for(const char * entry: list){
+      current = current.find_object<isAssertOnFail>(entry);
+      if( !current.is_valid() ){
+        return Object().get<TargetClass>();
+      }
+    }
+    return TargetClass(current.object());
+  }
+
+  template <class TargetClass> TargetClass find_parent() {
     static_assert(std::is_base_of<Object, TargetClass>::value);
-    return api()->obj_get_class(m_object) == TargetClass::get_class();
+    auto current = get_parent();
+    while (1) {
+      if (current.object() == nullptr) {
+        API_ASSERT(false);
+      } else {
+        if (current.is_class<TargetClass>()) {
+          return current.get<TargetClass>();
+        }
+      }
+      current = current.get_parent();
+    }
+  }
+
+  Object find_child(const char *name) const {
+    const auto count = get_child_count();
+    for (u32 i = 0; i < count; i++) {
+      auto child = get_child(i);
+      if (is_name_matched(child, name)) {
+        return child;
+      }
+    }
+    return Object();
   }
 
   ClassType get_class_type() const;
@@ -343,6 +384,8 @@ private:
   friend class TileView;
   friend class Group;
   static void delete_user_data(lv_event_t *);
+
+  Object find_object_worker(const char *name) const;
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)

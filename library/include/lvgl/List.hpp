@@ -71,15 +71,13 @@ public:
       button.add(Label(right_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-      Tree(button)
-        .find<Label>(right_symbol_name)
-        .set_text_static(options.right_symbol());
+      button.find<Label>(right_symbol_name).set_text_static(options.right_symbol());
     }
     return *this;
   }
 
   List &set_right_symbol_static(const char *name, const char *value) {
-    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
+    auto label = find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
     printf("set right symbol %p\n", label.object());
     if (label.object()) {
       label.set_text_static(value);
@@ -89,8 +87,7 @@ public:
 
   List &clear_right_symbols() {
     for (u32 i = 0; i < get_child_count(); i++) {
-      auto label =
-        Tree(get_child(i)).find<Label, IsAssertOnFail::no>(right_symbol_name);
+      auto label = get_child(i).find<Label, IsAssertOnFail::no>(right_symbol_name);
       if (label.object()) {
         label.set_text_static("");
       }
@@ -99,7 +96,7 @@ public:
   }
 
   List &set_right_symbol(const char *name, const char *value) {
-    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
+    auto label = find_within<Label, IsAssertOnFail::no>(name, right_symbol_name);
     if (label.object()) {
       label.set_text(value);
     }
@@ -178,13 +175,13 @@ public:
       .add(Label(check_symbol_name).configure([](Label &label) {
         label.set_width(size_from_content).set_alignment(Alignment::right_middle);
       }));
-    Tree(button).find<Label>(check_symbol_name).set_text_static("");
+    button.find<Label>(check_symbol_name).set_text_static("");
     return *this;
   }
 
   CheckList &clear_all() {
     for (u32 i = 0; i < get_child_count(); i++) {
-      auto label = Tree(get_child(i)).find<Label, IsAssertOnFail::no>(check_symbol_name);
+      auto label = get_child(i).find<Label, IsAssertOnFail::no>(check_symbol_name);
       if (label.object()) {
         label.set_text_static("");
       }
@@ -193,17 +190,16 @@ public:
   }
 
   CheckList &set_checked(const char *name, bool value = true) {
-    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
+    auto label = find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
     if (label.is_valid()) {
       auto *c = user_data<CheckListData>();
-      label.set_text_static(
-        value ? c->checked_symbol() : c->not_checked_symbol());
+      label.set_text_static(value ? c->checked_symbol() : c->not_checked_symbol());
     }
     return *this;
   }
 
   bool is_checked(const char *name) const {
-    auto label = Tree(*this).find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
+    auto label = find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
     if (label.is_valid()) {
       auto *c = user_data<CheckListData>();
       return var::StringView(label.get_text()) == c->checked_symbol();

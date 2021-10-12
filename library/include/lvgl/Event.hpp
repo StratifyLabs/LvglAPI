@@ -9,17 +9,22 @@ namespace lvgl {
 
 class Event {
 public:
-
-  using Callback = void (*)(lv_event_t*);
+  using Callback = void (*)(lv_event_t *);
 
   Event(lv_event_t *event);
 
   EventCode code() const { return EventCode(m_event->code); }
 
-  static const char * to_cstring(EventCode code);
+  static const char *to_cstring(EventCode code);
 
-  Object target() const;
-  Object current_target() const;
+  template <class TargetClass = Object> TargetClass target() const {
+    return Object(m_event->target).get<TargetClass>();
+  }
+
+  template <class TargetClass = Object> TargetClass current_target() const {
+    return Object(m_event->current_target).get<TargetClass>();
+  }
+
   Event previous_event() const { return Event(m_event->prev); }
 
   // param and user_data
@@ -27,19 +32,14 @@ public:
     return reinterpret_cast<ResultType>(m_event->param);
   }
 
-  template <typename ResultType> ResultType context() const {
+  template <typename ResultType> ResultType user_data() const {
     return reinterpret_cast<ResultType>(m_event->user_data);
-  }
-
-  bool is_target(const char *name) const {
-    return var::StringView(Object(m_event->target).name()) == name;
   }
 
   static void send(Object receiver, EventCode code, void *context = nullptr) {
     Api::api()->event_send(
       receiver.object(), static_cast<lv_event_code_t>(code), context);
   }
-
 
 private:
   lv_event_t *m_event = nullptr;

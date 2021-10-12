@@ -138,7 +138,7 @@ private:
   static void set_back_button_label(const Window &window, const char * symbol);
   static Label get_title_label(const Window & window);
   static Window get_window(Object object){
-    return Tree(object).find_parent<Window>();
+    return object.find_parent<Window>();
   }
 };
 

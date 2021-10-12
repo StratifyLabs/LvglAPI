@@ -37,7 +37,6 @@ set(SOURCES
 	TextArea.cpp
 	Theme.cpp
 	TileView.cpp
-	Tree.cpp
 	Window.cpp
 	PARENT_SCOPE
 	)
