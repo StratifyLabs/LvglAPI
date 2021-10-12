@@ -41,7 +41,6 @@ set(SOURCES
 	lvgl/TextArea.hpp
 	lvgl/Theme.hpp
 	lvgl/TileView.hpp
-	lvgl/Tree.hpp
 	lvgl/Types.hpp
 	lvgl/Window.hpp
 	lvgl/macros.hpp

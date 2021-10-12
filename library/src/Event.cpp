@@ -9,13 +9,6 @@ Event::Event(lv_event_t* event) : m_event(event){
 }
 
 
-Object Event::target() const {
-  return Object(m_event->target);
-}
-
-Object Event::current_target() const {
-  return Object(m_event->current_target);
-}
 
 #define CODE_CASE(x) case EventCode::x: return MCU_STRINGIFY(x)
 

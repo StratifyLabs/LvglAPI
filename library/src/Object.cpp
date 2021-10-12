@@ -5,6 +5,23 @@ lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
 
+Object Object::find_object_worker(const char *name) const {
+  // recursively find the child
+  auto get = find_child(name);
+  if (get.object() != nullptr) {
+    return get;
+  }
+  const auto count = get_child_count();
+  for (u32 i = 0; i < count; i++) {
+    const auto child = get_child(i);
+    auto result = child.find_object<IsAssertOnFail::no>(name);
+    if (result.m_object != nullptr) {
+      return result;
+    }
+  }
+  return Object();
+}
+
 void Object::set_user_data(lv_obj_t *obj, const char *name) {
   API_ASSERT(obj != nullptr);
   if (obj->user_data == nullptr) {

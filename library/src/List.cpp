@@ -16,7 +16,7 @@ CheckList::CheckList(Object parent, const CheckList &) {
     }
 
     const char *button_name = event.target().name();
-    auto checklist = event.current_target().get<CheckList>();
+    auto checklist = event.current_target<CheckList>();
     auto *c = checklist.user_data<CheckListData>();
     if (c->is_allow_multiple() == false) {
       checklist.clear_all();
@@ -44,8 +44,8 @@ FormList &FormList::add_item(const ItemData &item_data) {
       [](lv_event_t *e) {
         const Event event(e);
         auto *c = event.target().user_data<ItemData>();
-        auto button = event.target().get<Button>();
-        auto label = Tree(button).find<Label>(value_name);
+        auto button = event.target<Button>();
+        auto label = button.find<Label>(value_name);
         if (c->type() == ItemType::boolean) {
           if (var::StringView(label.get_text()).is_empty()) {
             label.set_text_static(LV_SYMBOL_OK);
@@ -66,7 +66,7 @@ FormList &FormList::add_item(const ItemData &item_data) {
     }));
 
   auto *c = button.user_data<ItemData>();
-  Tree(button)
+  button
     .find<Label>(value_name)
     .set_text_static((c->type() == ItemType::navigation) ? LV_SYMBOL_RIGHT : c->value().cstring());
   return *this;

@@ -44,7 +44,7 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
         const Event event(lv_event);
         if (event.target().name() == back_button_name) {
 
-          auto window = event.current_target().get<Window>();
+          auto window = event.current_target<Window>();
           auto *file_system_data = window.user_data<FileSystemData>();
 
           if (file_system_data->path() != file_system_data->base_path()) {
@@ -54,9 +54,9 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
               file_system_data->set_path(file_system_data->base_path());
             }
 
-            Tree(window).find<Label>(window_title_name)
+            window.find<Label>(window_title_name)
               .set_text_static(file_system_data->path());
-            Tree(event.current_target()).find<TileView>(tile_view_name).go_backward();
+            event.current_target().find<TileView>(tile_view_name).go_backward();
 
             const auto is_close = file_system_data->path() == file_system_data->base_path();
             set_back_button_label(
@@ -71,7 +71,7 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
       })
     .add(TileView(tile_view_name));
 
-  auto tile_view = Tree(window).find<TileView>(tile_view_name);
+  auto tile_view = window.find<TileView>(tile_view_name);
 
   tile_view.set_width(100_percent)
     .set_height(100_percent)
@@ -81,12 +81,12 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
 }
 
 void FileSystemWindow::set_back_button_label(const Window &window, const char *symbol) {
-  auto result = Tree(window).find(back_button_name).get_child(0).get<Image>();
+  auto result = window.find(back_button_name).get_child(0).get<Image>();
   result.set_source(symbol);
 }
 
 Label FileSystemWindow::get_title_label(const Window &window) {
-  return Tree(window).find<Label>(window_title_name);
+  return window.find<Label>(window_title_name);
 }
 
 void FileSystemWindow::configure_details(Container &container) {
@@ -178,7 +178,7 @@ void FileSystemWindow::configure_list(Container &container) {
           const Event event(e);
           const char *entry_name = event.target().name();
           if (entry_name != entry_list_name) {
-            auto list = event.current_target().get<List>();
+            auto list = event.current_target<List>();
             const auto entry_value = list.get_button_text(event.target());
 
             auto *tile_data = list.get_parent().user_data<TileData>();
@@ -190,7 +190,7 @@ void FileSystemWindow::configure_list(Container &container) {
             const auto info = fs::FileSystem().get_info(next_path);
 
             // clicked a directory or a file?
-            auto tile_view = Tree(window).find<TileView>(tile_view_name);
+            auto tile_view = window.find<TileView>(tile_view_name);
             if (info.is_directory()) {
               file_browser_data->set_path(next_path);
               tile_view.go_forward(TileData::create(next_path), configure_list);

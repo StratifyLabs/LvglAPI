@@ -556,7 +556,7 @@ public:
   }
 
   Derived &set_border_side(BorderSide value, Selector selector = Selector()) {
-    return set_property(Property::border_side, value, selector);
+    return set_property(Property::border_side, s32(value), selector);
   }
 
   Derived &set_border_post(bool value, Selector selector = Selector()) {
