@@ -24,54 +24,69 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
 
   set_user_data(m_object, options.initial_name());
 
-  auto *user_data =
-    reinterpret_cast<FileSystemWindow::FileSystemData *>(options.initial_context());
+  auto *user_data = reinterpret_cast<FileSystemWindow::Data *>(options.initial_context());
 
   user_data->set_path(user_data->base_path());
+  printf("load path %s\n", user_data->base_path().cstring());
 
   auto window = Container(m_object).get<Window>();
 
   window.clear_flag(Window::Flags::scrollable)
-    .add_title(
-      window_title_name, user_data->base_path(),
-      [](Label &label) { label.set_left_padding(10); })
-    .add_button(back_button_name, user_data->close_symbol(), size_from_content)
+    .add_title(Names::window_title, user_data->base_path(), [](Label &label) {
+      label.set_left_padding(10);
+    });
+
+  if (user_data->is_select_folder()) {
+    window.add_button(Names::ok_button, LV_SYMBOL_OK, size_from_content);
+  }
+
+  window.add_button(Names::back_button, user_data->close_symbol(), size_from_content)
     .set_width(100_percent)
     .set_height(100_percent)
     .add_event_callback(
       EventCode::clicked,
       [](lv_event_t *lv_event) {
         const Event event(lv_event);
-        if (event.target().name() == back_button_name) {
+        const auto target_name = event.target().name();
+        auto window = event.current_target<Window>();
+        if (target_name == Names::back_button) {
 
-          auto window = event.current_target<Window>();
-          auto *file_system_data = window.user_data<FileSystemData>();
+          auto *file_system_data = window.user_data<Data>();
 
           if (file_system_data->path() != file_system_data->base_path()) {
 
-            file_system_data->set_path(fs::Path::parent_directory(file_system_data->path()));
+            file_system_data->set_path(
+              fs::Path::parent_directory(file_system_data->path()));
             if (file_system_data->path().is_empty()) {
               file_system_data->set_path(file_system_data->base_path());
             }
 
-            window.find<Label>(window_title_name)
+            window.find<Label>(Names::window_title)
               .set_text_static(file_system_data->path());
-            event.current_target().find<TileView>(tile_view_name).go_backward();
+            event.current_target().find<TileView>(Names::tile_view).go_backward();
 
-            const auto is_close = file_system_data->path() == file_system_data->base_path();
+            const auto is_close =
+              file_system_data->path() == file_system_data->base_path();
             set_back_button_label(
-              window, is_close ? file_system_data->close_symbol() : file_system_data->back_symbol());
+              window, is_close ? file_system_data->close_symbol()
+                               : file_system_data->back_symbol());
 
           } else {
             // exit signal
             file_system_data->set_path("");
             Event::send(window.get_parent(), EventCode::exited);
           }
+        } else if( target_name == Names::ok_button ){
+          printf("OK button\n");
+          Event::send(window.get_parent(), EventCode::exited);
         }
-      })
-    .add(TileView(tile_view_name));
 
-  auto tile_view = window.find<TileView>(tile_view_name);
+      })
+    .get_content()
+    .add(TileView(Names::tile_view))
+    .set_padding(0);
+
+  auto tile_view = window.find<TileView>(Names::tile_view);
 
   tile_view.set_width(100_percent)
     .set_height(100_percent)
@@ -81,12 +96,12 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
 }
 
 void FileSystemWindow::set_back_button_label(const Window &window, const char *symbol) {
-  auto result = window.find(back_button_name).get_child(0).get<Image>();
+  auto result = window.find(Names::back_button).get_child(0).get<Image>();
   result.set_source(symbol);
 }
 
 Label FileSystemWindow::get_title_label(const Window &window) {
-  return window.find<Label>(window_title_name);
+  return window.find<Label>(Names::window_title);
 }
 
 void FileSystemWindow::configure_details(Container &container) {
@@ -98,12 +113,12 @@ void FileSystemWindow::configure_details(Container &container) {
         const Event event(e);
         auto *tile_data = event.target().user_data<TileData>();
         auto window = get_window(event.target());
-        auto *fs_data = window.user_data<FileSystemData>();
+        auto *fs_data = window.user_data<Data>();
 
         set_back_button_label(window, fs_data->back_symbol());
         get_title_label(window).set_text(tile_data->path());
       })
-    .add(Table(file_details_table_name).configure([](Table &table) {
+    .add(Table(Names::file_details_table).configure([](Table &table) {
       auto *tile_data = table.get_parent().user_data<TileData>();
 
       const auto width = Container::active_screen().get_width();
@@ -161,7 +176,7 @@ void FileSystemWindow::configure_list(Container &container) {
         auto window = get_window(event.target());
         get_title_label(window).set_text(tile_data->path());
 
-        auto *fs_data = window.user_data<FileSystemData>();
+        auto *fs_data = window.user_data<Data>();
         if (fs_data->path() != fs_data->base_path()) {
           set_back_button_label(window, fs_data->back_symbol());
         }
@@ -177,20 +192,20 @@ void FileSystemWindow::configure_list(Container &container) {
         .add_event_callback(EventCode::clicked, [](lv_event_t *e) {
           const Event event(e);
           const char *entry_name = event.target().name();
-          if (entry_name != entry_list_name) {
+          if (entry_name != Names::entry_list) {
             auto list = event.current_target<List>();
             const auto entry_value = list.get_button_text(event.target());
 
             auto *tile_data = list.get_parent().user_data<TileData>();
 
             auto window = get_window(event.target());
-            auto *file_browser_data = window.user_data<FileSystemData>();
+            auto *file_browser_data = window.user_data<Data>();
 
             const auto next_path = get_next_path(tile_data->path(), entry_value);
             const auto info = fs::FileSystem().get_info(next_path);
 
             // clicked a directory or a file?
-            auto tile_view = window.find<TileView>(tile_view_name);
+            auto tile_view = window.find<TileView>(Names::tile_view);
             if (info.is_directory()) {
               file_browser_data->set_path(next_path);
               tile_view.go_forward(TileData::create(next_path), configure_list);
@@ -205,11 +220,25 @@ void FileSystemWindow::configure_list(Container &container) {
           }
         });
 
-      auto *file_system_data = get_window(list).user_data<FileSystemData>();
+      auto *file_system_data = get_window(list).user_data<Data>();
 
       // add items in the director to the list
       const auto &path = file_system_data->path();
-      const auto file_list = fs::FileSystem().read_directory(path);
+      auto is_exclude = [](const var::StringView name, void *data) {
+        auto *file_system_data = reinterpret_cast<Data *>(data);
+
+        if (file_system_data->is_select_folder()) {
+          const auto info = fs::FileSystem().get_info(file_system_data->path() / name);
+          if (info.is_directory() == false) {
+            return fs::FileSystem::IsExclude::yes;
+          }
+        }
+
+        return fs::FileSystem::IsExclude::no;
+      };
+
+      const auto file_list = fs::FileSystem().read_directory(
+        path, fs::FileSystem::IsRecursive::no, is_exclude, file_system_data);
       for (const auto &item : file_list) {
         const auto full_path = get_next_path(path, item);
         {
@@ -220,8 +249,10 @@ void FileSystemWindow::configure_list(Container &container) {
           const auto item_type = file_system_data->is_select_file() && info.is_file()
                                    ? FormList::ItemType::string
                                    : FormList::ItemType::navigation;
-          list.add_item(
-            FormList::ItemData::create(item).set_symbol(symbol).set_type(item_type));
+
+          list.add_item(FormList::ItemData::create(item.cstring())
+                          .set_symbol(symbol)
+                          .set_type(item_type));
         }
       }
     }));

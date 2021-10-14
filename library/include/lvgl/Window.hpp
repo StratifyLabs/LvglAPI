@@ -71,41 +71,43 @@ private:
   const Construct *m_construct;
 };
 
-
 class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
 public:
   class Construct {
     API_AF(Construct, lv_coord_t, header_height, 15_percent);
   };
 
-
-  class FileSystemData : public UserDataAccess<FileSystemData> {
+  class Data : public UserDataAccess<Data> {
   public:
-    FileSystemData(const char * name) : UserDataBase(name){}
+    Data(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AC(FileSystemData,var::PathString,base_path);
-    API_AC(FileSystemData,var::PathString,path);
-    API_AB(FileSystemData,select_file,false);
-    API_AF(FileSystemData,const char *, directory_symbol, LV_SYMBOL_DIRECTORY);
-    API_AF(FileSystemData,const char *, file_symbol, LV_SYMBOL_FILE);
-    API_AF(FileSystemData,const char *, back_symbol, LV_SYMBOL_LEFT);
-    API_AF(FileSystemData,const char *, close_symbol, LV_SYMBOL_CLOSE);
+    API_AC(Data, var::PathString, base_path);
+    API_AC(Data, var::PathString, path);
+    API_AB(Data, select_file, false);
+    API_AB(Data, select_folder, false);
+    API_AF(Data, const char *, directory_symbol, LV_SYMBOL_DIRECTORY);
+    API_AF(Data, const char *, file_symbol, LV_SYMBOL_FILE);
+    API_AF(Data, const char *, back_symbol, LV_SYMBOL_LEFT);
+    API_AF(Data, const char *, close_symbol, LV_SYMBOL_CLOSE);
   };
 
-  explicit FileSystemWindow(const UserData &context, const Construct &options)
-    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+  explicit FileSystemWindow(const Data &user_data, const Construct &options)
+    : ObjectAccess(user_data.cast_as_name()), m_construct(&options) {}
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
-  static constexpr auto back_button_name = "BackButton";
-  static constexpr auto entry_list_name = "EntryList";
-  static constexpr auto tile_view_name = "TileView";
-  static constexpr auto file_browser_window = "FileBrowser";
-  static constexpr auto window_title_name = "WindowTitle";
-  static constexpr auto file_details_table_name = "FileDetails";
 
 private:
+  struct Names {
+    static constexpr auto ok_button = "OkButton";
+    static constexpr auto back_button = "BackButton";
+    static constexpr auto entry_list = "EntryList";
+    static constexpr auto tile_view = "TileView";
+    static constexpr auto file_browser_window = "FileBrowser";
+    static constexpr auto window_title = "WindowTitle";
+    static constexpr auto file_details_table = "FileDetails";
+  };
 
   class TileData : public UserDataAccess<TileData> {
   public:
@@ -134,11 +136,9 @@ private:
     return path / entry;
   }
 
-  static void set_back_button_label(const Window &window, const char * symbol);
-  static Label get_title_label(const Window & window);
-  static Window get_window(Object object){
-    return object.find_parent<Window>();
-  }
+  static void set_back_button_label(const Window &window, const char *symbol);
+  static Label get_title_label(const Window &window);
+  static Window get_window(Object object) { return object.find_parent<Window>(); }
 };
 
 } // namespace lvgl

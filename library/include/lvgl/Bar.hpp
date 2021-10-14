@@ -29,15 +29,16 @@ template <class Derived> class BarAccess : public ObjectAccess<Derived> {
 public:
   BarAccess() = default;
   BarAccess(u32 type) : ObjectAccess<Derived>(type) {}
-  BarAccess(const char * name) : ObjectAccess<Derived>(name) {}
+  BarAccess(const char *name) : ObjectAccess<Derived>(name) {}
 
   Derived &set_range(const Range &value) {
     Object::api()->bar_set_range(Object::object(), value.minimum(), value.maximum());
     return static_cast<Derived &>(*this);
   }
 
-  Derived & set_start_value(s16 start_value, IsAnimate is_animate = IsAnimate::yes){
-    Object::api()->bar_set_start_value(Object::object(), start_value, lv_anim_enable_t(is_animate));
+  Derived &set_start_value(s16 start_value, IsAnimate is_animate = IsAnimate::yes) {
+    Object::api()->bar_set_start_value(
+      Object::object(), start_value, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
@@ -64,17 +65,15 @@ public:
   }
 
   s16 get_value() const { return Object::api()->bar_get_value(Object::object()); }
+
 };
 
 class Bar : public BarAccess<Bar> {
 public:
+  explicit Bar(const char *name) : BarAccess(name) {}
+  explicit Bar(const UserData &context) : BarAccess(context.cast_as_name()) {}
 
-  explicit Bar(const char * name) : BarAccess(name){}
-  explicit Bar(const UserData & context) : BarAccess(context.cast_as_name()){}
-
-  static const lv_obj_class_t * get_class(){
-    return api()->bar_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->bar_class; }
 
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,

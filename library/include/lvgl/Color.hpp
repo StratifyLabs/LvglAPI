@@ -64,18 +64,19 @@ public:
 
   Color(u32 hex_value) { m_color = lv_color_hex(hex_value); }
 
-  Color(lv_color_t color) : m_color(color) {}
+  constexpr Color(lv_color_t color) : m_color(color) {}
+
   Color(const Rgb &rgb) { m_color = lv_color_make(rgb.red(), rgb.green(), rgb.blue()); }
   Color(const Hsv &hsv) {
     m_color = api()->color_hsv_to_rgb(hsv.hue(), hsv.saturation(), hsv.value());
   }
 
   static Color get_palette(Palette palette, PaletteLevel level = PaletteLevel::default_) {
-    const auto l = static_cast<int>(level);
-    const auto p = static_cast<lv_palette_t>(palette);
-    if( l < 0 ){
-      return Color(api()->palette_darken(p, -1*l));
-    } else if ( l > 0 ){
+    const auto l = int(level);
+    const auto p = lv_palette_t(palette);
+    if (l < 0) {
+      return Color(api()->palette_darken(p, -1 * l));
+    } else if (l > 0) {
       return Color(api()->palette_lighten(p, l));
     }
     return Color(api()->palette_main(p));
@@ -102,10 +103,65 @@ public:
 
   Hsv to_hsv() const { return Hsv(api()->color_to_hsv(m_color)); }
 
+
+  static Color red(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::red, level);
+  }
+  static Color pink(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::pink, level);
+  }
+  static Color purple(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::purple, level);
+  }
+  static Color deep_purple(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::deep_purple, level);
+  }
+  static Color indigo(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::indigo, level);
+  }
+  static Color blue(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::blue, level);
+  }
+  static Color light_blue(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::light_blue, level);
+  }
+  static Color cyan(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::cyan, level);
+  }
+  static Color teal(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::teal, level);
+  }
+  static Color green(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::green, level);
+  }
+  static Color light_green(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::light_green, level);
+  }
+  static Color lime(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::lime, level);
+  }
+  static Color yellow(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::yellow, level);
+  }
+  static Color amber(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::amber, level);
+  }
+  static Color orange(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::orange, level);
+  }
+  static Color deep_orange(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::deep_orange, level);
+  }
+  static Color brown(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::brown, level);
+  }
+  static Color grey(PaletteLevel level = PaletteLevel::default_) {
+    return get_palette(Palette::grey, level);
+  }
+
 private:
   lv_color_t m_color;
 };
-
 
 } // namespace lvgl
 

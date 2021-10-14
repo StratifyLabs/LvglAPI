@@ -27,6 +27,14 @@ void LvglGraphicsView::initialize_devices() {
   m_mouse_driver.user_data = this;
   m_mouse_driver.read_cb = read_mouse;
   m_mouse_device = lv_indev_drv_register(&m_mouse_driver);
+
+#if 0
+  lv_indev_drv_init(&m_mouse_wheel_driver);
+  m_mouse_wheel_driver.type = LV_INDEV_TYPE_ENCODER;
+  m_mouse_wheel_driver.user_data = this;
+  m_mouse_wheel_driver.read_cb = read_mouse_wheel;
+  m_mouse_wheel_device = lv_indev_drv_register(&m_mouse_wheel_driver);
+#endif
 }
 
 void LvglGraphicsView::tick() {
@@ -64,6 +72,20 @@ void LvglGraphicsView::mousePressEvent(QMouseEvent *event) {
 void LvglGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
   m_is_mouse_pressed = false;
   QGraphicsView::mouseReleaseEvent(event);
+}
+
+void LvglGraphicsView::wheelEvent(QWheelEvent *event){
+  const auto pixel_count = event->pixelDelta();
+  const auto degree_count = event->angleDelta();
+
+  if( !pixel_count.isNull() ){
+
+  } else if( !degree_count.isNull() ){
+
+  }
+
+  event->accept();
+
 }
 
 void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data) {
@@ -168,5 +190,19 @@ void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data)
   auto mouse_point = view->mousePosition();
   data->point.x = mouse_point.x();
   data->point.y = mouse_point.y();
-  data->state = view->isMousePressed() ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+  data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
 }
+
+void LvglGraphicsView::read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t *data) {
+  //currently mouse wheel is used to emulate an encoder (left, right arrows)
+  //it needs to be used for scrolling to work well here
+
+#if 0
+  auto *view = static_cast<LvglGraphicsView *>(device->user_data);
+  auto mouse_point = view->mousePosition();
+  data->point.x = mouse_point.x();
+  data->point.y = mouse_point.y();
+  data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+#endif
+}
+

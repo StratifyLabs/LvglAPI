@@ -15,8 +15,10 @@ class LvglGraphicsView final : public QGraphicsView {
   LvglRenderer m_renderer;
   lv_indev_drv_t m_keyboard_driver = {};
   lv_indev_drv_t m_mouse_driver = {};
+  lv_indev_drv_t m_mouse_wheel_driver = {};
   lv_indev_t *m_keyboard_device = nullptr;
   lv_indev_t *m_mouse_device = nullptr;
+  lv_indev_t *m_mouse_wheel_device = nullptr;
   Qt::Key m_key;
   bool m_is_mouse_pressed = false;
 
@@ -51,9 +53,11 @@ private:
   void keyReleaseEvent(QKeyEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 
   static void read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data);
   static void read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data);
+  static void read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t *data);
 
   void initialize_devices();
 

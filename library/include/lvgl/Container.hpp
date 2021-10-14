@@ -42,7 +42,42 @@ private:
   }
 };
 
-inline Container screen(){
+class Row : public ObjectAccess<Row> {
+public:
+  explicit Row(const char *name) : ObjectAccess(name) {}
+  explicit Row(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  Row(Object parent, const Row &) {
+    m_object = api()->label_create(parent.object());
+    api()->label_set_text_static(m_object, "");
+    set_flex_layout()
+      .set_flex_flow(FlexFlow::row)
+      .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+      .set_row_padding(20);
+  }
+};
+
+class Column : public ObjectAccess<Column> {
+public:
+  explicit Column(const char *name) : ObjectAccess(name) {}
+  explicit Column(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+
+private:
+  OBJECT_ACCESS_FRIENDS();
+  Column(Object parent, const Column &) {
+    m_object = api()->label_create(parent.object());
+    api()->label_set_text_static(m_object, "");
+    set_flex_layout()
+      .set_flex_flow(FlexFlow::column)
+      .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+      .set_column_padding(20);
+  }
+};
+
+
+inline Container screen() {
   Container result(Api::api()->disp_get_scr_act(nullptr));
   return result;
 }

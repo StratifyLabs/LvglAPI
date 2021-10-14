@@ -63,6 +63,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+
   Derived &set_width(lv_coord_t value) {
     api()->obj_set_width(m_object, value);
     return static_cast<Derived &>(*this);
@@ -71,6 +72,18 @@ public:
   Derived &set_height(lv_coord_t value) {
     api()->obj_set_height(m_object, value);
     return static_cast<Derived &>(*this);
+  }
+
+  Derived & fill_width(){
+    return set_width(100_percent);
+  }
+
+  Derived & fill_height(){
+    return set_height(100_percent);
+  }
+
+  Derived & fill(){
+    return fill_width().fill_height();
   }
 
   Derived &set_content_width(lv_coord_t value) {
@@ -186,39 +199,39 @@ public:
 
   Derived &scroll_by(const Point &position, IsAnimate is_animate) {
     api()->obj_scroll_by(
-      m_object, position.x(), position.y(), is_animate == IsAnimate::yes ? true : false);
+      m_object, position.x(), position.y(), lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to(const Point &position, IsAnimate is_animate) {
     api()->obj_scroll_to(
-      m_object, position.x(), position.y(), is_animate == IsAnimate::yes ? true : false);
+      m_object, position.x(), position.y(), lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_x(lv_coord_t value, IsAnimate is_animate) {
-    api()->obj_scroll_to_x(m_object, value, is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_x(m_object, value, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_y(lv_coord_t value, IsAnimate is_animate) {
-    api()->obj_scroll_to_y(m_object, value, is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_y(m_object, value, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_view(IsAnimate is_animate) {
-    api()->obj_scroll_to_view(m_object, is_animate == IsAnimate::yes ? true : false);
+    api()->obj_scroll_to_view(m_object, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &scroll_to_view_recursive(IsAnimate is_animate) {
     api()->obj_scroll_to_view_recursive(
-      m_object, is_animate == IsAnimate::yes ? true : false);
+      m_object, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
   Derived &update_snap(IsAnimate is_animate) {
-    api()->obj_update_snap(m_object, is_animate == IsAnimate::yes ? true : false);
+    api()->obj_update_snap(m_object, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
@@ -750,6 +763,10 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived & operator()(Callback callback){
+    return configure(callback);
+  }
+
   const char *initial_name() const { return m_initial_name; }
   UserData *initial_context() const {
     return const_cast<UserData *>(reinterpret_cast<const UserData *>(m_initial_name));
@@ -763,6 +780,8 @@ private:
 #define OBJECT_ACCESS_FORWARD_FRIENDS()                                                  \
   class Container;                                                                       \
   class NakedContainer;                                                                  \
+  class Row;                                                                             \
+  class Column;                                                                          \
   class Window;                                                                          \
   class Button;                                                                          \
   class MessageBox;                                                                      \
@@ -770,6 +789,8 @@ private:
 
 #define OBJECT_ACCESS_FRIENDS()                                                          \
   friend class ObjectAccess<Container>;                                                  \
+  friend class ObjectAccess<Row>;                                                        \
+  friend class ObjectAccess<Column>;                                                     \
   friend class ObjectAccess<NakedContainer>;                                             \
   friend class ObjectAccess<Window>;                                                     \
   friend class ObjectAccess<TileView>;                                                   \
