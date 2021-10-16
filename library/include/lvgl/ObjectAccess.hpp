@@ -118,6 +118,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived &center() {
+    api()->obj_set_align(m_object, static_cast<lv_align_t>(Alignment::center));
+    return static_cast<Derived &>(*this);
+  }
+
   Derived &set_alignment(Alignment alignment) {
     api()->obj_set_align(m_object, static_cast<lv_align_t>(alignment));
     return static_cast<Derived &>(*this);
