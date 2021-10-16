@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-Button::Button(Object parent, const Button &){
-  m_object = api()->btn_create(parent.object());
+Button::Button(const char * name){
+  m_object = api()->btn_create(screen_object());
+  set_user_data(m_object, name);
 }

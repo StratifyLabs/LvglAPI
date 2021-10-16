@@ -19,7 +19,7 @@ public:
     return api()->arc_class;
   }
 
-  explicit Arc(const char * name) : ObjectAccess(name){}
+  explicit Arc(const char * name);
 
   Arc & set_start_angle(u16 value){
     api()->arc_set_start_angle(m_object, value);
@@ -90,7 +90,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Arc(lv_obj_t * object){ m_object = object; }
-  Arc(Object parent, const Arc & options);
 
 
 };

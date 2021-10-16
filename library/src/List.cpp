@@ -3,12 +3,14 @@
 
 using namespace lvgl;
 
-List::List(Object parent, const List &) {
-  m_object = api()->list_create(parent.object());
+List::List(const char * name) {
+  m_object = api()->list_create(screen_object());
+  set_user_data(m_object,name);
 }
 
-CheckList::CheckList(Object parent, const CheckList &) {
-  m_object = api()->list_create(parent.object());
+CheckList::CheckList(const Data &user_data) {
+  m_object = api()->list_create(screen_object());
+  set_user_data(m_object,user_data.cast_as_name());
   get<CheckList>().add_event_callback(EventCode::clicked, [](lv_event_t *e) {
     const Event event(e);
     if (event.target().name() == event.current_target().name()) {
@@ -17,7 +19,7 @@ CheckList::CheckList(Object parent, const CheckList &) {
 
     const char *button_name = event.target().name();
     auto checklist = event.current_target<CheckList>();
-    auto *c = checklist.user_data<CheckListData>();
+    auto *c = checklist.user_data<Data>();
     if (c->is_allow_multiple() == false) {
       checklist.clear_all();
       checklist.set_checked(button_name);
@@ -29,8 +31,9 @@ CheckList::CheckList(Object parent, const CheckList &) {
   });
 }
 
-FormList::FormList(Object parent, const FormList &) {
-  m_object = api()->list_create(parent.object());
+FormList::FormList(Data& data) {
+  m_object = api()->list_create(screen_object());
+  set_user_data(m_object,data.cast_as_name());
 }
 
 FormList &FormList::add_item(const ItemData &item_data) {
@@ -61,13 +64,13 @@ FormList &FormList::add_item(const ItemData &item_data) {
           }
         }
       })
-    .add(Label(value_name).configure([](Label &label) {
-      label.set_width(size_from_content).set_alignment(Alignment::right_middle);
-    }));
+    .add_object(Label(value_name)
+                  .set_width(size_from_content)
+                  .set_alignment(Alignment::right_middle));
 
   auto *c = button.user_data<ItemData>();
-  button
-    .find<Label>(value_name)
-    .set_text_static((c->type() == ItemType::navigation) ? LV_SYMBOL_RIGHT : c->value().cstring());
+  button.find<Label>(value_name)
+    .set_text_static(
+      (c->type() == ItemType::navigation) ? LV_SYMBOL_RIGHT : c->value().cstring());
   return *this;
 }

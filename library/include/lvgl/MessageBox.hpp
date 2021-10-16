@@ -10,28 +10,23 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class MessageBox : public ObjectAccess<MessageBox> {
 public:
-  class Construct {
-  public:
+  struct Construct {
 
     Construct &set_button_list(const char *list[]) {
-      m_button_list = list;
+      button_list = list;
       return *this;
     }
 
-  private:
-    friend MessageBox;
-    API_AF(Construct, const char *, title, "");
-    API_AF(Construct, const char *, message, "");
-    API_AB(Construct, add_close_button, true);
-    API_AB(Construct, modal, false);
+    API_PUBLIC_MEMBER(Construct, const char *, name, "");
+    API_PUBLIC_MEMBER(Construct, const char *, title, "");
+    API_PUBLIC_MEMBER(Construct, const char *, message, "");
+    API_PUBLIC_BOOL(Construct, add_close_button, true);
+    API_PUBLIC_BOOL(Construct, modal, false);
 
-    const char **m_button_list = nullptr;
+    const char **button_list = nullptr;
   };
 
-  explicit MessageBox(const char *name, const Construct &options)
-    : ObjectAccess(name), m_construct(&options) {}
-  explicit MessageBox(const UserData &context, const Construct &options)
-    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+  MessageBox(const Construct &options);
 
   static const lv_obj_class_t *get_class() { return api()->message_box_class; }
 
@@ -49,9 +44,7 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit MessageBox(lv_obj_t *object) { m_object = object; }
-  MessageBox(Object parent, const MessageBox &options);
 
-  const Construct *m_construct = nullptr;
 
 };
 

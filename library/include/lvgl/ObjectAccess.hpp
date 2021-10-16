@@ -10,8 +10,6 @@ namespace lvgl {
 
 template <class Derived> class ObjectAccess : public Object {
 public:
-  ObjectAccess<Derived>() = default;
-  ObjectAccess<Derived>(const char *name) : m_initial_name(name) {}
 
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
@@ -729,11 +727,18 @@ public:
   }
 
   template <typename ChildClass> Derived &add(const ChildClass &child) {
-    ChildClass new_child(*this, child);
-    set_user_data(new_child.object(), child.initial_name());
-    if (child.initialize()) {
-      child.initialize()(new_child);
-    }
+    api()->obj_set_parent(child.m_object, m_object);
+    return static_cast<Derived &>(*this);
+  }
+
+  template <typename ChildClass> Derived &add_object(const ChildClass &child) {
+    api()->obj_set_parent(child.m_object, m_object);
+    return static_cast<Derived &>(*this);
+  }
+
+
+  Derived & setup(void (*configure)(lv_obj_t * object)){
+    configure(m_object);
     return static_cast<Derived &>(*this);
   }
 
@@ -755,26 +760,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  using Callback = void (*)(Derived &);
-  Callback initialize() const { return m_initialize; }
 
-  Derived &configure(Callback callback) {
-    m_initialize = callback;
-    return static_cast<Derived &>(*this);
-  }
-
-  Derived & operator()(Callback callback){
-    return configure(callback);
-  }
-
-  const char *initial_name() const { return m_initial_name; }
-  UserData *initial_context() const {
-    return const_cast<UserData *>(reinterpret_cast<const UserData *>(m_initial_name));
-  }
-
-private:
-  Callback m_initialize = nullptr;
-  const char *m_initial_name = nullptr;
 };
 
 #define OBJECT_ACCESS_FORWARD_FRIENDS()                                                  \

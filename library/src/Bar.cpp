@@ -13,6 +13,7 @@ Printer &operator<<(Printer &printer, const lvgl::Range &range) {
 
 using namespace lvgl;
 
-Bar::Bar(Object parent, const Bar &){
-  m_object = api()->bar_create(parent.object());
+Bar::Bar(const char * name){
+  m_object = api()->bar_create(screen_object());
+  set_user_data(m_object,name);
 }

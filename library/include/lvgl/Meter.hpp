@@ -34,8 +34,7 @@ public:
     lv_meter_indicator_t *m_indicator = nullptr;
   };
 
-  explicit Meter(const char * name) : ObjectAccess(name){}
-  explicit Meter(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Meter(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->meter_class;
@@ -123,7 +122,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Meter(lv_obj_t * object){ m_object = object; }
-  Meter(Object parent, const Meter &);
 
 
 };

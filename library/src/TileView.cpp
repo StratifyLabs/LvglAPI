@@ -1,10 +1,12 @@
 #include "lvgl/TileView.hpp"
 #include "lvgl/Event.hpp"
+#include "lvgl/Container.hpp"
 
 using namespace lvgl;
 
-TileView::TileView(Object parent, const TileView &) {
-  m_object = api()->tileview_create(parent.object());
+TileView::TileView(const char * name) {
+  m_object = api()->tileview_create(screen_object());
+  set_user_data(m_object,name);
 }
 
 Object TileView::get_tile(const Location &location) const {

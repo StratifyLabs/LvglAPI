@@ -9,8 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
 
-  explicit ButtonMatrix(const char * name) : ObjectAccess(name){}
-  explicit ButtonMatrix(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit ButtonMatrix(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->button_matrix_class;
@@ -31,8 +30,6 @@ private:
   friend class MessageBox;
   explicit ButtonMatrix(lv_obj_t *obj){ m_object = obj; }
   explicit ButtonMatrix(lv_btnmatrix_t *matrix){ m_object = reinterpret_cast<lv_obj_t*>(matrix); }
-
-  ButtonMatrix(Object parent, const ButtonMatrix &);
 
 };
 

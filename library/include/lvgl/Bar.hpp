@@ -70,8 +70,7 @@ public:
 
 class Bar : public BarAccess<Bar> {
 public:
-  explicit Bar(const char *name) : BarAccess(name) {}
-  explicit Bar(const UserData &context) : BarAccess(context.cast_as_name()) {}
+  explicit Bar(const char *name);
 
   static const lv_obj_class_t *get_class() { return api()->bar_class; }
 
@@ -89,7 +88,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Bar(lv_obj_t *object) { m_object = object; }
-  Bar(Object parent, const Bar &);
 };
 
 } // namespace lvgl

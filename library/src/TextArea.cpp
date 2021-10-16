@@ -6,36 +6,40 @@
 
 using namespace lvgl;
 
-TextArea::TextArea(Object parent, const TextArea &) {
-  m_object = api()->textarea_create(parent.object());
+TextArea::TextArea(const char *name) {
+  m_object = api()->textarea_create(screen_object());
+  set_user_data(m_object, name);
 }
 
-FileTextArea::FileTextArea(Object parent, const FileTextArea &options) {
-  m_object = api()->textarea_create(parent.object());
-  set_user_data(m_object, options.initial_name());
-
-  auto *data = user_data<Data>();
+FileTextArea::FileTextArea(Data &data) {
+  m_object = api()->textarea_create(screen_object());
+  set_user_data(m_object, data.cast_as_name());
 
   set_scroll_mode(ScrollBarMode::active);
 
-  API_ASSERT(data->file() != nullptr);
+  API_ASSERT(data.file() != nullptr);
 
-  const auto file_size = data->file()->size();
+  const auto file_size = data.file()->size();
 
-  if (file_size > data->m_buffer.size()) {
+  if (file_size > data.m_buffer.size()) {
     // add a progress bar
-    parent.get<Container>().add(Bar(progress_bar_name).configure([](Bar &bar) {
-      bar.set_height(20).set_width(100_percent).set_alignment(Alignment::bottom_middle);
-    }));
+#if 0
+    parent.get<Container>().add_object(Bar(progress_bar_name)
+                                         .set_height(20)
+                                         .set_width(100_percent)
+                                         .set_alignment(Alignment::bottom_middle));
+#endif
 
-    const auto pages = file_size / data->m_buffer.size() + 1;
-    data->set_progress_size(1000 / pages);
-    data->set_progress_start(0);
+    const auto pages = file_size / data.m_buffer.size() + 1;
+    data.set_progress_size(1000 / pages);
+    data.set_progress_start(0);
+#if 0
     parent.find<Bar>(progress_bar_name)
       .set_mode(Bar::Mode::range)
       .set_start_value(0)
-      .set_value(data->progress_size())
+      .set_value(data.progress_size())
       .set_range(Range().set_maximum(1000));
+#endif
   }
 
   // load file line by line to buffer

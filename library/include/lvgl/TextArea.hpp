@@ -13,8 +13,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class TextArea : public ObjectAccess<TextArea> {
 public:
-  explicit TextArea(const char *name) : ObjectAccess(name) {}
-  explicit TextArea(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit TextArea(const char *name);
 
   static const lv_obj_class_t *get_class() { return api()->textarea_class; }
 
@@ -158,7 +157,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class Keyboard;
   explicit TextArea(lv_obj_t *obj) { m_object = obj; }
-  TextArea(Object parent, const TextArea &);
 };
 
 class FileTextArea : public ObjectAccess<FileTextArea> {
@@ -187,7 +185,7 @@ public:
 
   static constexpr auto progress_bar_name = "FileTextAreaProgressBar";
 
-  explicit FileTextArea(const Data &data) : ObjectAccess(data.cast_as_name()) {}
+  explicit FileTextArea(Data& data);
 
   static const lv_obj_class_t *get_class() { return api()->textarea_class; }
 
@@ -335,7 +333,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class Keyboard;
   explicit FileTextArea(lv_obj_t *obj) { m_object = obj; }
-  FileTextArea(Object parent, const FileTextArea &);
 };
 
 } // namespace lvgl

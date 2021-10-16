@@ -9,8 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class TileView : public ObjectAccess<TileView> {
 public:
-  TileView(const char *name) : ObjectAccess(name) {}
-  TileView(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+  TileView(const char *name);
 
   static const lv_obj_class_t * get_class(){
     return api()->tileview_class;
@@ -26,7 +25,7 @@ public:
   TileView &add_tile(
     const char *name,
     const Location &location,
-    void (*add)(Container &container) = nullptr) {
+    void (*configure)(Container &container) = nullptr) {
     Container obj(api()->tileview_add_tile(
       m_object, location.column(), location.row(), lv_dir_t(location.direction())));
     set_user_data(obj.object(), name);
@@ -35,17 +34,19 @@ public:
       api()->obj_set_tile(m_object, obj.object(), LV_ANIM_OFF);
     }
 
-    if (add) {
-      add(obj);
+    if (configure) {
+      configure(obj);
     }
     return *this;
   }
 
+
+
   TileView &add_tile(
     const UserData &context,
     const Location &location,
-    void (*add)(Container &container) = nullptr) {
-    return add_tile(context.cast_as_name(), location, add);
+    void (*configure)(Container &container) = nullptr) {
+    return add_tile(context.cast_as_name(), location, configure);
   }
 
   Object get_active_tile() const {
@@ -82,7 +83,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit TileView(lv_obj_t *object) { m_object = object; }
-  TileView(Object parent, const TileView &);
 };
 
 } // namespace lvgl

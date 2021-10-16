@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-Keyboard::Keyboard(Object parent, const Keyboard&){
-  m_object = api()->keyboard_create(parent.object());
+Keyboard::Keyboard(const char * name){
+  m_object = api()->keyboard_create(screen_object());
+  set_user_data(m_object,name);
 }

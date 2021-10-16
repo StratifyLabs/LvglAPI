@@ -15,8 +15,7 @@ public:
     range = LV_SLIDER_MODE_RANGE
   };
 
-  explicit Slider(const char * name) : BarAccess(name){}
-  explicit Slider(const UserData & context) : BarAccess(context.cast_as_name()){}
+  explicit Slider(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->slider_class;
@@ -39,7 +38,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Slider(lv_obj_t * object){ m_object = object; }
-  Slider(Object parent, const Slider &);
 };
 
 }

@@ -2,7 +2,7 @@
 
 using namespace lvgl;
 
-Spinner::Spinner(Object parent, const Spinner &options) {
-  m_object = api()->spinner_create(
-    parent.object(), options.m_construct->time(), options.m_construct->arc_length());
+Spinner::Spinner(const Construct &options) {
+  m_object = api()->spinner_create(screen_object(), options.time, options.arc_length);
+  set_user_data(m_object, options.name);
 }

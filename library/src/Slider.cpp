@@ -3,6 +3,7 @@
 using namespace lvgl;
 
 
-Slider::Slider(Object parent, const Slider &){
-  m_object = api()->slider_create(parent.object());
+Slider::Slider(const char * name){
+  m_object = api()->slider_create(screen_object());
+  set_user_data(m_object,name);
 }

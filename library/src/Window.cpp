@@ -11,36 +11,35 @@
 
 using namespace lvgl;
 
-Window::Window(Object parent, const Window &options) {
-  m_object = api()->win_create(parent.object(), options.m_construct->header_height());
+Window::Window(const char * name, lv_coord_t header_height) {
+  m_object = api()->win_create(screen_object(), header_height);
+  set_user_data(m_object,name);
   get_header().add_flag(Flags::event_bubble);
   get_content().add_flag(Flags::event_bubble);
 }
 
-FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &options) {
-  m_object = api()->win_create(parent.object(), options.m_construct->header_height());
+FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
+  m_object = api()->win_create(screen_object(), header_height);
   get_header().add_flag(Flags::event_bubble);
   get_content().add_flag(Flags::event_bubble);
 
-  set_user_data(m_object, options.initial_name());
+  set_user_data(m_object, data.cast_as_name());
 
-  auto *user_data = reinterpret_cast<FileSystemWindow::Data *>(options.initial_context());
-
-  user_data->set_path(user_data->base_path());
-  printf("load path %s\n", user_data->base_path().cstring());
+  data.set_path(data.base_path());
+  printf("load path %s\n", data.base_path().cstring());
 
   auto window = Container(m_object).get<Window>();
 
   window.clear_flag(Window::Flags::scrollable)
-    .add_title(Names::window_title, user_data->base_path(), [](Label &label) {
+    .add_title(Names::window_title, data.base_path(), [](Label &label) {
       label.set_left_padding(10);
     });
 
-  if (user_data->is_select_folder()) {
+  if (data.is_select_folder()) {
     window.add_button(Names::ok_button, LV_SYMBOL_OK, size_from_content);
   }
 
-  window.add_button(Names::back_button, user_data->close_symbol(), size_from_content)
+  window.add_button(Names::back_button, data.close_symbol(), size_from_content)
     .set_width(100_percent)
     .set_height(100_percent)
     .add_event_callback(
@@ -91,7 +90,7 @@ FileSystemWindow::FileSystemWindow(Object parent, const FileSystemWindow &option
   tile_view.set_width(100_percent)
     .set_height(100_percent)
     .add_tile(
-      TileData::create("").set_path(user_data->path()),
+      TileData::create("").set_path(data.path()),
       TileView::Location().set_column(0), configure_list);
 }
 
@@ -118,7 +117,8 @@ void FileSystemWindow::configure_details(Container &container) {
         set_back_button_label(window, fs_data->back_symbol());
         get_title_label(window).set_text(tile_data->path());
       })
-    .add(Table(Names::file_details_table).configure([](Table &table) {
+    .add(Table(Names::file_details_table).setup([](lv_obj_t * obj) {
+      auto table = Container(obj).get<Table>();
       auto *tile_data = table.get_parent().user_data<TileData>();
 
       const auto width = Container::active_screen().get_width();
@@ -181,7 +181,8 @@ void FileSystemWindow::configure_list(Container &container) {
           set_back_button_label(window, fs_data->back_symbol());
         }
       })
-    .add(FormList(FormList::FormData::create()).configure([](FormList &list) {
+    .add_object(FormList(FormList::Data::create()).setup([](lv_obj_t * obj) {
+      auto list = Container(obj).get<FormList>();
       list.set_top_padding(0)
         .set_scroll_mode(ScrollBarMode::active)
         .set_border_width(0)

@@ -9,8 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Checkbox : public ObjectAccess<Checkbox>{
 public:
 
-  explicit Checkbox(const char * name) : ObjectAccess(name){}
-  explicit Checkbox(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Checkbox(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->checkbox_class;
@@ -33,7 +32,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Checkbox(lv_obj_t * object){ m_object = object; }
-  Checkbox(Object parent, const Checkbox &);
 };
 
 }

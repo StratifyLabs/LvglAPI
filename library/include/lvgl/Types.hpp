@@ -18,6 +18,12 @@ class Api : public api::ExecutionContext {
 public:
   static LvglApi &api() { return m_api; }
 
+protected:
+
+  static lv_obj_t * screen_object(){
+    return api()->disp_get_scr_act(nullptr);
+  }
+
 private:
   static LvglApi m_api;
 };

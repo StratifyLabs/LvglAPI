@@ -10,8 +10,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class List : public ObjectAccess<List> {
 public:
-  explicit List(const char *name) : ObjectAccess(name) {}
-  explicit List(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit List(const char *name);
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -67,10 +66,10 @@ public:
     }
     if (options.right_symbol()) {
       Button button(object);
-      button.add(Label(right_symbol_name).configure([](Label &label) {
-        label.set_width(size_from_content).set_alignment(Alignment::right_middle);
-      }));
-      button.find<Label>(right_symbol_name).set_text_static(options.right_symbol());
+      button.add_object(Label(right_symbol_name)
+                          .set_width(size_from_content)
+                          .set_alignment(Alignment::right_middle)
+                          .set_text_static(options.right_symbol()));
     }
     return *this;
   }
@@ -145,22 +144,21 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class DropDownList;
   explicit List(lv_obj_t *object) { m_object = object; }
-  List(Object parent, const List &);
 };
 
 class CheckList : public ObjectAccess<CheckList> {
 public:
-  class CheckListData : public lvgl::UserDataAccess<CheckListData> {
+  class Data : public lvgl::UserDataAccess<Data> {
   public:
-    explicit CheckListData(const char *name) : UserDataBase(name) {}
+    explicit Data(const char *name) : UserDataBase(name) {}
 
   private:
-    API_AB(CheckListData, allow_multiple, false);
-    API_AF(CheckListData, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(CheckListData, const char *, not_checked_symbol, "");
+    API_AB(Data, allow_multiple, false);
+    API_AF(Data, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(Data, const char *, not_checked_symbol, "");
   };
 
-  explicit CheckList(const UserData &context) : ObjectAccess(context.cast_as_name()) {}
+  explicit CheckList(const Data &user_data);
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -171,10 +169,10 @@ public:
     set_user_data(object, name);
     auto button = Container(object).get<Button>();
     button.add_flag(Flags::event_bubble)
-      .add(Label(check_symbol_name).configure([](Label &label) {
-        label.set_width(size_from_content).set_alignment(Alignment::right_middle);
-      }));
-    button.find<Label>(check_symbol_name).set_text_static("");
+      .add_object(Label(check_symbol_name)
+                    .set_width(size_from_content)
+                    .set_alignment(Alignment::right_middle)
+                    .set_text_static(""));
     return *this;
   }
 
@@ -191,7 +189,7 @@ public:
   CheckList &set_checked(const char *name, bool value = true) {
     auto label = find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
     if (label.is_valid()) {
-      auto *c = user_data<CheckListData>();
+      auto *c = user_data<Data>();
       label.set_text_static(value ? c->checked_symbol() : c->not_checked_symbol());
     }
     return *this;
@@ -200,7 +198,7 @@ public:
   bool is_checked(const char *name) const {
     auto label = find_within<Label, IsAssertOnFail::no>(name, check_symbol_name);
     if (label.is_valid()) {
-      auto *c = user_data<CheckListData>();
+      auto *c = user_data<Data>();
       return var::StringView(label.get_text()) == c->checked_symbol();
     }
     return false;
@@ -210,22 +208,21 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class DropDownList;
   explicit CheckList(lv_obj_t *object) { m_object = object; }
-  CheckList(Object parent, const CheckList &);
 };
 
 class FormList : public ObjectAccess<FormList> {
 public:
-  class FormData : public ::lvgl::UserDataAccess<UserData> {
+  class Data : public ::lvgl::UserDataAccess<Data> {
   public:
-    explicit FormData(const char *name) : UserDataBase(name) {}
+    explicit Data(const char *name = "") : UserDataBase(name) {}
 
   private:
-    API_AB(FormData, allow_multiple, false);
-    API_AF(FormData, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(FormData, const char *, not_checked_symbol, "");
+    API_AB(Data, allow_multiple, false);
+    API_AF(Data, const char *, checked_symbol, LV_SYMBOL_OK);
+    API_AF(Data, const char *, not_checked_symbol, "");
   };
 
-  explicit FormList(const UserData &user_data) : ObjectAccess(user_data.cast_as_name()) {}
+  explicit FormList(Data &user_data);
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -251,7 +248,6 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class DropDownList;
   explicit FormList(lv_obj_t *object) { m_object = object; }
-  FormList(Object parent, const FormList &);
 };
 
 } // namespace lvgl

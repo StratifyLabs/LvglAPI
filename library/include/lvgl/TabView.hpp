@@ -9,20 +9,13 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class TabView : public ObjectAccess<TabView> {
 public:
-  class Construct {
-  public:
-    Construct() = default;
-    Construct(Direction direction, u32 size) : m_direction(direction), m_size(size) {}
-
-  private:
-    API_AF(Construct, Direction, direction, Direction::top);
-    API_AF(Construct, u32, size, 10_percent);
+  struct Construct {
+    API_PUBLIC_MEMBER(Construct, const char *, name, "");
+    API_PUBLIC_MEMBER(Construct, Direction, direction, Direction::top);
+    API_PUBLIC_MEMBER(Construct, u32, size, 10_percent);
   };
 
-  explicit TabView(const char *name, const Construct &options)
-    : ObjectAccess(name), m_construct(&options) {}
-  explicit TabView(const UserData &context, const Construct &options)
-    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+  explicit TabView(const Construct &options);
 
   static const lv_obj_class_t *get_class() { return api()->tabview_class; }
 
@@ -87,10 +80,10 @@ public:
 
 private:
   OBJECT_ACCESS_FRIENDS();
-  explicit TabView(lv_obj_t *object) { m_object = object; }
-  TabView(Object parent, const TabView &options);
 
-  const Construct *m_construct = nullptr;
+
+  explicit TabView(lv_obj_t *object) { m_object = object; }
+
 };
 
 } // namespace lvgl

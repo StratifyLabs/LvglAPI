@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-ColorPicker::ColorPicker(Object parent, const ColorPicker&){
+ColorPicker::ColorPicker(const char * name){
+  set_user_data(m_object,name);
 
 }

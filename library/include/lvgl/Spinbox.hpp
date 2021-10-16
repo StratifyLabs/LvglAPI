@@ -9,8 +9,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class Spinbox : public ObjectAccess<Spinbox>
 {
 public:
-  explicit Spinbox(const char * name) : ObjectAccess(name){}
-  explicit Spinbox(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Spinbox(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->spinbox_class;
@@ -19,7 +18,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Spinbox(lv_obj_t * object){ m_object = object; }
-  Spinbox(Object parent, const Spinbox &);
 
 };
 

@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-DropDownList::DropDownList(Object parent, const DropDownList&){
-  m_object = api()->dropdown_create(parent.object());
+DropDownList::DropDownList(const char * name){
+  m_object = api()->dropdown_create(screen_object());
+  set_user_data(m_object,name);
 }

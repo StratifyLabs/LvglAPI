@@ -3,6 +3,7 @@
 using namespace lvgl;
 
 
-Image::Image(Object parent, const Image&){
-  m_object = api()->img_create(parent.object());
+Image::Image(const char * name){
+  m_object = api()->img_create(screen_object());
+  set_user_data(m_object,name);
 }

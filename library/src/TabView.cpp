@@ -2,14 +2,9 @@
 
 using namespace lvgl;
 
-TabView::TabView(Object parent, const TabView& options){
+TabView::TabView(const Construct &options) {
   m_object = api()->tabview_create(
-    parent.object(), static_cast<lv_dir_t>(options.m_construct->direction()), options.m_construct->size());
+    screen_object(), static_cast<lv_dir_t>(options.direction), options.size);
+  set_user_data(m_object, options.name);
 
-
-  auto tab_buttons = get_buttons();
-  tab_buttons.set_user_data(m_object, "TabViewButtons");
-  auto content = get_content();
-  content.set_user_data(m_object, "TabViewContent");
 }
-

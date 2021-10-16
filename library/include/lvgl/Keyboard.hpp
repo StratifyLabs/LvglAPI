@@ -21,8 +21,7 @@ public:
     number = LV_KEYBOARD_MODE_NUMBER
   };
 
-  explicit Keyboard(const char * name) : ObjectAccess(name){}
-  explicit Keyboard(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Keyboard(const char * name);
 
 
   static const lv_obj_class_t * get_class(){
@@ -65,7 +64,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Keyboard(lv_obj_t * object){ m_object = object; }
-  Keyboard(Object parent, const Keyboard &);
 
 };
 

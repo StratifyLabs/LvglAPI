@@ -8,24 +8,20 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Spinner : public ObjectAccess<Spinner> {
 public:
-  class Construct {
-    API_AF(Construct, u32, time, 1000);
-    API_AF(Construct, u32, arc_length, 60);
+  struct Construct {
+    API_PUBLIC_MEMBER(Construct, const char *, name, "");
+    API_PUBLIC_MEMBER(Construct, u32, time, 1000);
+    API_PUBLIC_MEMBER(Construct, u32, arc_length, 60);
   };
 
-  explicit Spinner(const char *name, const Construct &options)
-    : ObjectAccess(name), m_construct(&options) {}
-  explicit Spinner(const UserData &context, const Construct &options)
-    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+  explicit Spinner(const Construct &options);
 
   static const lv_obj_class_t *get_class() { return api()->spinner_class; }
 
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Spinner(lv_obj_t *object) { m_object = object; }
-  Spinner(Object parent, const Spinner &options);
 
-  const Construct *m_construct = nullptr;
 };
 
 } // namespace lvgl

@@ -6,6 +6,7 @@
 
 using namespace lvgl;
 
-Arc::Arc(Object parent, const Arc & options): ObjectAccess(options.name()){
-  m_object = api()->arc_create(parent.object());
+Arc::Arc(const char * name){
+  m_object = api()->arc_create(screen_object());
+  set_user_data(m_object,name);
 }

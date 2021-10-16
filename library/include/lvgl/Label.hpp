@@ -17,8 +17,7 @@ public:
     clip = LV_LABEL_LONG_CLIP
   };
 
-  explicit Label(const char * name) : ObjectAccess(name){}
-  explicit Label(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Label(const char * name = "");
 
   static const lv_obj_class_t * get_class(){
     return api()->label_class;

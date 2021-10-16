@@ -10,14 +10,8 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Window : public ObjectAccess<Window> {
 public:
-  class Construct {
-    API_AF(Construct, lv_coord_t, header_height, 15_percent);
-  };
 
-  explicit Window(const char *name, const Construct &options)
-    : ObjectAccess(name), m_construct(&options) {}
-  explicit Window(const UserData &context, const Construct &options)
-    : ObjectAccess(context.cast_as_name()), m_construct(&options) {}
+  explicit Window(const char * name, lv_coord_t header_height = 15_percent);
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -66,16 +60,10 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Window(lv_obj_t *object) { m_object = object; }
-  Window(Object parent, const Window &options);
-
-  const Construct *m_construct;
 };
 
 class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
 public:
-  class Construct {
-    API_AF(Construct, lv_coord_t, header_height, 15_percent);
-  };
 
   class Data : public UserDataAccess<Data> {
   public:
@@ -92,8 +80,7 @@ public:
     API_AF(Data, const char *, close_symbol, LV_SYMBOL_CLOSE);
   };
 
-  explicit FileSystemWindow(const Data &user_data, const Construct &options)
-    : ObjectAccess(user_data.cast_as_name()), m_construct(&options) {}
+  explicit FileSystemWindow(Data & data, lv_coord_t header_height = 15_percent);
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -119,12 +106,9 @@ private:
 
   OBJECT_ACCESS_FRIENDS();
   explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
-  FileSystemWindow(Object parent, const FileSystemWindow &options);
 
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
   Container get_content() const { return Container(api()->win_get_content(m_object)); }
-
-  const Construct *m_construct;
 
   static void configure_details(Container &container);
   static void configure_list(Container &container);

@@ -11,8 +11,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
-  explicit DropDownList(const char * name) : ObjectAccess(name){}
-  explicit DropDownList(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit DropDownList(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->dropdown_class;
@@ -113,7 +112,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit DropDownList(lv_obj_t * object){ m_object = object; }
-  DropDownList(Object parent, const DropDownList & options);
 };
 
 using DropDown = DropDownList;

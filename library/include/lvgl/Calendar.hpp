@@ -8,10 +8,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class Calendar : public ObjectAccess<Calendar> {
 public:
-
-
-  explicit Calendar(const char * name) : ObjectAccess(name){}
-  explicit Calendar(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Calendar(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->calendar_class;
@@ -20,7 +17,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Calendar(lv_obj_t * object){ m_object = object; }
-  Calendar(Object parent, const Calendar &);
 
 };
 

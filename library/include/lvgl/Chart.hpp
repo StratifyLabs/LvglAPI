@@ -182,8 +182,7 @@ public:
 
   };
 
-  explicit Chart(const char *name) : ObjectAccess(name) {}
-  explicit Chart(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Chart(const char *name);
 
   static const lv_obj_class_t * get_class(){
     return api()->chart_class;
@@ -272,7 +271,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Chart(lv_obj_t *object) { m_object = object; }
-  Chart(Object parent, const Chart &);
 };
 
 } // namespace lvgl

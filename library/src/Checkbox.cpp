@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-Checkbox::Checkbox(Object parent, const Checkbox&){
-  m_object = api()->checkbox_create(parent.object());
+Checkbox::Checkbox(const char * name){
+  m_object = api()->checkbox_create(screen_object());
+  set_user_data(m_object,name);
 }

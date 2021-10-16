@@ -2,4 +2,7 @@
 
 using namespace lvgl;
 
-ImageButton::ImageButton(Object parent, const ImageButton &) {}
+ImageButton::ImageButton(const char * name) {
+  set_user_data(m_object,name);
+
+}

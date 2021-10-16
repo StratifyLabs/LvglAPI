@@ -2,6 +2,7 @@
 
 using namespace lvgl;
 
-Spinbox::Spinbox(Object parent, const Spinbox &){
-  //m_object = api()->spinbox_create(parent.object());
+Spinbox::Spinbox(const char * name){
+  //m_object = api()->spinbox_create(screen_object());
+  set_user_data(m_object,name);
 }

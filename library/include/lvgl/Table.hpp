@@ -17,8 +17,7 @@ public:
     custom4 = LV_TABLE_CELL_CTRL_CUSTOM_4,
   };
 
-  explicit Table(const char * name) : ObjectAccess(name){}
-  explicit Table(const UserData & context) : ObjectAccess(context.cast_as_name()){}
+  explicit Table(const char * name);
 
   static const lv_obj_class_t * get_class(){
     return api()->table_class;
@@ -88,7 +87,6 @@ public:
 private:
   OBJECT_ACCESS_FRIENDS();
   explicit Table(lv_obj_t * object){ m_object = object; }
-  Table(Object parent, const Table &);
 
 };
 
