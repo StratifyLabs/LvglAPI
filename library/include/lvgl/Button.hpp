@@ -13,15 +13,10 @@ public:
 
   static const lv_obj_class_t *get_class() { return api()->button_class; }
 
-  class LabelUserData : public UserDataAccess<LabelUserData> {
-  public:
-    LabelUserData(const char *name = "") : UserDataBase(name) {}
 
-  private:
-    API_AF(LabelUserData, Alignment, alignment, Alignment::center);
-    API_AF(LabelUserData, u8, right_padding, 0);
-    API_AF(LabelUserData, u8, left_padding, 0);
-  };
+  Button & add_static_label(const char * text){
+    return add(Label().set_text_static(text).center());
+  }
 
 
 private:
