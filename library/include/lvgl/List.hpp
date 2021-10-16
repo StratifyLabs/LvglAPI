@@ -10,7 +10,7 @@ OBJECT_ACCESS_FORWARD_FRIENDS();
 
 class List : public ObjectAccess<List> {
 public:
-  explicit List(const char *name);
+  explicit List(const char *name = "");
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
