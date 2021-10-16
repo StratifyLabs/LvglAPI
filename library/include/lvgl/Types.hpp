@@ -80,6 +80,34 @@ private:
   lv_area_t m_area{};
 };
 
+enum class Flags {
+  hidden = LV_OBJ_FLAG_HIDDEN,
+  clickable = LV_OBJ_FLAG_CLICKABLE,
+  focusable = LV_OBJ_FLAG_CLICK_FOCUSABLE,
+  checkable = LV_OBJ_FLAG_CHECKABLE,
+  scrollable = LV_OBJ_FLAG_SCROLLABLE,
+  scroll_elastic = LV_OBJ_FLAG_SCROLL_ELASTIC,
+  scroll_momentum = LV_OBJ_FLAG_SCROLL_MOMENTUM,
+  scroll_one = LV_OBJ_FLAG_SCROLL_ONE,
+  scroll_chain = LV_OBJ_FLAG_SCROLL_CHAIN,
+  scroll_on_focus = LV_OBJ_FLAG_SCROLL_ON_FOCUS,
+  snapable = LV_OBJ_FLAG_SNAPABLE,
+  press_lock = LV_OBJ_FLAG_PRESS_LOCK,
+  event_bubble = LV_OBJ_FLAG_EVENT_BUBBLE,
+  gesture_bubble = LV_OBJ_FLAG_GESTURE_BUBBLE,
+  advance_hittest = LV_OBJ_FLAG_ADV_HITTEST,
+  ignore_layout = LV_OBJ_FLAG_IGNORE_LAYOUT,
+  floating = LV_OBJ_FLAG_FLOATING,
+  layout_1 = LV_OBJ_FLAG_LAYOUT_1,
+  layout_2 = LV_OBJ_FLAG_LAYOUT_2,
+  widget_1 = LV_OBJ_FLAG_WIDGET_1,
+  widget_2 = LV_OBJ_FLAG_WIDGET_2,
+  user_1 = LV_OBJ_FLAG_USER_1,
+  user_2 = LV_OBJ_FLAG_USER_2,
+  user_3 = LV_OBJ_FLAG_USER_3,
+  user_4 = LV_OBJ_FLAG_USER_4
+};
+
 enum class EventCode {
   all = LV_EVENT_ALL,
   pressed = LV_EVENT_PRESSED,

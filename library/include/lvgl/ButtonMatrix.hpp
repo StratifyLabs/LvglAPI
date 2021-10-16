@@ -28,6 +28,7 @@ private:
   OBJECT_ACCESS_FRIENDS();
   friend class Keyboard;
   friend class TabView;
+  friend class MessageBox;
   explicit ButtonMatrix(lv_obj_t *obj){ m_object = obj; }
   explicit ButtonMatrix(lv_btnmatrix_t *matrix){ m_object = reinterpret_cast<lv_obj_t*>(matrix); }
 

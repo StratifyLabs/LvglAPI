@@ -2,7 +2,8 @@
 #define LVGLAPI_LVGL_MESSAGEBOX_HPP
 
 #include "Label.hpp"
-#include "ObjectAccess.hpp"
+#include "Button.hpp"
+#include "ButtonMatrix.hpp"
 
 namespace lvgl {
 OBJECT_ACCESS_FORWARD_FRIENDS();
@@ -38,7 +39,10 @@ public:
     return api()->msgbox_get_active_btn_text(m_object);
   }
 
+  Label get_title() const { return Label(api()->msgbox_get_title(m_object)); }
   Label get_text() const { return Label(api()->msgbox_get_text(m_object)); }
+  Button get_close_button() const  { return Button(api()->msgbox_get_close_btn(m_object)); }
+  ButtonMatrix get_buttons() const {return ButtonMatrix(api()->msgbox_get_btns(m_object)); }
 
   void close() { api()->msgbox_close(object()); }
 

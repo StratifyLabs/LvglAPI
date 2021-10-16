@@ -49,6 +49,7 @@ private:
   friend class List;
   friend class Window;
   friend class TabView;
+  friend class MessageBox;
   Button(lv_obj_t *object) { m_object = object; }
   Button(Object parent, const Button &);
 };
