@@ -9,7 +9,7 @@ namespace lvgl {
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
 
-  explicit ButtonMatrix(const char * name);
+  explicit ButtonMatrix(const char * name = "");
   explicit ButtonMatrix(lv_obj_t *obj){ m_object = obj; }
   explicit ButtonMatrix(lv_btnmatrix_t *matrix){ m_object = reinterpret_cast<lv_obj_t*>(matrix); }
 

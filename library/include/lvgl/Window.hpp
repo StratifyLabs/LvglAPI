@@ -11,7 +11,7 @@ namespace lvgl {
 class Window : public ObjectAccess<Window> {
 public:
 
-  explicit Window(const char * name, lv_coord_t header_height = 15_percent);
+  explicit Window(const char * name = "", lv_coord_t header_height = 15_percent);
   explicit Window(lv_obj_t *object) {m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
@@ -20,7 +20,7 @@ public:
     const char *name,
     const void *icon,
     lv_coord_t width,
-    void (*add)(Button &) = nullptr) {
+    void (*add)(Button) = nullptr) {
     auto object = api()->win_add_btn(m_object, icon, width);
     set_user_data(object, name);
     Button button(object);
@@ -31,28 +31,14 @@ public:
     return *this;
   }
 
-  Window &add_button(
-    const UserData &context,
-    const void *icon,
-    lv_coord_t width,
-    void (*add)(Button &) = nullptr) {
-    return add_button(context.cast_as_name(), icon, width, add);
-  }
-
-  Window &add_title(const char *name, const char *text, void (*add)(Label &) = nullptr) {
+  Window &add_title(const char *name, const char *text, void (*add)(Label) = nullptr) {
     auto object = api()->win_add_title(m_object, text);
     api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
     set_user_data(object, name);
     if (add) {
-      Label label(object);
-      add(label);
+      add(Label(object));
     }
     return *this;
-  }
-
-  Window &
-  add_title(const UserData &context, const char *text, void (*add)(Label &) = nullptr) {
-    return add_title(context.cast_as_name(), text, add);
   }
 
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
@@ -106,8 +92,8 @@ private:
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
   Container get_content() const { return Container(api()->win_get_content(m_object)); }
 
-  static void configure_details(Container &container);
-  static void configure_list(Container &container);
+  static void configure_details(Container container);
+  static void configure_list(Container container);
 
   static var::PathString get_next_path(const var::PathString path, const char *entry) {
     if (path == "/") {

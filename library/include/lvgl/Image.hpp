@@ -11,7 +11,7 @@ namespace lvgl {
 
 class Image : public ObjectAccess<Image> {
 public:
-  explicit Image(const char * name);
+  explicit Image(const char * name = "");
   explicit Image(lv_obj_t * object){ m_object = object; }
 
 

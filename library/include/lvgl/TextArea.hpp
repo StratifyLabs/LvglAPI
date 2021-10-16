@@ -13,7 +13,7 @@ namespace lvgl {
 
 class TextArea : public ObjectAccess<TextArea> {
 public:
-  explicit TextArea(const char *name);
+  explicit TextArea(const char *name = "");
   explicit TextArea(lv_obj_t *obj) { m_object = obj; }
 
   static const lv_obj_class_t *get_class() { return api()->textarea_class; }

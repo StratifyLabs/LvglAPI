@@ -24,7 +24,7 @@ Object TileView::get_tile(const Location &location) const {
   return Object();
 }
 
-TileView &TileView::go_forward(const char *name, void (*configure)(Container &)) {
+TileView &TileView::go_forward(const char *name, void (*configure)(Container)) {
   auto active_location = get_active_tile_location();
   auto next_location = Location(active_location).set_column(active_location.column() + 1);
 

@@ -760,7 +760,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  using Callback = void (*)(Derived&);
+  using Callback = void (*)(Derived);
 
 
 };

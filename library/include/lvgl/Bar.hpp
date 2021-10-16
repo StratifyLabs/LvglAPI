@@ -70,7 +70,7 @@ public:
 
 class Bar : public BarAccess<Bar> {
 public:
-  explicit Bar(const char *name);
+  explicit Bar(const char *name = "");
   explicit Bar(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->bar_class; }

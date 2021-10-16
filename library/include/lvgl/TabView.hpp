@@ -23,7 +23,7 @@ public:
   TabView &add_tab(
     const char *name,
     const char *title,
-    void (*add)(Container &container) = nullptr) {
+    void (*add)(Container) = nullptr) {
     Container obj(api()->tabview_add_tab(m_object, title));
     set_user_data(obj.object(), name);
     if (add) {
@@ -32,27 +32,16 @@ public:
     return *this;
   }
 
-  TabView &add_tab(const char *name, void (*add)(Container &container) = nullptr) {
-    Container obj(api()->tabview_add_tab(m_object, name));
-    set_user_data(obj.object(), name);
+  TabView &add_tab(const char *title, void (*add)(Container) = nullptr) {
+    Container obj(api()->tabview_add_tab(m_object, title));
+    set_user_data(obj.object(), title);
     if (add) {
       add(obj);
     }
     return *this;
   }
 
-  TabView &add_tab(
-    const UserData &context,
-    const char *title,
-    void (*add)(Container &container) = nullptr) {
-    return add_tab(context.cast_as_name(), title, add);
-  }
-
-  TabView &add_tab(const UserData &context, void (*add)(Container &container) = nullptr) {
-    return add_tab(context.cast_as_name(), add);
-  }
-
-  TabView &add_content(size_t tab, void (*add)(Container &container)) {
+  TabView &add_content(size_t tab, void (*add)(Container)) {
     API_ASSERT(add != nullptr);
     Container container(get_tab(tab).object());
     if (add) {

@@ -7,10 +7,9 @@
 
 namespace lvgl {
 
-
 class Container : public ObjectAccess<Container> {
 public:
-  explicit Container(const char *name) {
+  explicit Container(const char *name = "") {
     m_object = api()->obj_create(screen_object());
     set_user_data(m_object, name);
   }
@@ -22,12 +21,11 @@ public:
 
   Container(lv_obj_t *object) { m_object = object; }
   Container(Object &object) { m_object = object.object(); }
-
 };
 
 class NakedContainer : public ObjectAccess<NakedContainer> {
 public:
-  explicit NakedContainer(const char *name) {
+  explicit NakedContainer(const char *name = "") {
     m_object = api()->label_create(screen_object());
     api()->label_set_text_static(m_object, "");
     set_user_data(m_object, name);
@@ -37,6 +35,14 @@ public:
 
 class Row : public ObjectAccess<Row> {
 public:
+  static Style get_style() {
+    return Style()
+      .set_flex_layout()
+      .set_flex_flow(FlexFlow::row)
+      .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+      .set_row_padding(20);
+  }
+
   explicit Row(const char *name = "") {
     m_object = api()->label_create(screen_object());
     api()->label_set_text_static(m_object, "");
@@ -65,7 +71,6 @@ public:
   }
 
   Row &justify_end() { return set_flex_align(SetFlexAlign().set_main(FlexAlign::end)); }
-
 };
 
 class Column : public ObjectAccess<Column> {
@@ -92,7 +97,6 @@ public:
   Column &justify_space_evenly() {
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_evenly));
   }
-
 };
 
 class ColumnSpacer : public ObjectAccess<ColumnSpacer> {

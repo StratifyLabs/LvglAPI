@@ -182,7 +182,7 @@ public:
 
   };
 
-  explicit Chart(const char *name);
+  explicit Chart(const char *name = "");
   explicit Chart(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t * get_class(){

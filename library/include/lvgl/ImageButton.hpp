@@ -9,7 +9,7 @@ namespace lvgl {
 class ImageButton : public ObjectAccess<ImageButton>
 {
 public:
-  explicit ImageButton(const char * name);
+  explicit ImageButton(const char * name = "");
   explicit ImageButton(lv_obj_t * object){ m_object = object; }
 
 

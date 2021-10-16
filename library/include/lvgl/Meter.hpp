@@ -34,7 +34,7 @@ public:
     lv_meter_indicator_t *m_indicator = nullptr;
   };
 
-  explicit Meter(const char * name);
+  explicit Meter(const char * name = "");
   explicit Meter(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){

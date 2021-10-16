@@ -21,7 +21,7 @@ public:
     number = LV_KEYBOARD_MODE_NUMBER
   };
 
-  explicit Keyboard(const char * name);
+  explicit Keyboard(const char * name = "");
   explicit Keyboard(lv_obj_t * object){ m_object = object; }
 
 

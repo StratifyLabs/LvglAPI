@@ -17,7 +17,7 @@ public:
     custom4 = LV_TABLE_CELL_CTRL_CUSTOM_4,
   };
 
-  explicit Table(const char * name);
+  explicit Table(const char * name = "");
   explicit Table(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){

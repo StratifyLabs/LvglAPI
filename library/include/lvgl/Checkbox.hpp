@@ -9,7 +9,7 @@ namespace lvgl {
 class Checkbox : public ObjectAccess<Checkbox>{
 public:
 
-  explicit Checkbox(const char * name);
+  explicit Checkbox(const char * name = "");
   explicit Checkbox(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){

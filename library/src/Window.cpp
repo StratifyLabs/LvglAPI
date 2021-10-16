@@ -31,7 +31,7 @@ FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
   auto window = Container(m_object).get<Window>();
 
   window.clear_flag(Window::Flags::scrollable)
-    .add_title(Names::window_title, data.base_path(), [](Label &label) {
+    .add_title(Names::window_title, data.base_path(), [](Label label) {
       label.set_left_padding(10);
     });
 
@@ -90,7 +90,7 @@ FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
   tile_view.set_width(100_percent)
     .set_height(100_percent)
     .add_tile(
-      TileData::create("").set_path(data.path()),
+      TileData::create("").set_path(data.path()).cast_as_name(),
       TileView::Location().set_column(0), configure_list);
 }
 
@@ -103,7 +103,7 @@ Label FileSystemWindow::get_title_label(const Window &window) {
   return window.find<Label>(Names::window_title);
 }
 
-void FileSystemWindow::configure_details(Container &container) {
+void FileSystemWindow::configure_details(Container container) {
 
   container
     .add_event_callback(
@@ -163,7 +163,7 @@ void FileSystemWindow::configure_details(Container &container) {
     }));
 }
 
-void FileSystemWindow::configure_list(Container &container) {
+void FileSystemWindow::configure_list(Container container) {
   // load the path
 
   container
@@ -207,13 +207,13 @@ void FileSystemWindow::configure_list(Container &container) {
             auto tile_view = window.find<TileView>(Names::tile_view);
             if (info.is_directory()) {
               file_browser_data->set_path(next_path);
-              tile_view.go_forward(TileData::create(next_path), configure_list);
+              tile_view.go_forward(TileData::create(next_path).cast_as_name(), configure_list);
             } else {
               file_browser_data->set_path(next_path);
               if (file_browser_data->is_select_file()) {
                 Event::send(window.get_parent(), EventCode::exited);
               } else {
-                tile_view.go_forward(TileData::create(next_path), configure_details);
+                tile_view.go_forward(TileData::create(next_path).cast_as_name(), configure_details);
               }
             }
           }

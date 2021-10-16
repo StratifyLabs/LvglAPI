@@ -9,7 +9,7 @@ namespace lvgl {
 
 class TileView : public ObjectAccess<TileView> {
 public:
-  TileView(const char *name);
+  TileView(const char *name = "");
   explicit TileView(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t * get_class(){
@@ -26,7 +26,7 @@ public:
   TileView &add_tile(
     const char *name,
     const Location &location,
-    void (*configure)(Container &container) = nullptr) {
+    void (*configure)(Container container) = nullptr) {
     Container obj(api()->tileview_add_tile(
       m_object, location.column(), location.row(), lv_dir_t(location.direction())));
     set_user_data(obj.object(), name);
@@ -39,15 +39,6 @@ public:
       configure(obj);
     }
     return *this;
-  }
-
-
-
-  TileView &add_tile(
-    const UserData &context,
-    const Location &location,
-    void (*configure)(Container &container) = nullptr) {
-    return add_tile(context.cast_as_name(), location, configure);
   }
 
   Object get_active_tile() const {
@@ -71,10 +62,7 @@ public:
   }
 
   // must create the TileView with NavigationContext for these to work
-  TileView &go_forward(const char * name, void (*configure)(Container &));
-  TileView &go_forward(const UserData & context, void (*configure)(Container &)){
-    return go_forward(context.cast_as_name(), configure);
-  }
+  TileView &go_forward(const char * name, void (*configure)(Container));
   TileView &go_forward(){
     return go_forward("", nullptr);
   }

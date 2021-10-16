@@ -10,7 +10,7 @@ class Roller : public ObjectAccess<Roller> {
 public:
   enum class Mode { normal = LV_ROLLER_MODE_NORMAL, infinite = LV_ROLLER_MODE_INFINITE };
 
-  explicit Roller(const char * name);
+  explicit Roller(const char * name = "");
   explicit Roller(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){

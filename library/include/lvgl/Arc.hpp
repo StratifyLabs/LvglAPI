@@ -19,7 +19,7 @@ public:
     return api()->arc_class;
   }
 
-  explicit Arc(const char * name);
+  explicit Arc(const char * name = "");
   explicit Arc(lv_obj_t * object){ m_object = object; }
 
   Arc & set_start_angle(u16 value){
