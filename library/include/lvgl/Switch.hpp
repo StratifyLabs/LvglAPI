@@ -5,20 +5,17 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Switch : public ObjectAccess<Switch>
 {
 public:
-  explicit Switch(const char * name);
+  explicit Switch(const char * name = "");
+  explicit Switch(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->switch_class;
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Switch(lv_obj_t * object){ m_object = object; }
 
 };
 

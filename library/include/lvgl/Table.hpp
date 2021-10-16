@@ -4,7 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Table : public ObjectAccess<Table> {
 public:
@@ -18,6 +18,7 @@ public:
   };
 
   explicit Table(const char * name);
+  explicit Table(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->table_class;
@@ -83,10 +84,6 @@ public:
     api()->table_get_selected_cell(m_object, &row, &col);
     return Cell().set_row(row).set_column(col);
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Table(lv_obj_t * object){ m_object = object; }
 
 };
 

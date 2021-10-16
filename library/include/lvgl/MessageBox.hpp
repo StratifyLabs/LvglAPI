@@ -6,7 +6,7 @@
 #include "ButtonMatrix.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class MessageBox : public ObjectAccess<MessageBox> {
 public:
@@ -27,6 +27,7 @@ public:
   };
 
   MessageBox(const Construct &options);
+  explicit MessageBox(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->message_box_class; }
 
@@ -40,10 +41,6 @@ public:
   ButtonMatrix get_buttons() const {return ButtonMatrix(api()->msgbox_get_btns(m_object)); }
 
   void close() { api()->msgbox_close(object()); }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit MessageBox(lv_obj_t *object) { m_object = object; }
 
 
 };

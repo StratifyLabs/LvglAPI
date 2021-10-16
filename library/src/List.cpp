@@ -64,7 +64,7 @@ FormList &FormList::add_item(const ItemData &item_data) {
           }
         }
       })
-    .add_object(Label(value_name)
+    .add(Label(value_name)
                   .set_width(size_from_content)
                   .set_alignment(Alignment::right_middle));
 

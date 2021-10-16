@@ -6,7 +6,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Container : public ObjectAccess<Container> {
 public:
@@ -23,8 +23,6 @@ public:
   Container(lv_obj_t *object) { m_object = object; }
   Container(Object &object) { m_object = object.object(); }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
 };
 
 class NakedContainer : public ObjectAccess<NakedContainer> {
@@ -34,9 +32,6 @@ public:
     api()->label_set_text_static(m_object, "");
     set_user_data(m_object, name);
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
   NakedContainer(lv_obj_t *object) { m_object = object; }
 };
 
@@ -51,6 +46,7 @@ public:
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
       .set_row_padding(20);
   }
+  Row(lv_obj_t *object) { m_object = object; }
 
   Row &justify_space_between() {
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_between));
@@ -70,9 +66,6 @@ public:
 
   Row &justify_end() { return set_flex_align(SetFlexAlign().set_main(FlexAlign::end)); }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  Row(lv_obj_t *object) { m_object = object; }
 };
 
 class Column : public ObjectAccess<Column> {
@@ -86,6 +79,7 @@ public:
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
       .set_column_padding(20);
   }
+  Column(lv_obj_t *object) { m_object = object; }
 
   Column &justify_space_between() {
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_between));
@@ -99,22 +93,15 @@ public:
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_evenly));
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  Column(lv_obj_t *object) { m_object = object; }
 };
 
 class ColumnSpacer : public ObjectAccess<ColumnSpacer> {
 public:
   ColumnSpacer(const char *name = "", lv_coord_t height = 50) { construct(name, height); }
-
   ColumnSpacer(lv_coord_t height) { construct("", height); }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
+  ColumnSpacer(lv_obj_t *object) { m_object = object; }
 
   lv_coord_t m_construct_height = 50;
-  ColumnSpacer(lv_obj_t *object) { m_object = object; }
 
   void construct(const char *name, lv_coord_t height) {
     m_object = api()->label_create(Api::api()->disp_get_scr_act(nullptr));
@@ -128,12 +115,9 @@ class RowSpacer : public ObjectAccess<RowSpacer> {
 public:
   RowSpacer(const char *name = "", lv_coord_t width = 50) { construct(name, width); }
   RowSpacer(lv_coord_t width) { construct("", width); }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
+  RowSpacer(lv_obj_t *object) { m_object = object; }
 
   lv_coord_t m_construct_height = 50;
-  RowSpacer(lv_obj_t *object) { m_object = object; }
 
   void construct(const char *name, lv_coord_t width) {
     m_object = api()->label_create(Api::api()->disp_get_scr_act(nullptr));

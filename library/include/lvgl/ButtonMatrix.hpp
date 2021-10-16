@@ -4,12 +4,14 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class ButtonMatrix : public ObjectAccess<ButtonMatrix> {
 public:
 
   explicit ButtonMatrix(const char * name);
+  explicit ButtonMatrix(lv_obj_t *obj){ m_object = obj; }
+  explicit ButtonMatrix(lv_btnmatrix_t *matrix){ m_object = reinterpret_cast<lv_obj_t*>(matrix); }
 
   static const lv_obj_class_t * get_class(){
     return api()->button_matrix_class;
@@ -23,13 +25,6 @@ public:
 
   const char *get_selected_text() const { return get_button_text(get_selected_button()); }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class Keyboard;
-  friend class TabView;
-  friend class MessageBox;
-  explicit ButtonMatrix(lv_obj_t *obj){ m_object = obj; }
-  explicit ButtonMatrix(lv_btnmatrix_t *matrix){ m_object = reinterpret_cast<lv_obj_t*>(matrix); }
 
 };
 

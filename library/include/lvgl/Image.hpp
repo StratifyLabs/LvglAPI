@@ -7,11 +7,12 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Image : public ObjectAccess<Image> {
 public:
   explicit Image(const char * name);
+  explicit Image(lv_obj_t * object){ m_object = object; }
 
 
   static const lv_obj_class_t * get_class(){
@@ -97,9 +98,6 @@ public:
     return api()->img_get_antialias(m_object);
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Image(lv_obj_t * object){ m_object = object; }
 
 };
 

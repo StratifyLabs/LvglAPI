@@ -4,7 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Label : public ObjectAccess<Label> {
 public:
@@ -18,6 +18,7 @@ public:
   };
 
   explicit Label(const char * name = "");
+  explicit Label(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->label_class;
@@ -108,14 +109,6 @@ public:
     return *this;
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class Window;
-  friend class TextArea;
-  friend class MessageBox;
-  friend class List;
-  explicit Label(lv_obj_t * object){ m_object = object; }
-  Label(Object parent, const Label &);
 
 };
 

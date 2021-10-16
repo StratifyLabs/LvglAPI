@@ -4,7 +4,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Spinner : public ObjectAccess<Spinner> {
 public:
@@ -15,12 +15,9 @@ public:
   };
 
   explicit Spinner(const Construct &options);
+  explicit Spinner(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->spinner_class; }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Spinner(lv_obj_t *object) { m_object = object; }
 
 };
 

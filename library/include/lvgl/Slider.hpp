@@ -4,7 +4,7 @@
 #include "Bar.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Slider : public BarAccess<Slider> {
 public:
@@ -15,7 +15,8 @@ public:
     range = LV_SLIDER_MODE_RANGE
   };
 
-  explicit Slider(const char * name);
+  explicit Slider(const char * name = "");
+  explicit Slider(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->slider_class;
@@ -35,9 +36,6 @@ public:
     return lv_slider_get_left_value(m_object);
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Slider(lv_obj_t * object){ m_object = object; }
 };
 
 }

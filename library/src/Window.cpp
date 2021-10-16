@@ -117,8 +117,7 @@ void FileSystemWindow::configure_details(Container &container) {
         set_back_button_label(window, fs_data->back_symbol());
         get_title_label(window).set_text(tile_data->path());
       })
-    .add(Table(Names::file_details_table).setup([](lv_obj_t * obj) {
-      auto table = Container(obj).get<Table>();
+    .add(Table(Names::file_details_table).setup([](Table table) {
       auto *tile_data = table.get_parent().user_data<TileData>();
 
       const auto width = Container::active_screen().get_width();
@@ -181,8 +180,7 @@ void FileSystemWindow::configure_list(Container &container) {
           set_back_button_label(window, fs_data->back_symbol());
         }
       })
-    .add_object(FormList(FormList::Data::create()).setup([](lv_obj_t * obj) {
-      auto list = Container(obj).get<FormList>();
+    .add(FormList(FormList::Data::create()).setup([](FormList list) {
       list.set_top_padding(0)
         .set_scroll_mode(ScrollBarMode::active)
         .set_border_width(0)

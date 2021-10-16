@@ -5,7 +5,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Meter : public ObjectAccess<Meter> {
 public:
@@ -35,6 +35,7 @@ public:
   };
 
   explicit Meter(const char * name);
+  explicit Meter(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->meter_class;
@@ -118,11 +119,6 @@ public:
     api()->meter_set_indicator_start_value(object(), indicator.indicator(), value);
     return *this;
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Meter(lv_obj_t * object){ m_object = object; }
-
 
 };
 

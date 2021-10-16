@@ -9,11 +9,12 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class TextArea : public ObjectAccess<TextArea> {
 public:
   explicit TextArea(const char *name);
+  explicit TextArea(lv_obj_t *obj) { m_object = obj; }
 
   static const lv_obj_class_t *get_class() { return api()->textarea_class; }
 
@@ -153,10 +154,6 @@ public:
     return *this;
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class Keyboard;
-  explicit TextArea(lv_obj_t *obj) { m_object = obj; }
 };
 
 class FileTextArea : public ObjectAccess<FileTextArea> {
@@ -186,6 +183,7 @@ public:
   static constexpr auto progress_bar_name = "FileTextAreaProgressBar";
 
   explicit FileTextArea(Data& data);
+  explicit FileTextArea(lv_obj_t *obj) { m_object = obj; }
 
   static const lv_obj_class_t *get_class() { return api()->textarea_class; }
 
@@ -329,10 +327,6 @@ public:
     return *this;
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class Keyboard;
-  explicit FileTextArea(lv_obj_t *obj) { m_object = obj; }
 };
 
 } // namespace lvgl

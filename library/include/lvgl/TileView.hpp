@@ -5,11 +5,12 @@
 
 namespace lvgl {
 
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class TileView : public ObjectAccess<TileView> {
 public:
   TileView(const char *name);
+  explicit TileView(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->tileview_class;
@@ -80,9 +81,6 @@ public:
 
   TileView &go_backward();
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit TileView(lv_obj_t *object) { m_object = object; }
 };
 
 } // namespace lvgl

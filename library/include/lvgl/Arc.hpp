@@ -5,7 +5,7 @@
 
 namespace lvgl {
 
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Arc : public ObjectAccess<Arc> {
 public:
@@ -20,6 +20,7 @@ public:
   }
 
   explicit Arc(const char * name);
+  explicit Arc(lv_obj_t * object){ m_object = object; }
 
   Arc & set_start_angle(u16 value){
     api()->arc_set_start_angle(m_object, value);
@@ -86,10 +87,6 @@ public:
   u16 get_value() const {
     return api()->arc_get_value(m_object);
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Arc(lv_obj_t * object){ m_object = object; }
 
 
 };

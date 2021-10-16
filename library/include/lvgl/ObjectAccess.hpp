@@ -732,18 +732,13 @@ public:
   }
 
   template <typename ChildClass> Derived &add(const ChildClass &child) {
-    api()->obj_set_parent(child.m_object, m_object);
-    return static_cast<Derived &>(*this);
-  }
-
-  template <typename ChildClass> Derived &add_object(const ChildClass &child) {
-    api()->obj_set_parent(child.m_object, m_object);
+    api()->obj_set_parent(child.object(), m_object);
     return static_cast<Derived &>(*this);
   }
 
 
-  Derived & setup(void (*configure)(lv_obj_t * object)){
-    configure(m_object);
+  Derived & setup(void (*configure)(Derived)){
+    configure(Derived(m_object));
     return static_cast<Derived &>(*this);
   }
 
@@ -769,28 +764,6 @@ public:
 
 
 };
-
-#define OBJECT_ACCESS_FORWARD_FRIENDS()                                                  \
-  class Container;                                                                       \
-  class NakedContainer;                                                                  \
-  class Row;                                                                             \
-  class Column;                                                                          \
-  class Window;                                                                          \
-  class Button;                                                                          \
-  class MessageBox;                                                                      \
-  class TileView
-
-#define OBJECT_ACCESS_FRIENDS()                                                          \
-  friend class ObjectAccess<Container>;                                                  \
-  friend class ObjectAccess<Row>;                                                        \
-  friend class ObjectAccess<Column>;                                                     \
-  friend class ObjectAccess<NakedContainer>;                                             \
-  friend class ObjectAccess<Window>;                                                     \
-  friend class ObjectAccess<TileView>;                                                   \
-  friend class ObjectAccess<Button>;                                                     \
-  friend class ObjectAccess<MessageBox>;                                                 \
-  friend class Tree;                                                                     \
-  friend class Object;
 
 } // namespace lvgl
 

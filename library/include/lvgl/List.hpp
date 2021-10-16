@@ -6,11 +6,12 @@
 #include "Label.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class List : public ObjectAccess<List> {
 public:
   explicit List(const char *name = "");
+  explicit List(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -66,7 +67,7 @@ public:
     }
     if (options.right_symbol()) {
       Button button(object);
-      button.add_object(Label(right_symbol_name)
+      button.add(Label(right_symbol_name)
                           .set_width(size_from_content)
                           .set_alignment(Alignment::right_middle)
                           .set_text_static(options.right_symbol()));
@@ -140,10 +141,6 @@ public:
     return api()->list_get_btn_text(object(), button.object());
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class DropDownList;
-  explicit List(lv_obj_t *object) { m_object = object; }
 };
 
 class CheckList : public ObjectAccess<CheckList> {
@@ -159,6 +156,7 @@ public:
   };
 
   explicit CheckList(const Data &user_data);
+  explicit CheckList(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -169,7 +167,7 @@ public:
     set_user_data(object, name);
     auto button = Container(object).get<Button>();
     button.add_flag(Flags::event_bubble)
-      .add_object(Label(check_symbol_name)
+      .add(Label(check_symbol_name)
                     .set_width(size_from_content)
                     .set_alignment(Alignment::right_middle)
                     .set_text_static(""));
@@ -204,10 +202,6 @@ public:
     return false;
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class DropDownList;
-  explicit CheckList(lv_obj_t *object) { m_object = object; }
 };
 
 class FormList : public ObjectAccess<FormList> {
@@ -223,6 +217,7 @@ public:
   };
 
   explicit FormList(Data &user_data);
+  explicit FormList(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->list_class; }
 
@@ -244,10 +239,6 @@ public:
 
   FormList &add_item(const ItemData &item_data);
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  friend class DropDownList;
-  explicit FormList(lv_obj_t *object) { m_object = object; }
 };
 
 } // namespace lvgl

@@ -6,12 +6,13 @@
 #include "Label.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Window : public ObjectAccess<Window> {
 public:
 
   explicit Window(const char * name, lv_coord_t header_height = 15_percent);
+  explicit Window(lv_obj_t *object) {m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -57,9 +58,6 @@ public:
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
   Container get_content() const { return Container(api()->win_get_content(m_object)); }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Window(lv_obj_t *object) { m_object = object; }
 };
 
 class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
@@ -81,6 +79,7 @@ public:
   };
 
   explicit FileSystemWindow(Data & data, lv_coord_t header_height = 15_percent);
+  explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -103,9 +102,6 @@ private:
   private:
     API_AC(TileData, var::PathString, path);
   };
-
-  OBJECT_ACCESS_FRIENDS();
-  explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
 
   Container get_header() const { return Container(api()->win_get_header(m_object)); }
   Container get_content() const { return Container(api()->win_get_content(m_object)); }

@@ -8,7 +8,7 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Chart : public ObjectAccess<Chart> {
 
@@ -183,6 +183,7 @@ public:
   };
 
   explicit Chart(const char *name);
+  explicit Chart(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->chart_class;
@@ -267,10 +268,6 @@ public:
     return *this;
   }
 
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Chart(lv_obj_t *object) { m_object = object; }
 };
 
 } // namespace lvgl

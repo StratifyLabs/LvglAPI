@@ -5,7 +5,7 @@
 #include "Container.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class TabView : public ObjectAccess<TabView> {
 public:
@@ -16,6 +16,7 @@ public:
   };
 
   explicit TabView(const Construct &options);
+  explicit TabView(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->tabview_class; }
 
@@ -77,12 +78,6 @@ public:
   }
 
   Container get_active_tab() const { return get_tab(get_active_tab_offset()); }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-
-
-  explicit TabView(lv_obj_t *object) { m_object = object; }
 
 };
 

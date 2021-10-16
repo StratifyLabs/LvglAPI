@@ -4,12 +4,13 @@
 #include "ObjectAccess.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Checkbox : public ObjectAccess<Checkbox>{
 public:
 
   explicit Checkbox(const char * name);
+  explicit Checkbox(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->checkbox_class;
@@ -29,9 +30,6 @@ public:
     return api()->checkbox_get_text(object());
   }
 
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Checkbox(lv_obj_t * object){ m_object = object; }
 };
 
 }

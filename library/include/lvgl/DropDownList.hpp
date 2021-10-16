@@ -6,12 +6,13 @@
 #include "List.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
   explicit DropDownList(const char * name);
+  explicit DropDownList(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->dropdown_class;
@@ -108,10 +109,6 @@ public:
     return *this;
   }
 
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit DropDownList(lv_obj_t * object){ m_object = object; }
 };
 
 using DropDown = DropDownList;

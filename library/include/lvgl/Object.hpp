@@ -277,7 +277,7 @@ public:
   Editable is_editable() const { return Editable(api()->obj_is_editable(m_object)); }
 
   lv_obj_t *object() { return m_object; }
-  const lv_obj_t *object() const { return m_object; }
+  lv_obj_t *object() const { return m_object; }
 
   const char *name() const {
     API_ASSERT(m_object != nullptr);

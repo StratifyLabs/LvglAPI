@@ -6,7 +6,7 @@
 #include "ButtonMatrix.hpp"
 
 namespace lvgl {
-OBJECT_ACCESS_FORWARD_FRIENDS();
+
 
 class Keyboard : public ObjectAccess<Keyboard>
 {
@@ -22,6 +22,7 @@ public:
   };
 
   explicit Keyboard(const char * name);
+  explicit Keyboard(lv_obj_t * object){ m_object = object; }
 
 
   static const lv_obj_class_t * get_class(){
@@ -60,10 +61,6 @@ public:
   ButtonMatrix get_button_matrix() const {
     return ButtonMatrix(&(reinterpret_cast<lv_keyboard_t*>(m_object)->btnm));
   }
-
-private:
-  OBJECT_ACCESS_FRIENDS();
-  explicit Keyboard(lv_obj_t * object){ m_object = object; }
 
 };
 
