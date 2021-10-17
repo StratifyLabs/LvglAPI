@@ -43,7 +43,6 @@ private:
 class Style : public Api {
 public:
   Style() { api()->style_init(&m_style); }
-  ~Style() { api()->style_reset(&m_style); }
 
   static const char * to_cstring(Property property);
   static Property property_from_cstring(const char * value);
@@ -110,6 +109,10 @@ public:
     return set_property(Property::width, value);
   }
 
+  Style &fill_width() {
+    return set_width(100_percent);
+  }
+
   Style &set_minimum_width(lv_coord_t value) {
     return set_property(Property::minimum_width, value);
   }
@@ -120,6 +123,10 @@ public:
 
   Style &set_height(lv_coord_t value) {
     return set_property(Property::height, value);
+  }
+
+  Style &fill_height() {
+    return set_height(100_percent);
   }
 
   Style &set_minimum_height(lv_coord_t value) {

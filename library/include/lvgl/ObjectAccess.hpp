@@ -10,7 +10,6 @@ namespace lvgl {
 
 template <class Derived> class ObjectAccess : public Object {
 public:
-
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
     return static_cast<Derived &>(*this);
@@ -61,7 +60,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-
   Derived &set_width(lv_coord_t value) {
     api()->obj_set_width(m_object, value);
     return static_cast<Derived &>(*this);
@@ -72,17 +70,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived & fill_width(){
-    return set_width(100_percent);
-  }
+  Derived &fill_width() { return set_width(100_percent); }
 
-  Derived & fill_height(){
-    return set_height(100_percent);
-  }
+  Derived &fill_height() { return set_height(100_percent); }
 
-  Derived & fill(){
-    return fill_width().fill_height();
-  }
+  Derived &fill() { return fill_width().fill_height(); }
 
   Derived &set_content_width(lv_coord_t value) {
     api()->obj_set_content_width(m_object, value);
@@ -228,8 +220,7 @@ public:
   }
 
   Derived &scroll_to_view_recursive(IsAnimate is_animate) {
-    api()->obj_scroll_to_view_recursive(
-      m_object, lv_anim_enable_t(is_animate));
+    api()->obj_scroll_to_view_recursive(m_object, lv_anim_enable_t(is_animate));
     return static_cast<Derived &>(*this);
   }
 
@@ -299,7 +290,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &set_flex_grow(u8 value) {
+  Derived &set_flex_grow(u8 value = 1) {
     api()->obj_set_flex_grow(m_object, value);
     return static_cast<Derived &>(*this);
   }
@@ -481,7 +472,7 @@ public:
     return set_property(Property::blend_mode, value, selector);
   }
 
-  Derived &set_layout(uint16_t value, Selector selector = Selector()) {
+  Derived &set_layout(uint16_t value, Selector selector) {
     return set_property(Property::layout, value, selector);
   }
 
@@ -733,12 +724,16 @@ public:
 
   template <typename ChildClass> Derived &add(const ChildClass &child) {
     api()->obj_set_parent(child.object(), m_object);
+    auto setup = child.get_setup();
+    if (setup) {
+      setup(child);
+    }
     return static_cast<Derived &>(*this);
   }
 
-
-  Derived & setup(void (*configure)(Derived)){
-    configure(Derived(m_object));
+  Derived &setup(void (*configure)(Derived)) {
+    m_setup = configure;
+    // configure(Derived(m_object));
     return static_cast<Derived &>(*this);
   }
 
@@ -762,7 +757,10 @@ public:
 
   using Callback = void (*)(Derived);
 
+  Callback get_setup() const { return m_setup; }
 
+private:
+  Callback m_setup = nullptr;
 };
 
 } // namespace lvgl

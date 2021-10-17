@@ -29,6 +29,8 @@ public:
     m_object = api()->label_create(screen_object());
     api()->label_set_text_static(m_object, "");
     set_user_data(m_object, name);
+    //clear the layout
+    set_layout(0);
   }
   NakedContainer(lv_obj_t *object) { m_object = object; }
 };
