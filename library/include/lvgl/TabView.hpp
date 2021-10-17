@@ -10,7 +10,9 @@ namespace lvgl {
 class TabView : public ObjectAccess<TabView> {
 public:
   struct Construct {
+    //name first
     API_PUBLIC_MEMBER(Construct, const char *, name, "");
+    //alphabetical
     API_PUBLIC_MEMBER(Construct, Direction, direction, Direction::top);
     API_PUBLIC_MEMBER(Construct, u32, size, 10_percent);
   };

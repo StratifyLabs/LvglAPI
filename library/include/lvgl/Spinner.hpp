@@ -9,9 +9,11 @@ namespace lvgl {
 class Spinner : public ObjectAccess<Spinner> {
 public:
   struct Construct {
+    //name is first
     API_PUBLIC_MEMBER(Construct, const char *, name, "");
-    API_PUBLIC_MEMBER(Construct, u32, time, 1000);
+    //alphabetical
     API_PUBLIC_MEMBER(Construct, u32, arc_length, 60);
+    API_PUBLIC_MEMBER(Construct, u32, time, 1000);
   };
 
   explicit Spinner(const Construct &options);

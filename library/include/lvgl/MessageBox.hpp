@@ -17,13 +17,16 @@ public:
       return *this;
     }
 
+    //name is first
     API_PUBLIC_MEMBER(Construct, const char *, name, "");
-    API_PUBLIC_MEMBER(Construct, const char *, title, "");
-    API_PUBLIC_MEMBER(Construct, const char *, message, "");
-    API_PUBLIC_BOOL(Construct, add_close_button, true);
-    API_PUBLIC_BOOL(Construct, modal, false);
 
+    //alphabetical
+    API_PUBLIC_BOOL(Construct, add_close_button, true);
     const char **button_list = nullptr;
+    API_PUBLIC_BOOL(Construct, modal, false);
+    API_PUBLIC_MEMBER(Construct, const char *, message, "");
+    API_PUBLIC_MEMBER(Construct, const char *, title, "");
+
   };
 
   MessageBox(const Construct &options);
