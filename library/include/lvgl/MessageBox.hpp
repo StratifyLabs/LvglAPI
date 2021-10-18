@@ -5,6 +5,10 @@
 #include "Button.hpp"
 #include "ButtonMatrix.hpp"
 
+#if defined MessageBox
+#undef MessageBox
+#endif
+
 namespace lvgl {
 
 

@@ -1,8 +1,23 @@
-#include <dirent.h>
 #include <fcntl.h>
 #include <sdk/types.h>
 #include <unistd.h>
 
+
+#if defined __win32
+#include "dirent_windows.h"
+#define posix_open _open
+#define posix_close _close
+#define posix_read _read
+#define posix_write _write
+#define posix_lseek _lseek
+#else
+#include <dirent.h>
+#define posix_open open
+#define posix_close close
+#define posix_read read
+#define posix_write write
+#define posix_lseek lseek
+#endif
 
 
 //#include <sos/dev/display.h>
@@ -889,14 +904,14 @@ lvgl_api_fs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mod
   const int f_mode =
     (mode == LV_FS_MODE_WR) ? OTHER_OPTIONS | O_RDWR : OTHER_OPTIONS | O_RDONLY;
 
-  long fd = open(path, f_mode);
-  return (void *)fd;
+  ssize_t fd = (ssize_t)posix_open(path, f_mode);
+  return (void*)fd;
 }
 
 static lv_fs_res_t lvgl_api_fs_close_cb(struct _lv_fs_drv_t *drv, void *file_p) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int fd = (long)file_p;
-  close(fd);
+  const int fd = (ssize_t)file_p;
+  posix_close(fd);
   return LV_FS_RES_OK;
 }
 
@@ -907,8 +922,8 @@ static lv_fs_res_t lvgl_api_fs_read_cb(
   uint32_t btr,
   uint32_t *br) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int fd = (long)file_p;
-  const int result = read(fd, buf, btr);
+  const int fd = (ssize_t)file_p;
+  const int result = posix_read(fd, buf, btr);
   if (result > 0) {
     *br = result;
     return LV_FS_RES_OK;
@@ -923,9 +938,9 @@ static lv_fs_res_t lvgl_api_fs_write_cb(
   uint32_t btw,
   uint32_t *bw) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int fd = (long)file_p;
+  const int fd = (ssize_t)file_p;
 
-  const int result = write(fd, buf, btw);
+  const int result = posix_write(fd, buf, btw);
   if (result > 0) {
     *bw = result;
     return LV_FS_RES_OK;
@@ -939,18 +954,18 @@ static lv_fs_res_t lvgl_api_fs_seek_cb(
   uint32_t pos,
   lv_fs_whence_t whence) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int fd = (long)file_p;
+  const int fd = (ssize_t)file_p;
   const int fwhence = (whence == LV_FS_SEEK_CUR)
                         ? SEEK_CUR
                         : (whence == LV_FS_SEEK_SET ? SEEK_SET : (SEEK_END));
-  lseek(fd, pos, fwhence);
+  posix_lseek(fd, pos, fwhence);
   return LV_FS_RES_OK;
 }
 static lv_fs_res_t
 lvgl_api_fs_tell_cb(struct _lv_fs_drv_t *drv, void *file_p, uint32_t *pos_p) {
   MCU_UNUSED_ARGUMENT(drv);
-  const int fd = (long)file_p;
-  *pos_p = lseek(fd, 0, SEEK_CUR);
+  const int fd = (ssize_t)file_p;
+  *pos_p = posix_lseek(fd, 0, SEEK_CUR);
   return LV_FS_RES_OK;
 }
 
