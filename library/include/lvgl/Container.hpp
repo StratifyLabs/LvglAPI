@@ -42,7 +42,7 @@ public:
       .set_flex_layout()
       .set_flex_flow(FlexFlow::row)
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
-      .set_row_padding(20);
+      .set_column_padding(20);
   }
 
   explicit Row(const char *name = "") {
@@ -84,7 +84,7 @@ public:
     set_flex_layout()
       .set_flex_flow(FlexFlow::column)
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
-      .set_column_padding(20);
+      .set_row_padding(20);
   }
   Column(lv_obj_t *object) { m_object = object; }
 
