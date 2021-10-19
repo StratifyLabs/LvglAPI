@@ -439,8 +439,8 @@ public:
     return set_property(Property::clip_corner, value, selector);
   }
 
-  Derived &set_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::opacity, value, selector);
+  Derived &set_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_color_filter_descriptor(
@@ -450,8 +450,8 @@ public:
       Property::color_filter_descriptor, PropertyValue(value), selector);
   }
 
-  Derived &set_color_filter_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::color_filter_opacity, value, selector);
+  Derived &set_color_filter_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::color_filter_opacity, lv_opa_t(value), selector);
   }
 
   Derived &
@@ -489,8 +489,8 @@ public:
     return set_property(Property::background_color_filtered, value, selector);
   }
 
-  Derived &set_background_opacity(const Color &value, Selector selector = Selector()) {
-    return set_property(Property::background_opacity, value, selector);
+  Derived &set_background_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::background_opacity, lv_opa_t(value), selector);
   }
 
   Derived &
@@ -524,8 +524,8 @@ public:
     return set_property(Property::background_image_source, value, selector);
   }
 
-  Derived &set_background_image_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::background_image_opacity, value, selector);
+  Derived &set_background_image_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::background_image_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_background_image_recolor(Color value, Selector selector = Selector()) {
@@ -538,8 +538,9 @@ public:
   }
 
   Derived &
-  set_background_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::background_image_recolor_opacity, value, selector);
+  set_background_image_recolor_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(
+      Property::background_image_recolor_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_background_image_tiled(bool value, Selector selector = Selector()) {
@@ -554,8 +555,8 @@ public:
     return set_property(Property::border_color_filtered, value, selector);
   }
 
-  Derived &set_border_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::border_opacity, value, selector);
+  Derived &set_border_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::border_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_border_width(lv_coord_t value, Selector selector = Selector()) {
@@ -578,8 +579,8 @@ public:
     return set_property(Property::text_color_filtered, value, selector);
   }
 
-  Derived &set_text_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::text_opacity, value, selector);
+  Derived &set_text_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::text_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_text_font(const Font &value, Selector selector = Selector()) {
@@ -606,8 +607,8 @@ public:
     return set_property(Property::text_alignment, s32(value), selector);
   }
 
-  Derived &set_image_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::image_opacity, value, selector);
+  Derived &set_image_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::image_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_image_recolor(Color value, Selector selector = Selector()) {
@@ -618,8 +619,8 @@ public:
     return set_property(Property::image_recolor_filtered, value, selector);
   }
 
-  Derived &set_image_recolor_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::image_recolor_opacity, value, selector);
+  Derived &set_image_recolor_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::image_recolor_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_outline_width(lv_coord_t value, Selector selector = Selector()) {
@@ -634,8 +635,8 @@ public:
     return set_property(Property::outline_color_filtered, value, selector);
   }
 
-  Derived &set_outline_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::outline_opacity, value, selector);
+  Derived &set_outline_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::outline_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_outline_padding(lv_coord_t value, Selector selector = Selector()) {
@@ -666,8 +667,8 @@ public:
     return set_property(Property::shadow_color_filtered, value, selector);
   }
 
-  Derived &set_shadow_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::shadow_opacity, value, selector);
+  Derived &set_shadow_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::shadow_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_line_width(lv_coord_t value, Selector selector = Selector()) {
@@ -694,8 +695,8 @@ public:
     return set_property(Property::line_color_filtered, value, selector);
   }
 
-  Derived &set_line_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::line_opacity, value, selector);
+  Derived &set_line_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::line_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_arc_width(lv_coord_t value, Selector selector = Selector()) {
@@ -714,8 +715,8 @@ public:
     return set_property(Property::arc_color_filtered, value, selector);
   }
 
-  Derived &set_arc_opacity(lv_opa_t value, Selector selector = Selector()) {
-    return set_property(Property::arc_opacity, value, selector);
+  Derived &set_arc_opacity(Opacity value, Selector selector = Selector()) {
+    return set_property(Property::arc_opacity, lv_opa_t(value), selector);
   }
 
   Derived &set_arc_image_source(const void *value, Selector selector = Selector()) {

@@ -49,6 +49,13 @@ public:
 class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
 public:
 
+  enum class ExitStatus {
+    null,
+    closed,
+    selected,
+    cancelled
+  };
+
   class Data : public UserDataAccess<Data> {
   public:
     Data(const char *name) : UserDataBase(name) {}
@@ -58,6 +65,8 @@ public:
     API_AC(Data, var::PathString, path);
     API_AB(Data, select_file, false);
     API_AB(Data, select_folder, false);
+    API_AB(Data, show_hidden, false);
+    API_AF(Data, ExitStatus, exit_status, ExitStatus::null);
     API_AF(Data, const char *, directory_symbol, LV_SYMBOL_DIRECTORY);
     API_AF(Data, const char *, file_symbol, LV_SYMBOL_FILE);
     API_AF(Data, const char *, back_symbol, LV_SYMBOL_LEFT);
@@ -79,6 +88,10 @@ private:
     static constexpr auto file_browser_window = "FileBrowser";
     static constexpr auto window_title = "WindowTitle";
     static constexpr auto file_details_table = "FileDetails";
+    static constexpr auto home_button = "HomeButton";
+    static constexpr auto select_button = "SelectButton";
+    static constexpr auto cancel_button = "CancelButton";
+    static constexpr auto show_hidden_checkbox = "ShowHidden";
   };
 
   class TileData : public UserDataAccess<TileData> {

@@ -21,7 +21,7 @@ public:
     return *this;
   }
 
-  Checkbox & set_static_text(const char * text){
+  Checkbox & set_text_static(const char * text){
     api()->checkbox_set_text_static(object(), text);
     return *this;
   }

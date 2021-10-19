@@ -1,24 +1,32 @@
 #include <fs/FileSystem.hpp>
 #include <fs/Path.hpp>
 
+#include "lvgl/Checkbox.hpp"
 #include "lvgl/Draw.hpp"
 #include "lvgl/Event.hpp"
 #include "lvgl/Image.hpp"
+#include "lvgl/Line.hpp"
 #include "lvgl/List.hpp"
 #include "lvgl/Table.hpp"
 #include "lvgl/TileView.hpp"
 #include "lvgl/Window.hpp"
 
+#ifdef __win32
+#define ROOT_DRIVE "C:/"
+#else
+#define ROOT_DRIVE "/"
+#endif
+
 using namespace lvgl;
 
-Window::Window(const char * name, lv_coord_t header_height) {
+Window::Window(const char *name, lv_coord_t header_height) {
   m_object = api()->win_create(screen_object(), header_height);
-  set_user_data(m_object,name);
+  set_user_data(m_object, name);
   get_header().add_flag(Flags::event_bubble);
   get_content().add_flag(Flags::event_bubble);
 }
 
-FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
+FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
   m_object = api()->win_create(screen_object(), header_height);
   get_header().add_flag(Flags::event_bubble);
   get_content().add_flag(Flags::event_bubble);
@@ -35,22 +43,16 @@ FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
       label.set_left_padding(10);
     });
 
-  if (data.is_select_folder()) {
-    window.add_button(Names::ok_button, LV_SYMBOL_OK, size_from_content);
-  }
-
   window.add_button(Names::back_button, data.close_symbol(), size_from_content)
-    .set_width(100_percent)
-    .set_height(100_percent)
+    .fill()
     .add_event_callback(
       EventCode::clicked,
       [](lv_event_t *lv_event) {
         const Event event(lv_event);
         const auto target_name = event.target().name();
         auto window = event.current_target<Window>();
+        auto *file_system_data = window.user_data<Data>();
         if (target_name == Names::back_button) {
-
-          auto *file_system_data = window.user_data<Data>();
 
           if (file_system_data->path() != file_system_data->base_path()) {
 
@@ -60,8 +62,7 @@ FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
               file_system_data->set_path(file_system_data->base_path());
             }
 
-            window.find<Label>(Names::window_title)
-              .set_text_static(file_system_data->path());
+            get_title_label(window).set_text_static(file_system_data->path());
             event.current_target().find<TileView>(Names::tile_view).go_backward();
 
             const auto is_close =
@@ -75,20 +76,56 @@ FileSystemWindow::FileSystemWindow(Data & data, lv_coord_t header_height) {
             file_system_data->set_path("");
             Event::send(window.get_parent(), EventCode::exited);
           }
-        } else if( target_name == Names::ok_button ){
-          printf("OK button\n");
+        } else if (target_name == Names::ok_button) {
           Event::send(window.get_parent(), EventCode::exited);
-        }
+        } else if (target_name == Names::select_button) {
+          Event::send(window.get_parent(), EventCode::exited);
+        } else if (target_name == Names::cancel_button) {
+          file_system_data->set_path("");
+          Event::send(window.get_parent(), EventCode::exited);
+        } else if (target_name == Names::home_button) {
+          auto tile_view = event.current_target().find<TileView>(Names::tile_view);
+          tile_view.set_tile(TileView::Location());
+          auto home_tile = tile_view.get_tile(TileView::Location()).get<Container>();
 
+          const auto *home = getenv("HOME");
+          const var::PathString folder = home != nullptr ? home : ROOT_DRIVE;
+
+          file_system_data->set_path(folder);
+
+          get_title_label(window).set_text_static(file_system_data->path());
+          auto *tile_data = home_tile.user_data<TileData>();
+          tile_data->set_path(file_system_data->path());
+          configure_list(home_tile.clean());
+        }
       })
     .get_content()
-    .add(TileView(Names::tile_view))
+    .add_flag(Flags::event_bubble)
+    .add(Column()
+           .add_flag(Flags::event_bubble)
+           .fill()
+           .set_row_padding(0)
+           .add(TileView(Names::tile_view).fill_width().set_flex_grow())
+           .add(Row()
+                  .add_flag(Flags::event_bubble)
+                  .fill_width()
+                  .set_height(Row::size_from_content)
+                  .set_column_padding(20)
+                  .set_padding(20)
+                  .set_flex_align(SetFlexAlign().set_main(FlexAlign::end))
+                  .add(Button(Names::home_button)
+                         .add_static_label(LV_SYMBOL_HOME)
+                         .add_flag(Flags::event_bubble))
+                  .add(Button(Names::select_button)
+                         .add_static_label("Select")
+                         .add_flag(Flags::event_bubble))
+                  .add(Button(Names::cancel_button)
+                         .add_static_label("Cancel")
+                         .add_flag(Flags::event_bubble))))
     .set_padding(0);
 
-  auto tile_view = window.find<TileView>(Names::tile_view);
-
-  tile_view.set_width(100_percent)
-    .set_height(100_percent)
+  // configure_list() requires the view to be complete
+  window.find<TileView>(Names::tile_view)
     .add_tile(
       TileData::create("").set_path(data.path()).cast_as_name(),
       TileView::Location().set_column(0), configure_list);
@@ -207,13 +244,15 @@ void FileSystemWindow::configure_list(Container container) {
             auto tile_view = window.find<TileView>(Names::tile_view);
             if (info.is_directory()) {
               file_browser_data->set_path(next_path);
-              tile_view.go_forward(TileData::create(next_path).cast_as_name(), configure_list);
+              tile_view.go_forward(
+                TileData::create(next_path).cast_as_name(), configure_list);
             } else {
               file_browser_data->set_path(next_path);
               if (file_browser_data->is_select_file()) {
                 Event::send(window.get_parent(), EventCode::exited);
               } else {
-                tile_view.go_forward(TileData::create(next_path).cast_as_name(), configure_details);
+                tile_view.go_forward(
+                  TileData::create(next_path).cast_as_name(), configure_details);
               }
             }
           }
@@ -226,6 +265,12 @@ void FileSystemWindow::configure_list(Container container) {
       auto is_exclude = [](const var::StringView name, void *data) {
         auto *file_system_data = reinterpret_cast<Data *>(data);
 
+        if (file_system_data->is_show_hidden() == false) {
+          if (name.length() && name.at(0) == '.') {
+            return fs::FileSystem::IsExclude::yes;
+          }
+        }
+
         if (file_system_data->is_select_folder()) {
           const auto info = fs::FileSystem().get_info(file_system_data->path() / name);
           if (info.is_directory() == false) {
@@ -236,8 +281,11 @@ void FileSystemWindow::configure_list(Container container) {
         return fs::FileSystem::IsExclude::no;
       };
 
-      const auto file_list = fs::FileSystem().read_directory(
-        path, fs::FileSystem::IsRecursive::no, is_exclude, file_system_data);
+      const auto file_list =
+        fs::FileSystem()
+          .read_directory(
+            path, fs::FileSystem::IsRecursive::no, is_exclude, file_system_data)
+          .sort(fs::PathList::ascending);
       for (const auto &item : file_list) {
         const auto full_path = get_next_path(path, item);
         {
