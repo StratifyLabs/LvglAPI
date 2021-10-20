@@ -664,6 +664,16 @@ enum class ClassType {
   textarea
 };
 
+struct WheelEvent {
+  enum class Type { null, pixel, degree };
+
+  Type type = Type::pixel;
+  Point delta;
+  Point mouse;
+
+  using Callback = WheelEvent (*)(void*);
+};
+
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);
 }

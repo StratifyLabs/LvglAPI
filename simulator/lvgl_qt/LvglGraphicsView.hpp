@@ -23,8 +23,6 @@ class LvglGraphicsView final : public QGraphicsView {
   bool m_is_mouse_pressed = false;
 
 public:
-
-
   LvglGraphicsView(QWidget *parent = nullptr);
   LvglGraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
 
@@ -34,20 +32,33 @@ public:
   QPointF mousePosition() const;
   bool isMousePressed() const noexcept;
 
+  var::Queue<lvgl::WheelEvent> & wheel_event_queue(){
+    return m_wheel_event_queue;
+  }
+
+  const var::Queue<lvgl::WheelEvent> & wheel_event_queue() const {
+    return m_wheel_event_queue;
+  }
 
 private:
   struct KeyEvent {
-    enum class State {
-      released, pressed
-    };
+    enum class State { released, pressed };
     State state = State::released;
     int key = 0;
   };
 
-  API_AB(LvglGraphicsView,shift,false);
-  API_AB(LvglGraphicsView,control,false);
-  API_AB(LvglGraphicsView,meta,false);
-  var::Queue<KeyEvent> key_event_queue;
+  struct ClickEvent {
+    enum class State { released, pressed };
+    State state = State::released;
+    lvgl::Point point;
+  };
+
+  API_AB(LvglGraphicsView, shift, false);
+  API_AB(LvglGraphicsView, control, false);
+  API_AB(LvglGraphicsView, meta, false);
+  var::Queue<KeyEvent> m_key_event_queue;
+  var::Queue<lvgl::WheelEvent> m_wheel_event_queue;
+  var::Queue<ClickEvent> m_click_event_queue;
 
   void keyPressEvent(QKeyEvent *event) override;
   void keyReleaseEvent(QKeyEvent *event) override;
@@ -60,9 +71,6 @@ private:
   static void read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t *data);
 
   void initialize_devices();
-
-
-
 };
 
 #endif // LVGLGRAPHICSVIEW_HPP

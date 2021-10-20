@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QFile>
+#include <QTimer>
 
 #include "LvglGraphicsView.hpp"
 #include "LvglRenderer.hpp"
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   setCentralWidget(view);
   timer->setInterval(LvglRenderer::tick_perios_ms);
   timer->start();
+
+  m_view = view;
 }
 
 var::Data MainWindow::get_assets(const var::StringView path){
@@ -37,6 +40,15 @@ var::Data MainWindow::get_assets(const var::StringView path){
   return result;
 }
 
-MainWindow::~MainWindow(){
+lvgl::WheelEvent MainWindow::get_wheel_event(){
+  auto * view = reinterpret_cast<LvglGraphicsView*>(m_view);
+  if( view->wheel_event_queue().count() == 0 ){
+    return lvgl::WheelEvent{ lvgl::WheelEvent::Type::null };
+  }
 
+  const auto result = view->wheel_event_queue().front();
+  view->wheel_event_queue().pop();
+  return result;
 }
+
+

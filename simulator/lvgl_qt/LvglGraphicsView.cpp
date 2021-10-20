@@ -1,4 +1,6 @@
 // 3rd Party
+#include <QApplication>
+#include <QClipboard>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QKeyEvent>
@@ -57,41 +59,55 @@ QPointF LvglGraphicsView::mousePosition() const {
 bool LvglGraphicsView::isMousePressed() const noexcept { return m_is_mouse_pressed; }
 
 void LvglGraphicsView::keyPressEvent(QKeyEvent *event) {
-  key_event_queue.push({KeyEvent::State::pressed, event->key()});
+  m_key_event_queue.push({KeyEvent::State::pressed, event->key()});
 }
 
 void LvglGraphicsView::keyReleaseEvent(QKeyEvent *event) {
-  key_event_queue.push({KeyEvent::State::released, event->key()});
+  m_key_event_queue.push({KeyEvent::State::released, event->key()});
 }
 
 void LvglGraphicsView::mousePressEvent(QMouseEvent *event) {
-  m_is_mouse_pressed = true;
   QGraphicsView::mousePressEvent(event);
+  m_is_mouse_pressed = true;
+  const auto position = mousePosition();
+  m_click_event_queue.push(
+    {ClickEvent::State::pressed, lvgl::Point(position.x(), position.y())});
 }
 
 void LvglGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
-  m_is_mouse_pressed = false;
   QGraphicsView::mouseReleaseEvent(event);
+  m_is_mouse_pressed = false;
+  const auto position = mousePosition();
+  m_click_event_queue.push(
+    {ClickEvent::State::released, lvgl::Point(position.x(), position.y())});
 }
 
-void LvglGraphicsView::wheelEvent(QWheelEvent *event){
+void LvglGraphicsView::wheelEvent(QWheelEvent *event) {
   const auto pixel_count = event->pixelDelta();
   const auto degree_count = event->angleDelta();
 
-  if( !pixel_count.isNull() ){
+  auto get_mouse_point = [&]() {
+    const auto position = mousePosition();
+    return lvgl::Point(position.x(), position.y());
+  };
 
-  } else if( !degree_count.isNull() ){
-
+  if (!pixel_count.isNull()) {
+    m_wheel_event_queue.push(
+      {lvgl::WheelEvent::Type::pixel, lvgl::Point(pixel_count.x(), pixel_count.y()),
+       get_mouse_point()});
+  } else if (!degree_count.isNull()) {
+    m_wheel_event_queue.push(
+      {lvgl::WheelEvent::Type::degree, lvgl::Point(degree_count.x(), degree_count.y()),
+       get_mouse_point()});
   }
 
   event->accept();
-
 }
 
 void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *data) {
   auto *view = reinterpret_cast<LvglGraphicsView *>(device->user_data);
 
-  auto &keys = view->key_event_queue;
+  auto &keys = view->m_key_event_queue;
 
   if (keys.count()) {
     const auto &event = keys.front();
@@ -121,7 +137,7 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
         return LV_KEY_NEXT;
       }
       if (key == Qt::Key_Tab) {
-        if( view->is_shift() ){
+        if (view->is_shift()) {
           return LV_KEY_PREV;
         }
         return LV_KEY_NEXT;
@@ -172,30 +188,53 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
         return 0;
       }
 
+      if (
+        key == Qt::Key_V && view->is_control()
+        && event.state == KeyEvent::State::pressed) {
+        const auto text = QApplication::clipboard()->text();
+        for (const auto value : text) {
+          keys.push({KeyEvent::State::pressed, value.unicode()})
+            .push({KeyEvent::State::released, value.unicode()});
+        }
+        fflush(stdout);
+      }
+
       if ((view->is_shift() == false) && key >= 'A' && key <= 'Z') {
         key = key - 'A' + 'a';
       }
       return key;
     }(event.key);
 
-    data->continue_reading = true;
     keys.pop();
-  } else {
-    data->continue_reading = false;
   }
+  data->continue_reading = keys.count() > 0;
 }
 
 void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data) {
   auto *view = static_cast<LvglGraphicsView *>(device->user_data);
-  auto mouse_point = view->mousePosition();
-  data->point.x = mouse_point.x();
-  data->point.y = mouse_point.y();
-  data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+
+  auto &events = view->m_click_event_queue;
+
+  if (events.count()) {
+    const auto &event = events.front();
+    data->point.x = event.point.x();
+    data->point.y = event.point.y();
+    data->state = (event.state == ClickEvent::State::pressed) ? LV_INDEV_STATE_PRESSED
+                                                            : LV_INDEV_STATE_RELEASED;
+    events.pop();
+  } else {
+    auto mouse_point = view->mousePosition();
+    data->point.x = mouse_point.x();
+    data->point.y = mouse_point.y();
+    data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+  }
+  data->continue_reading = 0;
+
 }
 
-void LvglGraphicsView::read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t *data) {
-  //currently mouse wheel is used to emulate an encoder (left, right arrows)
-  //it needs to be used for scrolling to work well here
+void LvglGraphicsView::read_mouse_wheel(lv_indev_drv_t *, lv_indev_data_t *) {
+  // currently mouse wheel is used to emulate an encoder (left, right arrows)
+  // it needs to be used for scrolling to work well here
 
 #if 0
   auto *view = static_cast<LvglGraphicsView *>(device->user_data);
@@ -205,4 +244,3 @@ void LvglGraphicsView::read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t 
   data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
 #endif
 }
-

@@ -270,6 +270,10 @@ public:
     return Object();
   }
 
+  Object find(Point point){
+    return Object(api()->indev_search_obj(m_object, point.point()));
+  }
+
   ClassType get_class_type() const;
   static const char *to_cstring(ClassType value);
   static ClassType class_type_from_cstring(const char *value);

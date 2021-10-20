@@ -6,7 +6,6 @@
 
 // 3rd Party
 #include <QMainWindow>
-#include <QTimer>
 
 #include <lvgl/Group.hpp>
 
@@ -18,7 +17,6 @@ class MainWindow final : public QMainWindow {
 
 public:
   explicit MainWindow(QWidget *parent = nullptr);
-  ~MainWindow() override;
 
   lvgl::Group & keyboard_group(){
     return m_group;
@@ -26,8 +24,19 @@ public:
 
   var::Data get_assets(const var::StringView path);
 
+  static lvgl::WheelEvent get_wheel_event_callback(void * context){
+    return reinterpret_cast<MainWindow*>(context)->get_wheel_event();
+  }
+
+  void * wheel_event_context(){
+    return this;
+  }
+
 private:
   lvgl::Group m_group;
+
+  void * m_view = nullptr;
+  lvgl::WheelEvent get_wheel_event();
 
 };
 
