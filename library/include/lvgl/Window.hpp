@@ -108,12 +108,7 @@ private:
   static void configure_details(Container container);
   static void configure_list(Container container);
 
-  static var::PathString get_next_path(const var::PathString path, const char *entry) {
-    if (path == "/") {
-      return var::PathString(path).append(entry);
-    }
-    return path / entry;
-  }
+  static var::PathString get_next_path(const var::PathString & path, const char *entry);
 
   static void set_back_button_label(const Window &window, const char *symbol);
   static Label get_title_label(const Window &window);

@@ -43,8 +43,10 @@ public:
 private:
   struct KeyEvent {
     enum class State { released, pressed };
+    enum class IsClipboard { no , yes };
     State state = State::released;
     int key = 0;
+    IsClipboard is_clipboard = IsClipboard::no;
   };
 
   struct ClickEvent {

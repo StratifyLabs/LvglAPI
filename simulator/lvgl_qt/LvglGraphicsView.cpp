@@ -109,6 +109,8 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
 
   auto &keys = view->m_key_event_queue;
 
+  *data = lv_indev_data_t{};
+
   if (keys.count()) {
     const auto &event = keys.front();
     data->state = event.state == KeyEvent::State::pressed ? LV_INDEV_STATE_PRESSED
@@ -132,7 +134,8 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
       }
     }
 
-    data->key = [&](int key) -> int {
+    data->key = [&](int key, KeyEvent::IsClipboard is_clipboard) -> int {
+
       if (key == Qt::Key_PageUp) {
         return LV_KEY_NEXT;
       }
@@ -158,9 +161,15 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
         return LV_KEY_DOWN;
       }
       if (key == Qt::Key_Right) {
+        if( view->is_control() ){
+          return LV_KEY_END;
+        }
         return LV_KEY_RIGHT;
       }
       if (key == Qt::Key_Left) {
+        if( view->is_control() ){
+          return LV_KEY_HOME;
+        }
         return LV_KEY_LEFT;
       }
       if (key == Qt::Key_Direction_R) {
@@ -189,25 +198,31 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
       }
 
       if (
-        key == Qt::Key_V && view->is_control()
-        && event.state == KeyEvent::State::pressed) {
+        (key == Qt::Key_V) && view->is_control()
+        && (event.state == KeyEvent::State::pressed)) {
         const auto text = QApplication::clipboard()->text();
+        keys.push({KeyEvent::State::pressed, 0, KeyEvent::IsClipboard::yes})
+          .push({KeyEvent::State::released, 0, KeyEvent::IsClipboard::yes});
         for (const auto value : text) {
-          keys.push({KeyEvent::State::pressed, value.unicode()})
-            .push({KeyEvent::State::released, value.unicode()});
+          keys
+            .push({KeyEvent::State::pressed, value.unicode(), KeyEvent::IsClipboard::yes})
+            .push(
+              {KeyEvent::State::released, value.unicode(), KeyEvent::IsClipboard::yes});
         }
-        fflush(stdout);
+        return 0;
       }
 
-      if ((view->is_shift() == false) && key >= 'A' && key <= 'Z') {
+      if (
+        (is_clipboard == KeyEvent::IsClipboard::no) && (view->is_shift() == false)
+        && (key >= 'A') && (key <= 'Z')) {
         key = key - 'A' + 'a';
       }
       return key;
-    }(event.key);
+    }(event.key, event.is_clipboard);
 
     keys.pop();
   }
-  data->continue_reading = keys.count() > 0;
+  data->continue_reading = data->key && keys.count() > 0;
 }
 
 void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data) {
@@ -220,16 +235,16 @@ void LvglGraphicsView::read_mouse(lv_indev_drv_t *device, lv_indev_data_t *data)
     data->point.x = event.point.x();
     data->point.y = event.point.y();
     data->state = (event.state == ClickEvent::State::pressed) ? LV_INDEV_STATE_PRESSED
-                                                            : LV_INDEV_STATE_RELEASED;
+                                                              : LV_INDEV_STATE_RELEASED;
     events.pop();
   } else {
     auto mouse_point = view->mousePosition();
     data->point.x = mouse_point.x();
     data->point.y = mouse_point.y();
-    data->state = view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+    data->state =
+      view->isMousePressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
   }
   data->continue_reading = 0;
-
 }
 
 void LvglGraphicsView::read_mouse_wheel(lv_indev_drv_t *, lv_indev_data_t *) {

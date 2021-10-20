@@ -200,6 +200,14 @@ void FileSystemWindow::configure_details(Container container) {
     }));
 }
 
+var::PathString FileSystemWindow::get_next_path(const var::PathString & path, const char *entry) {
+  if (path == ROOT_DRIVE) {
+    return var::PathString(path).append(entry);
+  }
+  return path / entry;
+}
+
+
 void FileSystemWindow::configure_list(Container container) {
   // load the path
 
