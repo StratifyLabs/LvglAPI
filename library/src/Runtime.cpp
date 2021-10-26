@@ -2,21 +2,36 @@
 #include <sos/sos.h>
 #endif
 
+#include <chrono/ClockTimer.hpp>
+
 #include "lvgl_api.h"
 
-#include "lvgl/Style.hpp"
 #include "lvgl/Runtime.hpp"
+#include "lvgl/Style.hpp"
 
 using namespace lvgl;
 
-Runtime::Runtime(){
+Runtime::Runtime() {
 #if __StratifyOS__
   kernel_request(LVGL_REQUEST_START, nullptr);
 #endif
+
+#if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
+  m_task_mutex =
+    thread::Mutex(thread::Mutex::Attributes().set_type(thread::Mutex::Type::recursive));
+#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
+  m_task_list.reserve(32);
+#else
+  for (auto &task : m_task_list) {
+    task = {nullptr, nullptr};
+  }
+#endif
+
+#endif
 }
 
-Runtime& Runtime::loop(){
-  while( is_stopped() == false ){
+Runtime &Runtime::loop() {
+  while (is_stopped() == false) {
     refresh();
   }
 
@@ -26,11 +41,51 @@ Runtime& Runtime::loop(){
   return *this;
 }
 
-Runtime& Runtime::refresh(){
-  chrono::wait(period());
-  api()->tick_inc(period().milliseconds() * increment_scale());
-  api()->timer_handler();
+#if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
+Runtime &Runtime::push(TaskCallback callback, void *context) {
+  thread::Mutex::Scope ms(m_task_mutex);
+#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
+  m_task_list.push_back(task);
+#else
+  for (auto &entry : m_task_list) {
+    if (entry.callback == nullptr) {
+      entry = {callback, context};
+      break;
+    }
+  }
+#endif
   return *this;
 }
+#endif
 
-
+Runtime &Runtime::refresh() {
+  chrono::ClockTimer timer(chrono::ClockTimer::IsRunning::yes);
+#if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
+  {
+    thread::Mutex::Scope ms(m_task_mutex);
+#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
+    m_task_list.push_back(task);
+    while (m_task_list.count()) {
+      auto &task = m_task_list.back();
+      task.callback(task.context);
+      m_task_list.pop_back();
+    }
+#else
+    for (auto &task : m_task_list) {
+      if (task.callback != nullptr) {
+        task.callback(task.context);
+        task.callback = nullptr;
+      }
+    }
+#endif
+  }
+#endif
+  api()->timer_handler();
+  timer.stop();
+  if (period() > timer) {
+    const auto remaining = period() - timer.micro_time();
+    chrono::wait(remaining);
+  }
+  api()->tick_inc(period().milliseconds() * increment_scale());
+  return *this;
+}
