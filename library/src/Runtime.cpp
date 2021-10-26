@@ -82,10 +82,13 @@ Runtime &Runtime::refresh() {
 #endif
   api()->timer_handler();
   timer.stop();
+  const auto elapsed = timer.micro_time();
   if (period() > timer) {
-    const auto remaining = period() - timer.micro_time();
+    const auto remaining = period() - elapsed;
     chrono::wait(remaining);
   }
-  api()->tick_inc(period().milliseconds() * increment_scale());
+  api()->tick_inc(
+    elapsed > period() ? elapsed.milliseconds()
+                       : period().milliseconds() * increment_scale());
   return *this;
 }
