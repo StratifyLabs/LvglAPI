@@ -324,6 +324,7 @@ protected:
   lv_obj_t *m_object = nullptr;
 
   friend class TabView;
+  friend class Display;
 
   explicit Object(lv_obj_t *obj) : m_object(obj) {}
   static void set_user_data(lv_obj_t *obj, const char *name);

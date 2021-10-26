@@ -11,6 +11,17 @@ public:
   using ReadyCallback = void (*)(_lv_anim_t *);
   using GetValueCallback = s32 (*)(_lv_anim_t *);
 
+  static constexpr u16 repeat_infinite = LV_ANIM_REPEAT_INFINITE;
+
+  enum class Path {
+    linear,
+    step,
+    ease_in,
+    ease_out,
+    ease_in_out,
+    overshoot,
+    bounce
+  };
 
   Animation() { api()->anim_init(&m_anim); }
 
@@ -24,6 +35,15 @@ public:
     lv_anim_set_exec_cb(&m_anim, callback);
     return *this;
   }
+
+
+  Animation &set_callback(Object object, Callback callback) {
+    lv_anim_set_var(&m_anim, object.object());
+    lv_anim_set_exec_cb(&m_anim, callback);
+    return *this;
+  }
+
+  Animation & set_path(Path path);
 
   Animation &set_ready_callback(ReadyCallback callback) {
     lv_anim_set_ready_cb(&m_anim, callback);
@@ -58,6 +78,10 @@ public:
   Animation &start() {
     m_active_anim = api()->anim_start(&m_anim);
     return *this;
+  }
+
+  static void refresh_now(){
+    api()->anim_refr_now();
   }
 
 private:

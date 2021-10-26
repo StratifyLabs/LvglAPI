@@ -1,6 +1,7 @@
 
 
 set(SOURCES
+	Animation.cpp
 	Arc.cpp
 	Bar.cpp
 	Button.cpp
@@ -27,6 +28,7 @@ set(SOURCES
 	PeriodicTimer.cpp
 	Roller.cpp
 	Runtime.cpp
+	Screen.cpp
 	Slider.cpp
 	Spinbox.cpp
 	Spinner.cpp

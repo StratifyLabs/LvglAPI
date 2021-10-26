@@ -29,8 +29,6 @@ public:
     m_object = api()->label_create(screen_object());
     api()->label_set_text_static(m_object, "");
     set_user_data(m_object, name);
-    //clear the layout
-    set_layout(0);
   }
   NakedContainer(lv_obj_t *object) { m_object = object; }
 };
@@ -42,7 +40,7 @@ public:
       .set_flex_layout()
       .set_flex_flow(FlexFlow::row)
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
-      .set_column_padding(20);
+      .set_column_padding(0);
   }
 
   explicit Row(const char *name = "") {
@@ -84,7 +82,7 @@ public:
     set_flex_layout()
       .set_flex_flow(FlexFlow::column)
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
-      .set_row_padding(20);
+      .set_row_padding(0);
   }
   Column(lv_obj_t *object) { m_object = object; }
 

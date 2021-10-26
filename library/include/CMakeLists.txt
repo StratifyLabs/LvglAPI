@@ -31,6 +31,7 @@ set(SOURCES
 	lvgl/PeriodicTimer.hpp
 	lvgl/Roller.hpp
 	lvgl/Runtime.hpp
+	lvgl/Screen.hpp
 	lvgl/Slider.hpp
 	lvgl/Spinbox.hpp
 	lvgl/Spinner.hpp

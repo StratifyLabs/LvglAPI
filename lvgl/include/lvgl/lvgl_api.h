@@ -336,6 +336,17 @@ typedef struct {
   uint32_t (*disp_get_inactive_time)(const lv_disp_t * disp);
   void (*disp_trig_activity)(lv_disp_t * disp);
   void (*disp_clean_dcache)(lv_disp_t * disp);
+  void (*disp_drv_update)(lv_disp_t * disp, lv_disp_drv_t * new_drv);
+  void (*disp_remove)(lv_disp_t * disp);
+  void (*disp_set_default)(lv_disp_t * disp);
+  lv_disp_t * (*disp_get_default)();
+  lv_coord_t (*disp_get_hor_res)(lv_disp_t * disp);
+  lv_coord_t (*disp_get_ver_res)(lv_disp_t * disp);
+  bool (*disp_get_antialiasing)(lv_disp_t * disp);
+  lv_coord_t (*disp_get_dpi)(const lv_disp_t * disp);
+  void (*disp_set_rotation)(lv_disp_t * disp, lv_disp_rot_t rotation);
+  lv_disp_rot_t (*disp_get_rotation)(lv_disp_t * disp);
+
   //theme
   lv_theme_t * (*theme_get_from_obj)(lv_obj_t * obj);
   void (*theme_apply)(lv_obj_t * obj);

@@ -50,9 +50,11 @@ TileView &TileView::go_backward() {
     return *this;
   }
 
+  Event::send(get_active_tile(), EventCode::exited);
+
   auto next_location = Location(active_location).set_column(active_location.column() - 1);
 
   set_tile(next_location).update_layout();
-  Event::send(get_active_tile(), EventCode::exited);
+  Event::send(get_active_tile(), EventCode::entered);
   return *this;
 }

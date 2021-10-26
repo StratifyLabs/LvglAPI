@@ -2,7 +2,6 @@
 #include <sdk/types.h>
 #include <unistd.h>
 
-
 #if defined __win32
 #include "dirent_windows.h"
 #define posix_open _open
@@ -18,7 +17,6 @@
 #define posix_write write
 #define posix_lseek lseek
 #endif
-
 
 //#include <sos/dev/display.h>
 #if _LVGL_HAS_STRATIFY_OS
@@ -351,6 +349,18 @@ const lvgl_api_t lvgl_api = {
   .disp_get_inactive_time = lv_disp_get_inactive_time,
   .disp_trig_activity = lv_disp_trig_activity,
   .disp_clean_dcache = lv_disp_clean_dcache,
+
+  .disp_drv_update = lv_disp_drv_update,
+  .disp_remove = lv_disp_remove,
+  .disp_set_default = lv_disp_set_default,
+  .disp_get_default = lv_disp_get_default,
+  .disp_get_hor_res = lv_disp_get_hor_res,
+  .disp_get_ver_res = lv_disp_get_ver_res,
+  .disp_get_antialiasing = lv_disp_get_antialiasing,
+  .disp_get_dpi = lv_disp_get_dpi,
+  .disp_set_rotation = lv_disp_set_rotation,
+  .disp_get_rotation = lv_disp_get_rotation,
+
   // theme
   .theme_get_from_obj = lv_theme_get_from_obj,
   .theme_apply = lv_theme_apply,
@@ -857,8 +867,7 @@ const lvgl_api_t lvgl_api = {
   .slider_class = &lv_slider_class,
   .switch_class = &lv_switch_class,
   .table_class = &lv_table_class,
-  .textarea_class = &lv_textarea_class
-};
+  .textarea_class = &lv_textarea_class};
 
 #if defined __StratifyOS__
 #include <sos/sos.h>
@@ -905,7 +914,7 @@ lvgl_api_fs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mod
     (mode == LV_FS_MODE_WR) ? OTHER_OPTIONS | O_RDWR : OTHER_OPTIONS | O_RDONLY;
 
   ssize_t fd = (ssize_t)posix_open(path, f_mode);
-  return (void*)fd;
+  return (void *)fd;
 }
 
 static lv_fs_res_t lvgl_api_fs_close_cb(struct _lv_fs_drv_t *drv, void *file_p) {

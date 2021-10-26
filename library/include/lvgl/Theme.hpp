@@ -37,7 +37,16 @@ public:
   }
 
 
+  lv_theme_t * native_value(){
+    return m_theme;
+  }
+
+  const lv_theme_t * native_value() const {
+    return m_theme;
+  }
+
 private:
+  friend class Display;
   Theme(lv_theme_t * theme) : m_theme(theme){}
   lv_theme_t * m_theme = nullptr;
 };
