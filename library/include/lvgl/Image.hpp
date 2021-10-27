@@ -8,23 +8,19 @@
 
 namespace lvgl {
 
-
 class Image : public ObjectAccess<Image> {
 public:
-  explicit Image(const char * name = "");
-  explicit Image(lv_obj_t * object){ m_object = object; }
+  explicit Image(const char *name = "");
+  explicit Image(lv_obj_t *object) { m_object = object; }
 
-
-  static const lv_obj_class_t * get_class(){
-    return api()->image_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->image_class; }
 
   Image &set_source(const var::StringView src) {
     api()->img_set_src(m_object, var::PathString(src).cstring());
     return *this;
   }
 
-  Image &set_source(const void * data_source) {
+  Image &set_source(const void *data_source) {
     api()->img_set_src(m_object, data_source);
     return *this;
   }
@@ -42,7 +38,6 @@ public:
   Image &set_offset(const Point &position) {
     return set_offset_x(position.x()).set_offset_y(position.y());
   }
-
 
   Image &set_angle(s16 value) {
     api()->img_set_angle(m_object, value);
@@ -64,25 +59,15 @@ public:
     return *this;
   }
 
-  const void * get_source() const {
-    return api()->img_get_src(m_object);
-  }
+  const void *get_source() const { return api()->img_get_src(m_object); }
 
-  lv_coord_t get_offset_x() const {
-    return api()->img_get_offset_x(m_object);
-  }
+  lv_coord_t get_offset_x() const { return api()->img_get_offset_x(m_object); }
 
-  lv_coord_t get_offset_y() const {
-    return api()->img_get_offset_y(m_object);
-  }
+  lv_coord_t get_offset_y() const { return api()->img_get_offset_y(m_object); }
 
-  Point get_offset() const {
-    return Point(get_offset_x(), get_offset_y());
-  }
+  Point get_offset() const { return Point(get_offset_x(), get_offset_y()); }
 
-  u16 get_angle() const {
-    return api()->img_get_angle(m_object);
-  }
+  u16 get_angle() const { return api()->img_get_angle(m_object); }
 
   Point get_pivot() const {
     Point result;
@@ -90,15 +75,44 @@ public:
     return result;
   }
 
-  u16 get_zoom() const {
-    return api()->img_get_zoom(m_object);
-  }
+  u16 get_zoom() const { return api()->img_get_zoom(m_object); }
 
-  bool is_antialias() const {
-    return api()->img_get_antialias(m_object);
-  }
+  bool is_antialias() const { return api()->img_get_antialias(m_object); }
 
+  class Info {
+  public:
+    /* Using Info() = default; causes problems with
+     * the following code
+     *
+     * int function(){
+     *   static const auto font_info = Font::Info();
+     * }
+     *
+     * It causes a crash on ARM Cortex M7. The problem
+     * is with the var::NameString member. It seems
+     * it doesn't get moved correctly.
+     *
+     */
 
+    Info(){};
+    explicit Info(const char *name, const lv_img_dsc_t *value)
+      : m_name(name), m_image(value) {}
+
+    bool is_valid() const { return m_image != nullptr; }
+
+    lv_coord_t width() const { return m_image->header.w; }
+
+    lv_coord_t height() const { return m_image->header.h; }
+
+    const void *source() const { return m_image; }
+
+  private:
+    API_AF(Info, const char *, name, nullptr);
+    API_AF(Info, const lv_img_dsc_t *, image, nullptr);
+  };
+
+  static Info find(const char *name, const Size size);
+  static Info find(const char *name) { return find(name, Size(0, 0)); }
 };
 
 } // namespace lvgl

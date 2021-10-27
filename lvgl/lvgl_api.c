@@ -27,6 +27,7 @@
 #include "lvgl_api.h"
 
 const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset);
+const lvgl_api_image_descriptor_t *lvgl_api_get_image(int offset);
 
 const lvgl_api_t lvgl_api = {
   .sos_api =
@@ -829,6 +830,7 @@ const lvgl_api_t lvgl_api = {
 
   // system
   .get_font = lvgl_api_get_font,
+  .get_image = lvgl_api_get_image,
 
   // class resolution
   .obj_class = &lv_obj_class,
@@ -881,6 +883,11 @@ const lvgl_api_font_descriptor_t *(*lvgl_api_get_font_callback)(int) = NULL;
 void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t *(*callback)(int)) {
   lvgl_api_get_font_callback = callback;
 }
+
+const lvgl_api_image_descriptor_t *(*lvgl_api_get_image_callback)(int) = NULL;
+void lvgl_api_set_image_callback(const lvgl_api_image_descriptor_t *(*callback)(int)) {
+  lvgl_api_get_image_callback = callback;
+}
 #endif
 
 const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset) {
@@ -891,6 +898,19 @@ const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset) {
 #else
   if (lvgl_api_get_font_callback) {
     return lvgl_api_get_font_callback(offset);
+  }
+  return NULL;
+#endif
+}
+
+const lvgl_api_image_descriptor_t *lvgl_api_get_image(int offset) {
+#if defined __StratifyOS__
+  lvgl_api_image_request_t request = {.offset = offset};
+  kernel_request(LVGL_REQUEST_GET_IMAGE, &request);
+  return request.descriptor;
+#else
+  if (lvgl_api_get_image_callback) {
+    return lvgl_api_get_image_callback(offset);
   }
   return NULL;
 #endif
