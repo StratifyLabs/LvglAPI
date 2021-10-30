@@ -17,29 +17,30 @@ Image::Info Image::find(const char *name, const Size size) {
   }();
 
   if (count == 0) {
-    return Info();
+    return {};
   }
 
   const lvgl_api_image_descriptor_t *descriptor_list[count];
-  {
-    for (int offset = 0; offset < count; offset++) {
-      descriptor_list[offset] = api()->get_image(offset);
-    }
+  for (auto offset : api::Index(count)) {
+    descriptor_list[offset] = api()->get_image(offset);
   }
 
   for (u16 i = 0; i < count; i++) {
     const Info image_info(descriptor_list[i]->name, descriptor_list[i]->image);
     // check if name is compatible
-    if (var::StringView(name) == image_info.name()) {
+
+    if (var::StringView(image_info.name()).find(name) == 0) {
       const auto is_size_ok = [&]() {
         if (size.width() == 0) {
           return true;
         }
         if (image_info.width() > size.width()) {
+          printf("bad width\n");
           return false;
         }
 
         if (image_info.height() > size.height()) {
+          printf("bad height\n");
           return false;
         }
 
@@ -47,10 +48,11 @@ Image::Info Image::find(const char *name, const Size size) {
       }();
 
       if (is_size_ok) {
+        printf("found image %s\n", image_info.name());
         return image_info;
       }
-
     }
   }
-  return Info();
+  printf("image not found\n");
+  return {};
 }

@@ -49,8 +49,8 @@ public:
     return *this;
   }
 
-  Image &set_zoom(u16 value) {
-    api()->img_set_zoom(m_object, value);
+  Image &set_zoom(float value) {
+    api()->img_set_zoom(m_object, u16(value*256.0f));
     return *this;
   }
 
