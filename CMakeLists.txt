@@ -10,7 +10,9 @@ add_subdirectory(library library)
 if(SOS_IS_LINK AND LVGL_API_IS_QT_SIMULATOR)
 	add_subdirectory(simulator simulator)
 endif()
-if(SOS_IS_TEST)
+
+option(LVGL_API_IS_TEST "Enable test builds for LvglAPI" OFF)
+if(LVGL_API_IS_TEST)
 	add_subdirectory(tests tests)
 endif()
 
