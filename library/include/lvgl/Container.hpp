@@ -19,8 +19,8 @@ public:
     return result;
   }
 
-  Container(lv_obj_t *object) { m_object = object; }
-  Container(Object &object) { m_object = object.object(); }
+  explicit Container(lv_obj_t *object) { m_object = object; }
+  explicit Container(Object &object) { m_object = object.object(); }
 };
 
 class NakedContainer : public ObjectAccess<NakedContainer> {
@@ -30,7 +30,7 @@ public:
     api()->label_set_text_static(m_object, "");
     set_user_data(m_object, name);
   }
-  NakedContainer(lv_obj_t *object) { m_object = object; }
+  explicit NakedContainer(lv_obj_t *object) { m_object = object; }
 };
 
 class Row : public ObjectAccess<Row> {
@@ -52,7 +52,7 @@ public:
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
       .set_row_padding(20);
   }
-  Row(lv_obj_t *object) { m_object = object; }
+  explicit Row(lv_obj_t *object) { m_object = object; }
 
   Row &justify_space_between() {
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_between));
@@ -84,7 +84,7 @@ public:
       .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
       .set_row_padding(0);
   }
-  Column(lv_obj_t *object) { m_object = object; }
+  explicit Column(lv_obj_t *object) { m_object = object; }
 
   Column &justify_space_between() {
     return set_flex_align(SetFlexAlign().set_main(FlexAlign::space_between));
@@ -101,9 +101,9 @@ public:
 
 class ColumnSpacer : public ObjectAccess<ColumnSpacer> {
 public:
-  ColumnSpacer(const char *name = "", lv_coord_t height = 50) { construct(name, height); }
-  ColumnSpacer(lv_coord_t height) { construct("", height); }
-  ColumnSpacer(lv_obj_t *object) { m_object = object; }
+  explicit ColumnSpacer(const char *name = "", lv_coord_t height = 50) { construct(name, height); }
+  explicit ColumnSpacer(lv_coord_t height) { construct("", height); }
+  explicit ColumnSpacer(lv_obj_t *object) { m_object = object; }
 
   lv_coord_t m_construct_height = 50;
 
@@ -117,9 +117,9 @@ public:
 
 class RowSpacer : public ObjectAccess<RowSpacer> {
 public:
-  RowSpacer(const char *name = "", lv_coord_t width = 50) { construct(name, width); }
-  RowSpacer(lv_coord_t width) { construct("", width); }
-  RowSpacer(lv_obj_t *object) { m_object = object; }
+  explicit RowSpacer(const char *name = "", lv_coord_t width = 50) { construct(name, width); }
+  explicit RowSpacer(lv_coord_t width) { construct("", width); }
+  explicit RowSpacer(lv_obj_t *object) { m_object = object; }
 
   lv_coord_t m_construct_height = 50;
 

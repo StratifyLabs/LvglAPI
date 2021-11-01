@@ -26,7 +26,7 @@ public:
     return *this;
   }
 
-  const char * get_text() const {
+  API_NO_DISCARD const char * get_text() const {
     return api()->checkbox_get_text(object());
   }
 

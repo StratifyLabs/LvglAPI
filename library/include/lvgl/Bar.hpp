@@ -5,7 +5,6 @@
 
 namespace lvgl {
 
-
 class Range {
 public:
   Range() = default;
@@ -28,8 +27,8 @@ private:
 template <class Derived> class BarAccess : public ObjectAccess<Derived> {
 public:
   BarAccess() = default;
-  BarAccess(u32 type) : ObjectAccess<Derived>(type) {}
-  BarAccess(const char *name) : ObjectAccess<Derived>(name) {}
+  explicit BarAccess(u32 type) : ObjectAccess<Derived>(type) {}
+  explicit BarAccess(const char *name) : ObjectAccess<Derived>(name) {}
 
   Derived &set_range(const Range &value) {
     Object::api()->bar_set_range(Object::object(), value.minimum(), value.maximum());
@@ -48,7 +47,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Range get_range() const {
+  API_NO_DISCARD Range get_range() const {
     return Range()
       .set_minimum(Object::api()->bar_get_min_value(Object::object()))
       .set_maximum(Object::api()->bar_get_max_value(Object::object()));
@@ -64,8 +63,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  s16 get_value() const { return Object::api()->bar_get_value(Object::object()); }
-
+  API_NO_DISCARD s16 get_value() const { return Object::api()->bar_get_value(Object::object()); }
 };
 
 class Bar : public BarAccess<Bar> {
@@ -85,7 +83,6 @@ public:
     api()->bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
     return *this;
   }
-
 };
 
 } // namespace lvgl

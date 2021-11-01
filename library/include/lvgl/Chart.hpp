@@ -9,22 +9,21 @@
 
 namespace lvgl {
 
-
 class Chart : public ObjectAccess<Chart> {
 
   template <typename Type> class Feature {
   public:
     Feature() = default;
-    Feature(lv_obj_t * object, Type *series) : m_chart(object), m_value(series) {}
+    Feature(lv_obj_t *object, Type *series) : m_chart(object), m_value(series) {}
 
-    bool is_valid() const { return m_value; }
+    API_NO_DISCARD bool is_valid() const { return m_value; }
 
-    const Type *value() const { return m_value; }
+    API_NO_DISCARD const Type *value() const { return m_value; }
 
-    Type *value() { return m_value; }
+    API_NO_DISCARD Type *value() { return m_value; }
 
   protected:
-    lv_obj_t * m_chart = nullptr;
+    lv_obj_t *m_chart = nullptr;
     Type *m_value = nullptr;
   };
 
@@ -51,7 +50,7 @@ public:
   class Cursor : public Feature<lv_chart_cursor_t> {
   public:
     Cursor() = default;
-    Cursor(lv_obj_t * chart, lv_chart_cursor_t *value) : Feature(chart, value) {}
+    Cursor(lv_obj_t *chart, lv_chart_cursor_t *value) : Feature(chart, value) {}
 
     Cursor &set_position(const Point &point) {
       API_ASSERT(is_valid());
@@ -60,34 +59,32 @@ public:
       return *this;
     }
 
-    Point get_point() const {
+    API_NO_DISCARD Point get_point() const {
       API_ASSERT(is_valid());
-      return Point(api()->chart_get_cursor_point(m_chart, m_value));
+      return {api()->chart_get_cursor_point(m_chart, m_value)};
     }
-
   };
 
   class Series : public Feature<lv_chart_series_t> {
   public:
     Series() = default;
-    Series(lv_obj_t *chart, lv_chart_series_t *series)
-      : Feature(chart, series) {}
+    Series(lv_obj_t *chart, lv_chart_series_t *series) : Feature(chart, series) {}
 
-    var::View get_x_values() const {
+    API_NO_DISCARD var::View get_x_values() const {
       API_ASSERT(is_valid());
-      return var::View(
+      return {
         Chart::api()->chart_get_x_array(m_chart, m_value),
-        get_point_count() * sizeof(lv_coord_t));
+        get_point_count() * sizeof(lv_coord_t)};
     }
 
-    var::View get_y_values() const {
+    API_NO_DISCARD var::View get_y_values() const {
       API_ASSERT(is_valid());
-      return var::View(
+      return {
         Chart::api()->chart_get_y_array(m_chart, m_value),
-        get_point_count() * sizeof(lv_coord_t));
+        get_point_count() * sizeof(lv_coord_t)};
     }
 
-    u16 get_point_count() const {
+    API_NO_DISCARD u16 get_point_count() const {
       API_ASSERT(is_valid());
       return Chart::api()->chart_get_point_count(m_chart);
     }
@@ -104,11 +101,11 @@ public:
       return *this;
     }
 
-    u16 get_x_start_point() const {
+    API_NO_DISCARD u16 get_x_start_point() const {
       return api()->chart_get_x_start_point(m_chart, m_value);
     }
 
-    Point get_point_by_id(u16 id) {
+    API_NO_DISCARD Point get_point_by_id(u16 id) {
       Point result;
       api()->chart_get_point_pos_by_id(m_chart, m_value, id, result.point());
       return result;
@@ -144,9 +141,9 @@ public:
       return *this;
     }
 
-    Series get_next_series() const {
+    API_NO_DISCARD Series get_next_series() const {
       API_ASSERT(is_valid());
-      return Series(m_chart, api()->chart_get_series_next(m_chart, m_value));
+      return {m_chart, api()->chart_get_series_next(m_chart, m_value)};
     }
 
     Series &set_cursor_point(Cursor cursor, u16 id) {
@@ -179,15 +176,12 @@ public:
       api()->chart_set_value_by_id2(m_chart, m_value, id, value.x(), value.y());
       return *this;
     }
-
   };
 
   explicit Chart(const char *name = "");
   explicit Chart(lv_obj_t *object) { m_object = object; }
 
-  static const lv_obj_class_t * get_class(){
-    return api()->chart_class;
-  }
+  static const lv_obj_class_t *get_class() { return api()->chart_class; }
 
   Chart &set_type(Type value) {
     api()->chart_set_type(object(), static_cast<lv_chart_type_t>(value));
@@ -225,8 +219,8 @@ public:
     return *this;
   }
 
-  u16 get_zoom_x() const { return api()->chart_get_zoom_x(object()); }
-  u16 get_zoom_y() const { return api()->chart_get_zoom_y(object()); }
+  API_NO_DISCARD u16 get_zoom_x() const { return api()->chart_get_zoom_x(object()); }
+  API_NO_DISCARD u16 get_zoom_y() const { return api()->chart_get_zoom_y(object()); }
 
   class Tick {
     API_AF(Tick, lv_coord_t, major_length, 10);
@@ -245,9 +239,9 @@ public:
     return *this;
   }
 
-  Type get_type() const { return Type(api()->chart_get_type(object())); }
+  API_NO_DISCARD Type get_type() const { return Type(api()->chart_get_type(object())); }
 
-  u16 get_point_count() const { return api()->chart_get_point_count(object()); }
+  API_NO_DISCARD u16 get_point_count() const { return api()->chart_get_point_count(object()); }
 
   Chart &refresh() {
     api()->chart_refresh(object());
@@ -255,19 +249,18 @@ public:
   }
 
   Series add_series(Color color, Axis axis) {
-    return Series(
+    return {
       object(), api()->chart_add_series(
-                  object(), color.get_color(), static_cast<lv_chart_axis_t>(axis)));
+                  object(), color.get_color(), static_cast<lv_chart_axis_t>(axis))};
   }
 
-  u32 get_pressed_point() const { return api()->chart_get_pressed_point(object()); }
+  API_NO_DISCARD u32 get_pressed_point() const { return api()->chart_get_pressed_point(object()); }
 
   Chart &add_cursor(Color color, Direction direction) {
     api()->chart_add_cursor(
       object(), color.get_color(), static_cast<lv_dir_t>(direction));
     return *this;
   }
-
 };
 
 } // namespace lvgl

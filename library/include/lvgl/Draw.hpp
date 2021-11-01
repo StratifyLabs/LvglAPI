@@ -9,18 +9,18 @@ namespace lvgl {
 
 class Draw {
 public:
-  Draw(lv_obj_draw_part_dsc_t * value) : m_draw(value){}
+  explicit Draw(lv_obj_draw_part_dsc_t * value) : m_draw(value){}
 
   class Rectangle {
   public:
-    Rectangle(lv_draw_rect_dsc_t * value) : m_rectangle(value){}
+    explicit Rectangle(lv_draw_rect_dsc_t * value) : m_rectangle(value){}
 
     Rectangle& set_radius(lv_coord_t value){
       m_rectangle->radius = value;
       return *this;
     }
 
-    auto radius() const {
+    API_NO_DISCARD auto radius() const {
       return m_rectangle->radius;
     }
 
@@ -29,7 +29,7 @@ public:
       return *this;
     }
 
-    auto blend_mode() const {
+    API_NO_DISCARD auto blend_mode() const {
       return BlendMode(m_rectangle->blend_mode);
     }
 
@@ -38,7 +38,7 @@ public:
       return *this;
     }
 
-    auto background_color() const {
+    API_NO_DISCARD auto background_color() const {
       return Color(m_rectangle->bg_color);
     }
 
@@ -47,7 +47,7 @@ public:
       return *this;
     }
 
-    auto background_gradient_color() const {
+    API_NO_DISCARD auto background_gradient_color() const {
       return Color(m_rectangle->bg_grad_color);
     }
 
@@ -171,33 +171,33 @@ public:
     lv_draw_rect_dsc_t * m_rectangle;
   };
 
-  bool is_rectangle_valid() const {
+  API_NO_DISCARD bool is_rectangle_valid() const {
     return m_draw->rect_dsc;
   }
 
-  auto get_rectangle(){
+  API_NO_DISCARD auto get_rectangle(){
     API_ASSERT(m_draw->rect_dsc != nullptr);
     return Rectangle(m_draw->rect_dsc);
   }
 
-  auto id() const {
+  API_NO_DISCARD auto id() const {
     return m_draw->id;
   }
 
-  Part part() const {
+  API_NO_DISCARD Part part() const {
     return Part(m_draw->part);
   }
 
-  auto radius() const {
+  API_NO_DISCARD auto radius() const {
     return m_draw->radius;
   }
 
-  auto value() const {
+  API_NO_DISCARD auto value() const {
     return m_draw->value;
   }
 
 private:
-  lv_obj_draw_part_dsc_t * m_draw;
+  lv_obj_draw_part_dsc_t * m_draw = nullptr;
 };
 
 
