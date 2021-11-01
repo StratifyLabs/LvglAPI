@@ -7,6 +7,9 @@ using namespace lvgl;
 
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
+  if( !is_valid() ){
+    return Object();
+  }
   auto get = find_child(name);
   if (get.object() != nullptr) {
     return get;
@@ -17,6 +20,17 @@ Object Object::find_object_worker(const char *name) const {
     auto result = child.find_object<IsAssertOnFail::no>(name);
     if (result.m_object != nullptr) {
       return result;
+    }
+  }
+  return Object();
+}
+
+Object Object::find_child(const char *name) const {
+  const auto count = get_child_count();
+  for (u32 i = 0; i < count; i++) {
+    auto child = get_child(i);
+    if (is_name_matched(child, name)) {
+      return child;
     }
   }
   return Object();
