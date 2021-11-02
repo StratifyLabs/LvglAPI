@@ -33,17 +33,17 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
 
   set_user_data(m_object, data.cast_as_name());
 
-  data.set_path(data.base_path());
-  printf("load path %s\n", data.base_path().cstring());
+  data.set_path(data.base_path);
+  printf("load path %s\n", data.base_path.cstring());
 
   auto window = Container(m_object).get<Window>();
 
   window.clear_flag(Window::Flags::scrollable)
-    .add_title(Names::window_title, data.base_path(), [](Label label) {
+    .add_title(Names::window_title, data.base_path, [](Label label) {
       label.set_left_padding(10);
     });
 
-  window.add_button(Names::back_button, data.close_symbol(), size_from_content)
+  window.add_button(Names::back_button, data.close_symbol, size_from_content)
     .fill()
     .add_event_callback(
       EventCode::clicked,
@@ -54,22 +54,22 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
         auto *file_system_data = window.user_data<Data>();
         if (target_name == Names::back_button) {
 
-          if (file_system_data->path() != file_system_data->base_path()) {
+          if (file_system_data->path != file_system_data->base_path) {
 
             file_system_data->set_path(
-              fs::Path::parent_directory(file_system_data->path()));
-            if (file_system_data->path().is_empty()) {
-              file_system_data->set_path(file_system_data->base_path());
+              fs::Path::parent_directory(file_system_data->path));
+            if (file_system_data->path.is_empty()) {
+              file_system_data->set_path(file_system_data->base_path);
             }
 
-            get_title_label(window).set_text_static(file_system_data->path());
+            get_title_label(window).set_text_static(file_system_data->path);
             event.current_target().find<TileView>(Names::tile_view).go_backward();
 
             const auto is_close =
-              file_system_data->path() == file_system_data->base_path();
+              file_system_data->path == file_system_data->base_path;
             set_back_button_label(
-              window, is_close ? file_system_data->close_symbol()
-                               : file_system_data->back_symbol());
+              window, is_close ? file_system_data->close_symbol
+                               : file_system_data->back_symbol);
 
           } else {
             // exit signal
@@ -93,9 +93,9 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
 
           file_system_data->set_path(folder);
 
-          get_title_label(window).set_text_static(file_system_data->path());
+          get_title_label(window).set_text_static(file_system_data->path);
           auto *tile_data = home_tile.user_data<TileData>();
-          tile_data->set_path(file_system_data->path());
+          tile_data->set_path(file_system_data->path);
           configure_list(home_tile.clean());
         }
       })
@@ -127,7 +127,7 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
   // configure_list() requires the view to be complete
   window.find<TileView>(Names::tile_view)
     .add_tile(
-      TileData::create("").set_path(data.path()).cast_as_name(),
+      TileData::create("").set_path(data.path).cast_as_name(),
       TileView::Location().set_column(0), configure_list);
 }
 
@@ -151,7 +151,7 @@ void FileSystemWindow::configure_details(Container container) {
         auto window = get_window(event.target());
         auto *fs_data = window.user_data<Data>();
 
-        set_back_button_label(window, fs_data->back_symbol());
+        set_back_button_label(window, fs_data->back_symbol);
         get_title_label(window).set_text(tile_data->path());
       })
     .add(Table(Names::file_details_table).setup([](Table table) {
@@ -221,8 +221,8 @@ void FileSystemWindow::configure_list(Container container) {
         get_title_label(window).set_text(tile_data->path());
 
         auto *fs_data = window.user_data<Data>();
-        if (fs_data->path() != fs_data->base_path()) {
-          set_back_button_label(window, fs_data->back_symbol());
+        if (fs_data->path != fs_data->base_path) {
+          set_back_button_label(window, fs_data->back_symbol);
         }
       })
     .add(FormList(FormList::Data::create()).setup([](FormList list) {
@@ -256,7 +256,7 @@ void FileSystemWindow::configure_list(Container container) {
                 TileData::create(next_path).cast_as_name(), configure_list);
             } else {
               file_browser_data->set_path(next_path);
-              if (file_browser_data->is_select_file()) {
+              if (file_browser_data->is_select_file) {
                 Event::send(window.get_parent(), EventCode::exited);
               } else {
                 tile_view.go_forward(
@@ -269,18 +269,18 @@ void FileSystemWindow::configure_list(Container container) {
       auto *file_system_data = get_window(list).user_data<Data>();
 
       // add items in the director to the list
-      const auto &path = file_system_data->path();
+      const auto &path = file_system_data->path;
       auto is_exclude = [](const var::StringView name, void *data) {
         auto *file_system_data = reinterpret_cast<Data *>(data);
 
-        if (file_system_data->is_show_hidden() == false) {
+        if (file_system_data->is_show_hidden == false) {
           if (name.length() && name.at(0) == '.') {
             return fs::FileSystem::IsExclude::yes;
           }
         }
 
-        if (file_system_data->is_select_folder()) {
-          const auto info = fs::FileSystem().get_info(file_system_data->path() / name);
+        if (file_system_data->is_select_folder) {
+          const auto info = fs::FileSystem().get_info(file_system_data->path / name);
           if (info.is_directory() == false) {
             return fs::FileSystem::IsExclude::yes;
           }
@@ -299,9 +299,9 @@ void FileSystemWindow::configure_list(Container container) {
         {
           api::ErrorScope es;
           const auto info = fs::FileSystem().get_info(full_path);
-          const auto *symbol = info.is_directory() ? file_system_data->directory_symbol()
-                                                   : file_system_data->file_symbol();
-          const auto item_type = file_system_data->is_select_file() && info.is_file()
+          const auto *symbol = info.is_directory() ? file_system_data->directory_symbol
+                                                   : file_system_data->file_symbol;
+          const auto item_type = file_system_data->is_select_file && info.is_file()
                                    ? FormList::ItemType::string
                                    : FormList::ItemType::navigation;
 

@@ -23,7 +23,7 @@ public:
 
   Screen();
 
-  Screen(lv_obj_t *value) { m_object = value; }
+  explicit Screen(lv_obj_t *value) { m_object = value; }
 
   enum class IsAutoRemove { no, yes };
 
@@ -51,10 +51,10 @@ public:
   Screen get_active_screen() { return Screen(api()->disp_get_scr_act(m_display)); }
   Screen get_previous_screen() { return Screen(api()->disp_get_scr_act(m_display)); }
 
-  Object get_top_layer() const { return Object(api()->disp_get_layer_top(m_display)); }
-  Object get_system_layer() const { return Object(api()->disp_get_layer_sys(m_display)); }
+  API_NO_DISCARD Object get_top_layer() const { return Object(api()->disp_get_layer_top(m_display)); }
+  API_NO_DISCARD Object get_system_layer() const { return Object(api()->disp_get_layer_sys(m_display)); }
 
-  chrono::MicroTime get_inactive_time() const {
+  API_NO_DISCARD chrono::MicroTime get_inactive_time() const {
     return chrono::MicroTime(api()->disp_get_inactive_time(m_display) * 1000);
   }
 
@@ -102,17 +102,17 @@ public:
 
   static Display get_default() { return Display(api()->disp_get_default()); }
 
-  lv_coord_t get_horizontal_resolution() const {
+  API_NO_DISCARD lv_coord_t get_horizontal_resolution() const {
     return api()->disp_get_hor_res(m_display);
   }
 
-  lv_coord_t get_vertical_resolution() const {
+  API_NO_DISCARD lv_coord_t get_vertical_resolution() const {
     return api()->disp_get_ver_res(m_display);
   }
 
-  bool is_antialiasing() const { return api()->disp_get_antialiasing(m_display); }
+  API_NO_DISCARD bool is_antialiasing() const { return api()->disp_get_antialiasing(m_display); }
 
-  lv_coord_t get_dots_per_inch() const { return api()->disp_get_dpi(m_display); }
+  API_NO_DISCARD lv_coord_t get_dots_per_inch() const { return api()->disp_get_dpi(m_display); }
 
   enum class Rotation {
     none = LV_DISP_ROT_NONE,
@@ -126,12 +126,12 @@ public:
     return *this;
   }
 
-  Rotation get_rotation() const { return Rotation(api()->disp_get_rotation(m_display)); }
+  API_NO_DISCARD Rotation get_rotation() const { return Rotation(api()->disp_get_rotation(m_display)); }
 
-  Theme get_theme() const { return Theme(api()->disp_get_theme(m_display)); }
+  API_NO_DISCARD Theme get_theme() const { return Theme(api()->disp_get_theme(m_display)); }
 
 private:
-  Display(lv_disp_t *value) : m_display(value) {}
+  explicit Display(lv_disp_t *value) : m_display(value) {}
   lv_disp_t *m_display;
 };
 

@@ -46,19 +46,19 @@ public:
     return *this;
   }
 
-  TextArea get_text_area() const {
+  API_NO_DISCARD TextArea get_text_area() const {
     return TextArea(api()->keyboard_get_textarea(object()));
   }
 
-  Mode get_mode() const {
+  API_NO_DISCARD Mode get_mode() const {
     return Mode(api()->keyboard_get_mode(object()));
   }
 
-  const char ** get_map_array() const {
+  API_NO_DISCARD const char ** get_map_array() const {
     return api()->btnmatrix_get_map(object());
   }
 
-  ButtonMatrix get_button_matrix() const {
+  API_NO_DISCARD ButtonMatrix get_button_matrix() const {
     return ButtonMatrix(&(reinterpret_cast<lv_keyboard_t*>(m_object)->btnm));
   }
 

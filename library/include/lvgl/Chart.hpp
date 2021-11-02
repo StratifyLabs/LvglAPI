@@ -61,7 +61,7 @@ public:
 
     API_NO_DISCARD Point get_point() const {
       API_ASSERT(is_valid());
-      return {api()->chart_get_cursor_point(m_chart, m_value)};
+      return Point{api()->chart_get_cursor_point(m_chart, m_value)};
     }
   };
 

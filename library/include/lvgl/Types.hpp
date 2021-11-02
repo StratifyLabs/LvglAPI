@@ -32,10 +32,10 @@ class Point {
 public:
   Point() = default;
   Point(lv_coord_t x, lv_coord_t y) : m_point{x, y} {}
-  Point(const lv_point_t &point) : m_point(point) {}
+  explicit Point(const lv_point_t &point) : m_point(point) {}
 
   Point operator+(const Point &a) const {
-    return Point(m_point.x + a.m_point.x, m_point.y + a.m_point.y);
+    return {lv_coord_t(m_point.x + a.m_point.x), lv_coord_t(m_point.y + a.m_point.y)};
   }
 
   Point &operator+(const Point &a) {
@@ -44,12 +44,12 @@ public:
     return *this;
   }
 
-  lv_coord_t x() const { return m_point.x; }
-  lv_coord_t y() const { return m_point.y; }
+  API_NO_DISCARD lv_coord_t x() const { return m_point.x; }
+  API_NO_DISCARD lv_coord_t y() const { return m_point.y; }
 
-  lv_point_t *point() { return &m_point; }
+  API_NO_DISCARD lv_point_t *point() { return &m_point; }
 
-  const lv_point_t *point() const { return &m_point; }
+  API_NO_DISCARD const lv_point_t *point() const { return &m_point; }
 
 private:
   lv_point_t m_point{};
@@ -59,8 +59,8 @@ class Size {
 public:
   Size(lv_coord_t w, lv_coord_t h) : m_width(w), m_height(h) {}
 
-  lv_coord_t width() const { return m_width; }
-  lv_coord_t height() const { return m_height; }
+  API_NO_DISCARD lv_coord_t width() const { return m_width; }
+  API_NO_DISCARD lv_coord_t height() const { return m_height; }
 
 private:
   lv_coord_t m_width;
@@ -79,7 +79,7 @@ public:
 
   lv_area_t *area() { return &m_area; }
 
-  const lv_area_t *area() const { return &m_area; }
+  API_NO_DISCARD const lv_area_t *area() const { return &m_area; }
 
 private:
   friend class Object;
@@ -551,12 +551,12 @@ public:
   // selector can be an or'd combo of parts and states
 
   // allow implicit conversion
-  Selector(Part part) : m_selector(lv_style_selector_t(part)) {}
-  Selector(State state) : m_selector(lv_style_selector_t(state)) {}
+  Selector(Part part) : m_selector(lv_style_selector_t(part)) {} // NOLINT(google-explicit-constructor)
+  Selector(State state) : m_selector(lv_style_selector_t(state)) {} // NOLINT(google-explicit-constructor)
 
   Selector(Part part, State state)
     : m_selector(lv_style_selector_t(part) | lv_style_selector_t(state)) {}
-  lv_style_selector_t value() const { return m_selector; }
+  API_NO_DISCARD lv_style_selector_t value() const { return m_selector; }
 
 private:
   lv_style_selector_t m_selector = 0;
@@ -616,9 +616,9 @@ enum class MixRatio {
 
 class Percent {
 public:
-  Percent(unsigned long long value) : m_value(LV_PCT(value)) {}
+  explicit Percent(unsigned long long value) : m_value(LV_PCT(value)) {}
 
-  lv_coord_t value() const { return m_value; }
+  API_NO_DISCARD lv_coord_t value() const { return m_value; }
 
 private:
   lv_coord_t m_value;

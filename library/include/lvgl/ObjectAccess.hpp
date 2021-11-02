@@ -153,7 +153,7 @@ public:
   move_children_by(const Point &difference, IsIgnoreFloating is_ignore_floating) {
     api()->obj_move_children_by(
       m_object, difference.x(), difference.y(),
-      is_ignore_floating == IsIgnoreFloating::yes ? true : false);
+      is_ignore_floating == IsIgnoreFloating::yes);
     return static_cast<Derived &>(*this);
   }
 
@@ -414,13 +414,6 @@ public:
     api()->obj_set_local_style_prop(
       m_object, lv_style_prop_t(property), *value.style_value(), selector.value());
     return static_cast<Derived &>(*this);
-  }
-
-  PropertyValue get_property(Property property, Selector selector = Selector()) const {
-    PropertyValue result;
-    api()->obj_get_local_style_prop(
-      m_object, lv_style_prop_t(property), result.style_value(), selector.value());
-    return result;
   }
 
   Derived &set_row_padding(lv_coord_t value, Selector selector = Selector()) {
@@ -766,4 +759,4 @@ private:
 
 } // namespace lvgl
 
-#endif // LVGLAPI_LVGL_OBJECT_HPP
+#endif // LVGLAPI_LVGL_OBJECTACCESS_HPP

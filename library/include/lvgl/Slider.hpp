@@ -32,7 +32,7 @@ public:
     return *this;
   }
 
-  int16_t get_left_value() const {
+  API_NO_DISCARD int16_t get_left_value() const {
     return lv_slider_get_left_value(m_object);
   }
 

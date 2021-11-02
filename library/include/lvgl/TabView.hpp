@@ -52,23 +52,23 @@ public:
     return *this;
   }
 
-  Container get_content() const {
+  API_NO_DISCARD Container get_content() const {
     return Container(api()->tabview_get_content(m_object));
   }
 
-  ButtonMatrix get_buttons() const {
+  API_NO_DISCARD ButtonMatrix get_buttons() const {
     return ButtonMatrix(api()->tabview_get_tab_btns(m_object));
   }
 
-  size_t get_active_tab_offset() const { return api()->tabview_get_tab_act(m_object); }
+  API_NO_DISCARD size_t get_active_tab_offset() const { return api()->tabview_get_tab_act(m_object); }
 
-  Container get_tab(size_t i) const {
+  API_NO_DISCARD Container get_tab(size_t i) const {
     API_ASSERT(get_content().object());
     API_ASSERT(i < get_content().get_child_count());
     return Container(get_content().get_child(i).object());
   }
 
-  Container get_active_tab() const { return get_tab(get_active_tab_offset()); }
+  API_NO_DISCARD Container get_active_tab() const { return get_tab(get_active_tab_offset()); }
 
 };
 
