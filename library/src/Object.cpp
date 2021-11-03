@@ -33,7 +33,7 @@ Object Object::find_child(const char *name) const {
       return child;
     }
   }
-  return Object();
+  return {};
 }
 
 void Object::set_user_data(lv_obj_t *obj, const char *name) {

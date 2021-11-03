@@ -259,17 +259,7 @@ public:
     }
   }
 
-  API_NO_DISCARD Object find_child(const char *name) const {
-    const auto count = get_child_count();
-    for (u32 i = 0; i < count; i++) {
-      auto child = get_child(i);
-      if (is_name_matched(child, name)) {
-        return child;
-      }
-    }
-    return {};
-  }
-
+  API_NO_DISCARD Object find_child(const char *name) const;
   API_NO_DISCARD Object find(Point point){
     return Object(api()->indev_search_obj(m_object, point.point()));
   }
