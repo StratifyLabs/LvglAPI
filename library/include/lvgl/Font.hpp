@@ -11,10 +11,9 @@ namespace lvgl {
 class Font : public Api {
 public:
   Font() = default;
-  Font(const lv_font_t *font) : m_font(font) {}
-  Font(const var::PathString &path);
+  explicit Font(const lv_font_t *font) : m_font(font) {}
 
-  const lv_font_t *font() const { return m_font; }
+  API_NO_DISCARD const lv_font_t *font() const { return m_font; }
 
 
   enum class Style {
@@ -55,17 +54,17 @@ public:
      *
      */
 
-    Info(){};
+    Info()= default;;
     explicit Info(const char * path);
-    Font get_font() const {
+    API_NO_DISCARD Font get_font() const {
       return Font(font());
     }
 
-    bool is_valid() const {
+    API_NO_DISCARD bool is_valid() const {
       return point_size() > 0;
     }
 
-    const Font operator()() const {
+    Font operator()() const {
       return get_font();
     }
 
@@ -97,4 +96,4 @@ namespace printer {
 Printer & operator<<(Printer & printer, const lvgl::Font::Info & a);
 }
 
-#endif // FONT_HPP
+#endif // LVGLAPI_LVGL_FONT_HPP

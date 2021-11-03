@@ -8,6 +8,8 @@ namespace lvgl {
 
 class Theme : public Api {
 public:
+  explicit Theme(lv_theme_t * theme) : m_theme(theme){}
+
   Theme(){
     m_theme = api()->theme_get_from_obj(nullptr);
   }
@@ -41,13 +43,12 @@ public:
     return m_theme;
   }
 
-  const lv_theme_t * native_value() const {
+  API_NO_DISCARD const lv_theme_t * native_value() const {
     return m_theme;
   }
 
 private:
   friend class Display;
-  Theme(lv_theme_t * theme) : m_theme(theme){}
   lv_theme_t * m_theme = nullptr;
 };
 

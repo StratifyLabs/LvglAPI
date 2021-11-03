@@ -69,7 +69,7 @@ public:
     return *this;
   }
 
-  bool is_editing() const {
+  API_NO_DISCARD bool is_editing() const {
     return api()->group_get_editing(m_group);
   }
 
@@ -78,19 +78,19 @@ public:
     return *this;
   }
 
-  bool is_wrap() const {
+  API_NO_DISCARD bool is_wrap() const {
     return api()->group_get_wrap(m_group);
   }
 
-  u32 get_object_count() const {
+  API_NO_DISCARD u32 get_object_count() const {
     return api()->group_get_obj_count(m_group);
   }
 
-  Object get_focused() const {
+  API_NO_DISCARD Object get_focused() const {
     return Object(api()->group_get_focused(m_group));
   }
 
-  lv_group_t * group(){
+  API_NO_DISCARD lv_group_t * group(){
     return m_group;
   }
 

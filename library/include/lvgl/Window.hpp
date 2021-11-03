@@ -7,12 +7,10 @@
 
 namespace lvgl {
 
-
 class Window : public ObjectAccess<Window> {
 public:
-
-  explicit Window(const char * name = "", lv_coord_t header_height = 15_percent);
-  explicit Window(lv_obj_t *object) {m_object = object; }
+  explicit Window(const char *name = "", lv_coord_t header_height = 15_percent);
+  explicit Window(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
 
@@ -41,43 +39,42 @@ public:
     return *this;
   }
 
-  Container get_header() const { return Container(api()->win_get_header(m_object)); }
-  Container get_content() const { return Container(api()->win_get_content(m_object)); }
-
+  API_NO_DISCARD Container get_header() const {
+    return Container(api()->win_get_header(m_object));
+  }
+  API_NO_DISCARD Container get_content() const {
+    return Container(api()->win_get_content(m_object));
+  }
 };
 
 class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
 public:
-
-  enum class ExitStatus {
-    null,
-    closed,
-    selected,
-    cancelled
-  };
+  enum class ExitStatus { null, closed, selected, cancelled };
 
   class Data : public UserDataAccess<Data> {
   public:
-    Data(const char *name) : UserDataBase(name) {}
+    explicit Data(const char *name = "") : UserDataBase(name) {}
 
-  private:
-    API_AC(Data, var::PathString, base_path);
-    API_AC(Data, var::PathString, path);
-    API_AB(Data, select_file, false);
-    API_AB(Data, select_folder, false);
-    API_AB(Data, show_hidden, false);
-    API_AF(Data, ExitStatus, exit_status, ExitStatus::null);
-    API_AF(Data, const char *, directory_symbol, LV_SYMBOL_DIRECTORY);
-    API_AF(Data, const char *, file_symbol, LV_SYMBOL_FILE);
-    API_AF(Data, const char *, back_symbol, LV_SYMBOL_LEFT);
-    API_AF(Data, const char *, close_symbol, LV_SYMBOL_CLOSE);
+    API_PMAZ(animation_time, Data, chrono::MicroTime, chrono::MicroTime{});
+    API_PMAZ(back_symbol, Data, const char *, LV_SYMBOL_LEFT);
+    API_PMAZ(base_path, Data, var::PathString, {});
+    API_PMAZ(close_symbol, Data, const char *, LV_SYMBOL_CLOSE);
+    API_PMAZ(directory_symbol, Data, const char *, LV_SYMBOL_DIRECTORY);
+    API_PMAZ(exit_status, Data, ExitStatus, ExitStatus::null);
+    API_PMAZ(file_symbol, Data, const char *, LV_SYMBOL_FILE);
+
+    // members start with is_
+    API_PUBLIC_BOOL(Data, select_file, false);
+    API_PUBLIC_BOOL(Data, select_folder, false);
+    API_PUBLIC_BOOL(Data, show_hidden, false);
+
+    API_PMAZ(path, Data, var::PathString, {});
   };
 
-  explicit FileSystemWindow(Data & data, lv_coord_t header_height = 15_percent);
+  explicit FileSystemWindow(Data &data, lv_coord_t header_height = 15_percent);
   explicit FileSystemWindow(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->window_class; }
-
 
 private:
   struct Names {
@@ -89,6 +86,7 @@ private:
     static constexpr auto window_title = "WindowTitle";
     static constexpr auto file_details_table = "FileDetails";
     static constexpr auto home_button = "HomeButton";
+    static constexpr auto root_drive_button = "RootDriveButton";
     static constexpr auto select_button = "SelectButton";
     static constexpr auto cancel_button = "CancelButton";
     static constexpr auto show_hidden_checkbox = "ShowHidden";
@@ -96,19 +94,23 @@ private:
 
   class TileData : public UserDataAccess<TileData> {
   public:
-    TileData(const char *path) : UserDataBase(""), m_path(path) {}
+    explicit TileData(const char *path) : UserDataBase(""), m_path(path) {}
 
   private:
     API_AC(TileData, var::PathString, path);
   };
 
-  Container get_header() const { return Container(api()->win_get_header(m_object)); }
-  Container get_content() const { return Container(api()->win_get_content(m_object)); }
+  API_NO_DISCARD Container get_header() const {
+    return Container(api()->win_get_header(m_object));
+  }
+  API_NO_DISCARD Container get_content() const {
+    return Container(api()->win_get_content(m_object));
+  }
 
   static void configure_details(Container container);
   static void configure_list(Container container);
 
-  static var::PathString get_next_path(const var::PathString & path, const char *entry);
+  static var::PathString get_next_path(const var::PathString &path, const char *entry);
 
   static void set_back_button_label(const Window &window, const char *symbol);
   static Label get_title_label(const Window &window);

@@ -24,11 +24,11 @@ public:
   explicit PropertyValue(const void *pointer) { m_value.ptr = pointer; }
   PropertyValue(Color color) { m_value.color = color.get_color(); }
 
-  s32 number() const { return m_value.num; }
+  API_NO_DISCARD s32 number() const { return m_value.num; }
 
-  const void *pointer() const { return m_value.ptr; }
+  API_NO_DISCARD const void *pointer() const { return m_value.ptr; }
 
-  Color color() const { return Color(m_value.color); }
+  API_NO_DISCARD Color color() const { return Color(m_value.color); }
 
   lv_style_value_t * style_value(){
     return &m_value;
@@ -93,7 +93,7 @@ public:
   static BlendMode blend_mode_from_cstring(const char * value);
 
 
-  PropertyValue get_property_value(Property property) const {
+  API_NO_DISCARD PropertyValue get_property_value(Property property) const {
     PropertyValue result;
     api()->style_get_prop(
       const_cast<lv_style_t *>(&m_style), lv_style_prop_t(property), &result.m_value);
@@ -418,9 +418,6 @@ public:
 
   Style &set_shadow_x_offset(lv_coord_t value) {
     return set_property(Property::shadow_x_offset, value);
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->style_set_prop(&m_style, LV_STYLE_SHADOW_OFS_X, v);
-    return *this;
   }
 
   Style &set_shadow_y_offset(lv_coord_t value) {
@@ -441,9 +438,6 @@ public:
 
   Style &set_shadow_opacity(lv_opa_t value) {
     return set_property(Property::shadow_opacity, value);
-    lv_style_value_t v = {.num = static_cast<int32_t>(value)};
-    api()->style_set_prop(&m_style, LV_STYLE_SHADOW_OPA, v);
-    return *this;
   }
 
   Style &set_line_width(lv_coord_t value) {
@@ -499,7 +493,7 @@ public:
   }
 
   lv_style_t *style() { return &m_style; }
-  const lv_style_t *style() const { return &m_style; }
+  API_NO_DISCARD const lv_style_t *style() const { return &m_style; }
 
 private:
   friend class Object;

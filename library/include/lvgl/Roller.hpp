@@ -38,11 +38,11 @@ public:
     return result;
   }
 
-  const char * get_options() const {
+  API_NO_DISCARD const char * get_options() const {
     return api()->roller_get_options(object());
   }
 
-  u16 get_option_count() const {
+  API_NO_DISCARD u16 get_option_count() const {
     return api()->roller_get_option_cnt(object());
   }
 

@@ -66,19 +66,19 @@ public:
       m_object, cell.row(), cell.column(), static_cast<lv_table_cell_ctrl_t>(value));
   }
 
-  const char *get_cell_value(const Cell &cell) const {
+  API_NO_DISCARD const char *get_cell_value(const Cell &cell) const {
     return api()->table_get_cell_value(m_object, cell.row(), cell.column());
   }
 
-  u16 get_row_count() const { return api()->table_get_row_cnt(m_object); }
+  API_NO_DISCARD u16 get_row_count() const { return api()->table_get_row_cnt(m_object); }
 
-  u16 get_column_count() const { return api()->table_get_col_cnt(m_object); }
+  API_NO_DISCARD u16 get_column_count() const { return api()->table_get_col_cnt(m_object); }
 
-  lv_coord_t get_column_width(u16 column) const {
+  API_NO_DISCARD lv_coord_t get_column_width(u16 column) const {
     return api()->table_get_col_width(m_object, column);
   }
 
-  Cell get_selected_cell() const {
+  API_NO_DISCARD Cell get_selected_cell() const {
     u16 row = 0;
     u16 col = 0;
     api()->table_get_selected_cell(m_object, &row, &col);

@@ -103,29 +103,29 @@ public:
     return *this;
   }
 
-  const char *get_text() const { return api()->textarea_get_text(object()); }
+  API_NO_DISCARD const char *get_text() const { return api()->textarea_get_text(object()); }
 
-  const char *get_placeholder_text() const {
+  API_NO_DISCARD const char *get_placeholder_text() const {
     return api()->textarea_get_placeholder_text(m_object);
   }
 
-  Label get_label() const { return Label(api()->textarea_get_label(m_object)); }
+  API_NO_DISCARD Label get_label() const { return Label(api()->textarea_get_label(m_object)); }
 
-  int get_cursor_position() const { return api()->textarea_get_cursor_pos(m_object); }
+  API_NO_DISCARD int get_cursor_position() const { return api()->textarea_get_cursor_pos(m_object); }
 
-  bool get_password_mode() const { return api()->textarea_get_password_mode(m_object); }
+  API_NO_DISCARD bool get_password_mode() const { return api()->textarea_get_password_mode(m_object); }
 
-  bool get_one_line() const { return api()->textarea_get_one_line(m_object); }
+  API_NO_DISCARD bool get_one_line() const { return api()->textarea_get_one_line(m_object); }
 
-  const char *get_accepted_characters() const {
+  API_NO_DISCARD const char *get_accepted_characters() const {
     return api()->textarea_get_accepted_chars(m_object);
   }
 
-  size_t get_max_length() const { return api()->textarea_get_max_length(m_object); }
+  API_NO_DISCARD size_t get_max_length() const { return api()->textarea_get_max_length(m_object); }
 
-  bool get_text_selection() const { return api()->textarea_get_text_selection(m_object); }
+  API_NO_DISCARD bool get_text_selection() const { return api()->textarea_get_text_selection(m_object); }
 
-  chrono::MicroTime get_password_show_time() const {
+  API_NO_DISCARD chrono::MicroTime get_password_show_time() const {
     return api()->textarea_get_password_show_time(m_object) * 1_milliseconds;
   }
 
@@ -171,10 +171,10 @@ public:
     friend FileTextArea;
     var::View m_buffer;
 
-    size_t m_file_size;
-    int m_file_read_location;
+    size_t m_file_size{};
+    int m_file_read_location{};
 
-    size_t get_location_advance_size() const {
+    API_NO_DISCARD size_t get_location_advance_size() const {
       return m_buffer.size() * 3 / 4;
     }
 
@@ -274,31 +274,31 @@ public:
     return *this;
   }
 
-  const char *get_text() const { return api()->textarea_get_text(object()); }
+  API_NO_DISCARD const char *get_text() const { return api()->textarea_get_text(object()); }
 
-  const char *get_placeholder_text() const {
+  API_NO_DISCARD const char *get_placeholder_text() const {
     return api()->textarea_get_placeholder_text(m_object);
   }
 
-  Label get_label() const {
+  API_NO_DISCARD Label get_label() const {
     return Container(api()->textarea_get_label(m_object)).get<Label>();
   }
 
-  int get_cursor_position() const { return api()->textarea_get_cursor_pos(m_object); }
+  API_NO_DISCARD int get_cursor_position() const { return api()->textarea_get_cursor_pos(m_object); }
 
-  bool get_password_mode() const { return api()->textarea_get_password_mode(m_object); }
+  API_NO_DISCARD bool get_password_mode() const { return api()->textarea_get_password_mode(m_object); }
 
-  bool get_one_line() const { return api()->textarea_get_one_line(m_object); }
+  API_NO_DISCARD bool get_one_line() const { return api()->textarea_get_one_line(m_object); }
 
-  const char *get_accepted_characters() const {
+  API_NO_DISCARD const char *get_accepted_characters() const {
     return api()->textarea_get_accepted_chars(m_object);
   }
 
-  size_t get_max_length() const { return api()->textarea_get_max_length(m_object); }
+  API_NO_DISCARD size_t get_max_length() const { return api()->textarea_get_max_length(m_object); }
 
-  bool get_text_selection() const { return api()->textarea_get_text_selection(m_object); }
+  API_NO_DISCARD bool get_text_selection() const { return api()->textarea_get_text_selection(m_object); }
 
-  chrono::MicroTime get_password_show_time() const {
+  API_NO_DISCARD chrono::MicroTime get_password_show_time() const {
     return api()->textarea_get_password_show_time(m_object) * 1_milliseconds;
   }
 

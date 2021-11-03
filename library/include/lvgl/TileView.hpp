@@ -9,7 +9,7 @@ namespace lvgl {
 
 class TileView : public ObjectAccess<TileView> {
 public:
-  TileView(const char *name = "");
+  explicit TileView(const char *name = "");
   explicit TileView(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t * get_class(){
@@ -26,7 +26,7 @@ public:
   TileView &add_tile(
     const char *name,
     const Location &location,
-    void (*configure)(Container container) = nullptr) {
+    void (*configure)(Container) = nullptr) {
     Container obj(api()->tileview_add_tile(
       m_object, location.column(), location.row(), lv_dir_t(location.direction())));
     set_user_data(obj.object(), name);
@@ -41,13 +41,13 @@ public:
     return *this;
   }
 
-  Object get_active_tile() const {
+  API_NO_DISCARD Object get_active_tile() const {
     return Object(api()->tileview_get_tile_act(m_object));
   }
 
-  Object get_tile(const Location & location) const;
+  API_NO_DISCARD Object get_tile(const Location & location) const;
 
-  Location get_active_tile_location() const {
+  API_NO_DISCARD Location get_active_tile_location() const {
     auto object = get_active_tile();
     return Location()
       .set_column(object.get_x() / get_content_width())

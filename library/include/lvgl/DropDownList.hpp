@@ -65,37 +65,37 @@ public:
     return *this;
   }
 
-  List get_list() const {
+  API_NO_DISCARD List get_list() const {
     return List(api()->dropdown_get_list(m_object));
   }
 
-  const char * get_text() const {
+  API_NO_DISCARD const char * get_text() const {
     return api()->dropdown_get_text(m_object);
   }
 
-  const char * get_options() const {
+  API_NO_DISCARD const char * get_options() const {
     return api()->dropdown_get_options(m_object);
   }
 
-  u16 get_selected() const {
+  API_NO_DISCARD u16 get_selected() const {
     return api()->dropdown_get_selected(m_object);
   }
 
-  u16 get_option_count() const {
+  API_NO_DISCARD u16 get_option_count() const {
     return api()->dropdown_get_option_cnt(m_object);
   }
 
-  template<class StringType> StringType get_selected_string() const {
+  template<class StringType> API_NO_DISCARD StringType get_selected_string() const {
     StringType result;
     api()->dropdown_get_selected_str(m_object, result.data(), result.capacity());
     return result;
   }
 
-  bool get_highlight_selected() const {
+  API_NO_DISCARD bool get_highlight_selected() const {
     return api()->dropdown_get_selected_highlight(m_object);
   }
 
-  Direction get_direction() const {
+  API_NO_DISCARD Direction get_direction() const {
     return Direction(api()->dropdown_get_dir(m_object));
   }
 

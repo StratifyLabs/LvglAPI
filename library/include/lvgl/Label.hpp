@@ -54,25 +54,25 @@ public:
     return *this;
   }
 
-  char * get_text() const {
+  API_NO_DISCARD char * get_text() const {
     return api()->label_get_text(m_object);
   }
 
-  LongMode get_long_mode() const {
+  API_NO_DISCARD LongMode get_long_mode() const {
     return LongMode(api()->label_get_long_mode(m_object));
   }
 
-  bool is_recolor() const {
+  API_NO_DISCARD bool is_recolor() const {
     return api()->label_get_recolor(m_object);
   }
 
-  Point get_letter_position(u32 value)const{
+  API_NO_DISCARD Point get_letter_position(u32 value)const{
     Point position;
     api()->label_get_letter_pos(m_object, value, position.point());
     return position;
   }
 
-  u32 get_letter_on(const Point & position)const{
+  API_NO_DISCARD u32 get_letter_on(const Point & position)const{
     Point tmp(position);
     return api()->label_get_letter_on(m_object, tmp.point());
   }
@@ -82,11 +82,11 @@ public:
     return api()->label_is_char_under_pos(m_object, tmp.point());
   }
 
-  u32 get_text_selection_start() const {
+  API_NO_DISCARD u32 get_text_selection_start() const {
     return api()->label_get_text_selection_start(m_object);
   }
 
-  u32 get_text_selection_end() const {
+  API_NO_DISCARD u32 get_text_selection_end() const {
     return api()->label_get_text_selection_end(m_object);
   }
 

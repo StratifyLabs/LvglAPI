@@ -11,9 +11,9 @@ class Event {
 public:
   using Callback = void (*)(lv_event_t *);
 
-  Event(lv_event_t *event);
+  explicit Event(lv_event_t *event);
 
-  EventCode code() const { return EventCode(m_event->code); }
+  API_NO_DISCARD EventCode code() const { return EventCode(m_event->code); }
 
   static const char *to_cstring(EventCode code);
 
@@ -25,7 +25,7 @@ public:
     return Object(m_event->current_target).get<TargetClass>();
   }
 
-  Event previous_event() const { return Event(m_event->prev); }
+  API_NO_DISCARD Event previous_event() const { return Event(m_event->prev); }
 
   // param and user_data
   template <typename ResultType> ResultType parameter() const {

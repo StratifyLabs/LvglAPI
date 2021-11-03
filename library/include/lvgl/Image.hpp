@@ -50,7 +50,7 @@ public:
   }
 
   Image &set_zoom(float value) {
-    api()->img_set_zoom(m_object, u16(value*256.0f));
+    api()->img_set_zoom(m_object, u16(value * 256.0f));
     return *this;
   }
 
@@ -59,25 +59,29 @@ public:
     return *this;
   }
 
-  const void *get_source() const { return api()->img_get_src(m_object); }
+  API_NO_DISCARD const void *get_source() const { return api()->img_get_src(m_object); }
 
-  lv_coord_t get_offset_x() const { return api()->img_get_offset_x(m_object); }
+  API_NO_DISCARD lv_coord_t get_offset_x() const {
+    return api()->img_get_offset_x(m_object);
+  }
 
-  lv_coord_t get_offset_y() const { return api()->img_get_offset_y(m_object); }
+  API_NO_DISCARD lv_coord_t get_offset_y() const {
+    return api()->img_get_offset_y(m_object);
+  }
 
-  Point get_offset() const { return Point(get_offset_x(), get_offset_y()); }
+  API_NO_DISCARD Point get_offset() const { return {get_offset_x(), get_offset_y()}; }
 
-  u16 get_angle() const { return api()->img_get_angle(m_object); }
+  API_NO_DISCARD u16 get_angle() const { return api()->img_get_angle(m_object); }
 
-  Point get_pivot() const {
+  API_NO_DISCARD Point get_pivot() const {
     Point result;
     api()->img_get_pivot(m_object, result.point());
     return result;
   }
 
-  u16 get_zoom() const { return api()->img_get_zoom(m_object); }
+  API_NO_DISCARD u16 get_zoom() const { return api()->img_get_zoom(m_object); }
 
-  bool is_antialias() const { return api()->img_get_antialias(m_object); }
+  API_NO_DISCARD bool is_antialias() const { return api()->img_get_antialias(m_object); }
 
   class Info {
   public:
@@ -94,24 +98,22 @@ public:
      *
      */
 
-    Info(){};
+    Info() = default;
+    ;
     explicit Info(const char *name, const lv_img_dsc_t *value)
       : m_name(name), m_image(value) {}
 
-    bool is_valid() const { return m_image != nullptr; }
-
-    lv_coord_t width() const { return m_image->header.w; }
-
-    lv_coord_t height() const { return m_image->header.h; }
-
-    const void *source() const { return m_image; }
+    API_NO_DISCARD bool is_valid() const { return m_image != nullptr; }
+    API_NO_DISCARD lv_coord_t width() const { return m_image->header.w; }
+    API_NO_DISCARD lv_coord_t height() const { return m_image->header.h; }
+    API_NO_DISCARD const void *source() const { return m_image; }
 
   private:
     API_AF(Info, const char *, name, nullptr);
     API_AF(Info, const lv_img_dsc_t *, image, nullptr);
   };
 
-  static Info find(const char *name, const Size size);
+  static Info find(const char *name, Size size);
   static Info find(const char *name) { return find(name, Size(0, 0)); }
 };
 
