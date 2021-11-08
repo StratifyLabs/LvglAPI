@@ -34,7 +34,6 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
   set_user_data(m_object, data.cast_as_name());
 
   data.set_path(data.base_path);
-  printf("load path %s\n", data.base_path.cstring());
 
   auto window = Container(m_object).get<Window>();
 
@@ -65,11 +64,10 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
             get_title_label(window).set_text_static(file_system_data->path);
             event.current_target().find<TileView>(Names::tile_view).go_backward();
 
-            const auto is_close =
-              file_system_data->path == file_system_data->base_path;
+            const auto is_close = file_system_data->path == file_system_data->base_path;
             set_back_button_label(
-              window, is_close ? file_system_data->close_symbol
-                               : file_system_data->back_symbol);
+              window,
+              is_close ? file_system_data->close_symbol : file_system_data->back_symbol);
 
           } else {
             // exit signal
@@ -83,16 +81,21 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
         } else if (target_name == Names::cancel_button) {
           file_system_data->set_path("");
           Event::send(window.get_parent(), EventCode::exited);
-        } else if (target_name == Names::home_button) {
+        } else if (
+          target_name == Names::home_button || target_name == Names::root_drive_button) {
           auto tile_view = event.current_target().find<TileView>(Names::tile_view);
           tile_view.set_tile(TileView::Location());
           auto home_tile = tile_view.get_tile(TileView::Location()).get<Container>();
+          const auto folder = [&]() -> var::PathString {
+            if (target_name == Names::home_button) {
+              const auto *home = getenv("HOME");
+              return home != nullptr ? home : ROOT_DRIVE;
+            } else {
+              return ROOT_DRIVE;
+            }
+          }();
 
-          const auto *home = getenv("HOME");
-          const var::PathString folder = home != nullptr ? home : ROOT_DRIVE;
-
-          file_system_data->set_path(folder);
-
+          file_system_data->set_base_path(folder).set_path(folder);
           get_title_label(window).set_text_static(file_system_data->path);
           auto *tile_data = home_tile.user_data<TileData>();
           tile_data->set_path(file_system_data->path);
@@ -105,7 +108,10 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
            .add_flag(Flags::event_bubble)
            .fill()
            .set_row_padding(0)
-           .add(TileView(Names::tile_view).fill_width().set_flex_grow())
+           .add(TileView(Names::tile_view)
+                  .fill_width()
+                  .set_flex_grow()
+                  .set_animation_time(data.animation_time))
            .add(Row()
                   .add_flag(Flags::event_bubble)
                   .fill_width()
@@ -113,6 +119,9 @@ FileSystemWindow::FileSystemWindow(Data &data, lv_coord_t header_height) {
                   .set_column_padding(20)
                   .set_padding(20)
                   .set_flex_align(SetFlexAlign().set_main(FlexAlign::end))
+                  .add(Button(Names::root_drive_button)
+                         .add_static_label(LV_SYMBOL_DRIVE)
+                         .add_flag(Flags::event_bubble))
                   .add(Button(Names::home_button)
                          .add_static_label(LV_SYMBOL_HOME)
                          .add_flag(Flags::event_bubble))
@@ -200,13 +209,13 @@ void FileSystemWindow::configure_details(Container container) {
     }));
 }
 
-var::PathString FileSystemWindow::get_next_path(const var::PathString & path, const char *entry) {
+var::PathString
+FileSystemWindow::get_next_path(const var::PathString &path, const char *entry) {
   if (path == ROOT_DRIVE) {
     return var::PathString(path).append(entry);
   }
   return path / entry;
 }
-
 
 void FileSystemWindow::configure_list(Container container) {
   // load the path
@@ -272,7 +281,6 @@ void FileSystemWindow::configure_list(Container container) {
       const auto &path = file_system_data->path;
       auto is_exclude = [](const var::StringView name, void *data) {
         auto *file_system_data = reinterpret_cast<Data *>(data);
-
         if (file_system_data->is_show_hidden == false) {
           if (name.length() && name.at(0) == '.') {
             return fs::FileSystem::IsExclude::yes;
@@ -289,11 +297,14 @@ void FileSystemWindow::configure_list(Container container) {
         return fs::FileSystem::IsExclude::no;
       };
 
-      const auto file_list =
-        fs::FileSystem()
+      const auto file_list = [&]() {
+        api::ErrorScope error_scope;
+        return fs::FileSystem()
           .read_directory(
             path, fs::FileSystem::IsRecursive::no, is_exclude, file_system_data)
           .sort(fs::PathList::ascending);
+      }();
+
       for (const auto &item : file_list) {
         const auto full_path = get_next_path(path, item);
         {

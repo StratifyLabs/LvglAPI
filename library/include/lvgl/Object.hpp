@@ -260,7 +260,6 @@ public:
   }
 
   API_NO_DISCARD Object find_child(const char *name) const;
-
   API_NO_DISCARD Object find(Point point){
     return Object(api()->indev_search_obj(m_object, point.point()));
   }
