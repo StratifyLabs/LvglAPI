@@ -5,6 +5,7 @@
 #include <chrono/ClockTimer.hpp>
 
 #if defined __link
+#include <window/Clipboard.hpp>
 #include <window/Event.hpp>
 #endif
 
@@ -168,6 +169,7 @@ void Runtime::initialize_devices() {
   m_keyboard_driver.read_cb = read_keyboard_callback;
   m_keyboard_device = lv_indev_drv_register(&m_keyboard_driver);
 
+  m_group = lvgl::Group::create();
   lv_indev_set_group(m_keyboard_device, m_group.group());
 
   lv_indev_drv_init(&m_mouse_driver);
@@ -230,10 +232,22 @@ void Runtime::handle_mouse_event(const window::Event &event) {
 }
 
 void Runtime::handle_keyboard_event(const window::Event &event) {
+  const auto type = event.type();
+  if ((type != window::EventType::key_down) && (type != window::EventType::key_up)) {
+    return;
+  }
+
+  const auto key_event = event.get_keyboard();
   switch (event.type()) {
   case window::EventType::key_down:
+    m_keyboard_event_queue.push(
+      {window::Event::State::pressed, key_event.modifiers(), key_event.scan_code(),
+       key_event.key_code(), IsClipboard::no});
+    break;
   case window::EventType::key_up:
-    m_keyboard_event_queue.push(event);
+    m_keyboard_event_queue.push(
+      {window::Event::State::released, key_event.modifiers(), key_event.scan_code(),
+       key_event.key_code(), IsClipboard::no});
     break;
   default:
     break;
@@ -311,101 +325,123 @@ void Runtime::read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t 
   *data = lv_indev_data_t{};
 
   if (keys.count()) {
-    printf("Process key\n");
-    const auto &event = keys.front().get_keyboard();
-    data->state = event.type() == window::EventType::key_down ? LV_INDEV_STATE_PRESSED
-                                                              : LV_INDEV_STATE_RELEASED;
+    const auto &key_event = keys.front();
+    data->state = (key_event.state == window::Event::State::pressed)
+                    ? LV_INDEV_STATE_PRESSED
+                    : LV_INDEV_STATE_RELEASED;
 
     data->key = [&]() -> u32 {
-      const auto key = event.scan_code();
+      const auto scan_code = key_event.scan_code;
 
-      if (key == window::ScanCode::page_up) {
+      if (scan_code == window::ScanCode::page_up) {
         return LV_KEY_NEXT;
       }
-      if (key == window::ScanCode::tab) {
-        if (event.is_shift()) {
+      if (scan_code == window::ScanCode::tab) {
+        if (key_event.modifier & window::KeyModifier::shift) {
           return LV_KEY_PREV;
         }
         return LV_KEY_NEXT;
       }
-      if (key == window::ScanCode::page_down) {
+      if (scan_code == window::ScanCode::page_down) {
         return LV_KEY_PREV;
       }
-      if (key == window::ScanCode::return_) {
+      if (scan_code == window::ScanCode::return_) {
         return LV_KEY_ENTER;
       }
-      if (key == window::ScanCode::keypad_enter) {
+      if (scan_code == window::ScanCode::keypad_enter) {
         return LV_KEY_ENTER;
       }
-      if (key == window::ScanCode::up) {
+      if (scan_code == window::ScanCode::up) {
         return LV_KEY_UP;
       }
-      if (key == window::ScanCode::down) {
+      if (scan_code == window::ScanCode::down) {
         return LV_KEY_DOWN;
       }
-      if (key == window::ScanCode::right) {
-        if (event.modifiers() & window::KeyModifier::control) {
+      if (scan_code == window::ScanCode::right) {
+        if (key_event.modifier & window::KeyModifier::control) {
           return LV_KEY_END;
         }
         return LV_KEY_RIGHT;
       }
-      if (key == window::ScanCode::left) {
-        if (event.is_control()) {
+      if (scan_code == window::ScanCode::left) {
+        if (key_event.modifier & window::KeyModifier::control) {
           return LV_KEY_HOME;
         }
         return LV_KEY_LEFT;
       }
-      if (key == window::ScanCode::escape) {
+      if (scan_code == window::ScanCode::escape) {
         return LV_KEY_ESC;
       }
-#if 0
-      if (key == window::ScanCode::backspace) {
+      if (scan_code == window::ScanCode::delete_) {
         return LV_KEY_DEL;
       }
-#endif
-      if (key == window::ScanCode::backspace) {
+      if (scan_code == window::ScanCode::backspace) {
         return LV_KEY_BACKSPACE;
       }
-      if (key == window::ScanCode::home) {
+      if (scan_code == window::ScanCode::home) {
         return LV_KEY_HOME;
       }
-      if (key == window::ScanCode::end) {
+      if (scan_code == window::ScanCode::end) {
         return LV_KEY_END;
       }
+
       if (
-        (key == window::ScanCode::left_shift) || (key == window::ScanCode::right_shift)
-        || (key == window::ScanCode::right_alt) || (key == window::ScanCode::left_alt)
-        || (key == window::ScanCode::right_control)
-        || (key == window::ScanCode::left_control) || (key == window::ScanCode::right_gui)
-        || (key == window::ScanCode::left_gui)) {
+        (scan_code == window::ScanCode::left_shift)
+        || (scan_code == window::ScanCode::right_shift)
+        || (scan_code == window::ScanCode::left_control)
+        || (scan_code == window::ScanCode::right_control)
+        || (scan_code == window::ScanCode::left_alt)
+        || (scan_code == window::ScanCode::right_alt)
+        || (scan_code == window::ScanCode::left_meta)
+        || (scan_code == window::ScanCode::right_meta)) {
         return 0;
       }
 
       if (
-        (key == window::ScanCode::v) && event.is_control()
-        && (event.state() == window::EventState::pressed)) {
-#if 0
-        const auto text = QApplication::clipboard()->text();
-        keys.push({KeyEvent::State::pressed, 0, KeyEvent::IsClipboard::yes})
-          .push({KeyEvent::State::released, 0, KeyEvent::IsClipboard::yes});
-        for (const auto value : text) {
-          keys
-            .push({KeyEvent::State::pressed, value.unicode(), KeyEvent::IsClipboard::yes})
-            .push(
-              {KeyEvent::State::released, value.unicode(), KeyEvent::IsClipboard::yes});
+        (scan_code == window::ScanCode::v)
+        && (key_event.modifier & window::KeyModifier::control)
+        && (key_event.state == window::EventState::pressed)) {
+        if (window::Clipboard::has_text()) {
+          window::Clipboard clipboard;
+          const var::StringView text = clipboard.get_text();
+          printf("paste %s\n", clipboard.get_text());
+          for (const auto value : text) {
+            keys
+              .push(
+                {window::Event::State::pressed, window::KeyModifier::none,
+                 window::ScanCode::unknown, u32(value), IsClipboard::yes})
+              .push(
+                {window::Event::State::released, window::KeyModifier::none,
+                 window::ScanCode::unknown, u32(value), IsClipboard::yes});
+          }
         }
-#endif
         return 0;
       }
 
-#if 0
       if (
-        (is_clipboard == KeyEvent::IsClipboard::no) && (view->is_shift() == false)
-        && (key >= 'A') && (key <= 'Z')) {
-        key = key - 'A' + 'a';
+        (key_event.modifier & window::KeyModifier::shift)
+        && (key_event.is_clipboard == IsClipboard::no)) {
+
+
+        if (
+          (key_event.key_code >= 'a') && (key_event.key_code <= 'z')
+          && (key_event.is_clipboard == IsClipboard::no)) {
+          return key_event.key_code - 'a' + 'A';
+        }
+
+        static constexpr auto default_case = "`1234567890-=[]\\;',./";
+        static constexpr auto shift_case = "~!@#$%^&*()_+{}|:\"<>?";
+
+        const auto position = var::StringView(default_case).find(key_event.key_code);
+        if( position != var::StringView::npos ){
+          return shift_case[position];
+        }
+
+
+
+
       }
-#endif
-      return event.key_code();
+      return key_event.key_code;
     }();
 
     keys.pop();

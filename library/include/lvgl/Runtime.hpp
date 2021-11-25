@@ -77,11 +77,24 @@ private:
 #endif
 
 #if defined __link
+
+  enum class IsClipboard {
+    no, yes
+  };
+
+  struct KeyEvent {
+    window::Event::State state;
+    window::KeyModifier modifier;
+    window::ScanCode scan_code;
+    u32 key_code;
+    IsClipboard is_clipboard;
+  };
+
   window::Window m_window;
   window::Renderer m_renderer;
   window::Texture m_texture;
   var::Queue<window::Event> m_mouse_event_queue;
-  var::Queue<window::Event> m_keyboard_event_queue;
+  var::Queue<KeyEvent> m_keyboard_event_queue;
   var::Queue<window::Event> m_mouse_wheel_event_queue;
   window::Point m_mouse_position;
   window::EventState m_mouse_state;
