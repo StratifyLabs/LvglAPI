@@ -90,12 +90,17 @@ private:
     IsClipboard is_clipboard;
   };
 
+  struct MouseWheelEvent {
+    window::Event event;
+    window::Point position;
+  };
+
   window::Window m_window;
   window::Renderer m_renderer;
   window::Texture m_texture;
   var::Queue<window::Event> m_mouse_event_queue;
   var::Queue<KeyEvent> m_keyboard_event_queue;
-  var::Queue<window::Event> m_mouse_wheel_event_queue;
+  var::Queue<MouseWheelEvent> m_mouse_wheel_event_queue;
   window::Point m_mouse_position;
   window::EventState m_mouse_state;
   lv_indev_drv_t m_keyboard_driver{};
@@ -111,11 +116,13 @@ private:
   lv_color_t *m_active_frame_buffer = nullptr;
   window::Size m_display_size;
   float m_dpi_scale = 1.0f;
+  API_AF(Runtime,u32,scroll_wheel_multiplier,20);
 
   void initialize_display();
   void initialize_devices();
   void update_window();
   void update_events();
+  void update_wheel_event();
 
   void handle_mouse_event(const window::Event &event);
   void handle_keyboard_event(const window::Event &event);

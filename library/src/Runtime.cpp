@@ -5,6 +5,7 @@
 #include <chrono/ClockTimer.hpp>
 
 #if defined __link
+#include "lvgl/Container.hpp"
 #include <window/Clipboard.hpp>
 #include <window/Event.hpp>
 #endif
@@ -208,6 +209,8 @@ void Runtime::update_events() {
     }
     has_events = event.is_valid();
   }
+
+  update_wheel_event();
 }
 
 void Runtime::handle_mouse_event(const window::Event &event) {
@@ -224,7 +227,7 @@ void Runtime::handle_mouse_event(const window::Event &event) {
     m_mouse_position = event.get_mouse_motion().point();
     break;
   case window::EventType::mouse_wheel:
-    m_mouse_wheel_event_queue.push(event);
+    m_mouse_wheel_event_queue.push({event, m_mouse_position});
     break;
   default:
     break;
@@ -252,6 +255,28 @@ void Runtime::handle_keyboard_event(const window::Event &event) {
   default:
     break;
   }
+}
+
+void Runtime::update_wheel_event() {
+  WheelEvent wheel_event;
+  do {
+    wheel_event = get_wheel_event();
+    if (wheel_event.type != WheelEvent::Type::null) {
+
+      // advance the scroll on the current object?
+      auto object = screen().find(wheel_event.mouse);
+
+      // look for the first scrollable parent
+      for (Object current = object; current.is_valid(); current = current.get_parent()) {
+        if (current.get_scroll_bottom() != 0 || current.get_scroll_y() != 0) {
+          const auto scroll_y = current.get_scroll_y();
+          current.get<lvgl::Container>().scroll_to_y(
+            scroll_y + -1 * wheel_event.delta.y() * scroll_wheel_multiplier(), IsAnimate::yes);
+          break;
+        }
+      }
+    }
+  } while (wheel_event.type != WheelEvent::Type::null);
 }
 
 void Runtime::flush(
@@ -404,7 +429,17 @@ void Runtime::read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t 
         if (window::Clipboard::has_text()) {
           window::Clipboard clipboard;
           const var::StringView text = clipboard.get_text();
-          printf("paste %s\n", clipboard.get_text());
+
+          // for some reason the first character from the clipboard gets dropped
+          // adding this 0 key before the clipboard fixes it
+          keys
+            .push(
+              {window::Event::State::pressed, window::KeyModifier::none,
+               window::ScanCode::unknown, u32(0), IsClipboard::yes})
+            .push(
+              {window::Event::State::released, window::KeyModifier::none,
+               window::ScanCode::unknown, u32(0), IsClipboard::yes});
+
           for (const auto value : text) {
             keys
               .push(
@@ -422,7 +457,6 @@ void Runtime::read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t 
         (key_event.modifier & window::KeyModifier::shift)
         && (key_event.is_clipboard == IsClipboard::no)) {
 
-
         if (
           (key_event.key_code >= 'a') && (key_event.key_code <= 'z')
           && (key_event.is_clipboard == IsClipboard::no)) {
@@ -433,13 +467,9 @@ void Runtime::read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t 
         static constexpr auto shift_case = "~!@#$%^&*()_+{}|:\"<>?";
 
         const auto position = var::StringView(default_case).find(key_event.key_code);
-        if( position != var::StringView::npos ){
+        if (position != var::StringView::npos) {
           return shift_case[position];
         }
-
-
-
-
       }
       return key_event.key_code;
     }();
@@ -456,12 +486,16 @@ WheelEvent Runtime::get_wheel_event() {
     return lvgl::WheelEvent{lvgl::WheelEvent::Type::null};
   }
 
-  const auto wheel_event = events.front().get_mouse_wheel();
+  const auto &event = events.front();
+  const auto wheel_event = event.event.get_mouse_wheel();
+
   WheelEvent result{
     WheelEvent::Type::pixel,
-    lvgl::Point(wheel_event.point().x(), wheel_event.point().y()),
-    lvgl::Point(wheel_event.point().x(), wheel_event.point().y())};
+    lvgl::Point(wheel_event.point().x()*m_dpi_scale, wheel_event.point().y()*m_dpi_scale),
+    lvgl::Point(event.position.x()*m_dpi_scale, event.position.y()* m_dpi_scale)};
+
   events.pop();
+
   return result;
 }
 
