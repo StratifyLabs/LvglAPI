@@ -5,11 +5,19 @@
 
 #include "Color.hpp"
 #include "Object.hpp"
+#include "Group.hpp"
 
 namespace lvgl {
 
 template <class Derived> class ObjectAccess : public Object {
 public:
+
+  Derived& add_to_group(Group & group){
+    group.add(*this);
+    return static_cast<Derived &>(*this);
+  }
+
+
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
     return static_cast<Derived &>(*this);

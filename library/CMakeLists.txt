@@ -1,6 +1,7 @@
 
 set(LIBRARIES ThreadAPI FsAPI ChronoAPI VarAPI)
 if(SOS_IS_LINK)
+	list(APPEND LIBRARIES WindowAPI)
 	list(APPEND LIBRARIES lvgl)
 endif()
 
