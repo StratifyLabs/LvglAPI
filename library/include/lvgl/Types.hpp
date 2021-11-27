@@ -87,6 +87,7 @@ private:
 };
 
 enum class Flags {
+  null = 0,
   hidden = LV_OBJ_FLAG_HIDDEN,
   clickable = LV_OBJ_FLAG_CLICKABLE,
   focusable = LV_OBJ_FLAG_CLICK_FOCUSABLE,

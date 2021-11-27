@@ -113,8 +113,8 @@ public:
     API_AF(Info, const lv_img_dsc_t *, image, nullptr);
   };
 
-  static Info find(const char *name, Size size);
-  static Info find(const char *name) { return find(name, Size(0, 0)); }
+  static Info find_image(const char *name, Size size);
+  static Info find_image(const char *name) { return find_image(name, Size(0, 0)); }
 };
 
 } // namespace lvgl

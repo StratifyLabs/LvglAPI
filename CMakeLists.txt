@@ -5,8 +5,10 @@ include(CTest)
 
 option(LVGL_API_IS_QT_SIMULATOR "Enable the Qt simulator" OFF)
 
-add_subdirectory(lvgl lvgl)
-add_subdirectory(library library)
+add_subdirectory(lvgl)
+add_subdirectory(lodepng)
+add_subdirectory(library)
+
 if(SOS_IS_LINK AND LVGL_API_IS_QT_SIMULATOR)
 	add_subdirectory(simulator simulator)
 endif()

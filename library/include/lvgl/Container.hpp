@@ -75,6 +75,15 @@ public:
 
 class Column : public ObjectAccess<Column> {
 public:
+  static const Style & get_style() {
+    static const auto style = Style()
+                                .set_flex_layout()
+                                .set_flex_flow(FlexFlow::column)
+                                .set_flex_align(SetFlexAlign().set_main(FlexAlign::start))
+                                .set_row_padding(0);
+    return style;
+  }
+
   explicit Column(const char *name = "") {
     m_object = api()->label_create(screen_object());
     api()->label_set_text_static(m_object, "");
@@ -101,7 +110,9 @@ public:
 
 class ColumnSpacer : public ObjectAccess<ColumnSpacer> {
 public:
-  explicit ColumnSpacer(const char *name = "", lv_coord_t height = 50) { construct(name, height); }
+  explicit ColumnSpacer(const char *name = "", lv_coord_t height = 50) {
+    construct(name, height);
+  }
   explicit ColumnSpacer(lv_coord_t height) { construct("", height); }
   explicit ColumnSpacer(lv_obj_t *object) { m_object = object; }
 
@@ -117,7 +128,9 @@ public:
 
 class RowSpacer : public ObjectAccess<RowSpacer> {
 public:
-  explicit RowSpacer(const char *name = "", lv_coord_t width = 50) { construct(name, width); }
+  explicit RowSpacer(const char *name = "", lv_coord_t width = 50) {
+    construct(name, width);
+  }
   explicit RowSpacer(lv_coord_t width) { construct("", width); }
   explicit RowSpacer(lv_obj_t *object) { m_object = object; }
 

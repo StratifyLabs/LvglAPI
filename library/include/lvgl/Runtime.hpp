@@ -40,6 +40,9 @@ public:
 
 #if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
   Runtime &push(TaskCallback callback, void *context = nullptr);
+  Runtime &push(void *context, TaskCallback callback){
+    return push(callback, context);
+  }
 #endif
 
 #if defined __link

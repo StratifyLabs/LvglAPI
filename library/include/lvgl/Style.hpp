@@ -181,12 +181,20 @@ public:
     return set_property(Property::bottom_padding, value);
   }
 
+  Style &set_vertical_padding(lv_coord_t value) {
+    return set_top_padding(value).set_bottom_padding(value);
+  }
+
   Style &set_left_padding(lv_coord_t value) {
     return set_property(Property::left_padding, value);
   }
 
   Style &set_right_padding(lv_coord_t value) {
     return set_property(Property::right_padding, value);
+  }
+
+  Style &set_horizontal_padding(lv_coord_t value) {
+    return set_left_padding(value).set_right_padding(value);
   }
 
   Style &set_row_padding(lv_coord_t value) {

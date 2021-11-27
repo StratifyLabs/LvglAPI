@@ -11,6 +11,22 @@ extern "C" {
 
 #define LVGL_API_VERSION 8
 
+#define LVGL_ASSETFS_NAME_MAX 255
+
+typedef struct MCU_PACK {
+  char name[LVGL_ASSETFS_NAME_MAX + 1];
+  u32 start;
+  u32 size;
+  u16 uid;
+  u16 mode;
+} lvgl_assetfs_dirent_t;
+
+typedef struct {
+  u32 count;
+  const lvgl_assetfs_dirent_t entries[];
+} lvgl_assetfs_header_t;
+
+
 typedef struct {
   const char *name;
   const lv_font_t * font;
@@ -883,10 +899,15 @@ typedef struct {
 extern const lvgl_api_t lvgl_api;
 
 void lvgl_api_initialize_filesystem();
+void lvgl_api_initialize_png_decoder();
 
-#if _LVGL_HAS_STRATIFY_OS
+typedef struct {
+  const lvgl_assetfs_dirent_t *entry;
+  size_t seek_offset;
+} lvgl_api_assetfs_file_t;
+
+//asset filesystem are loaded in memory
 void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t* drv, char letter);
-#endif
 
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)

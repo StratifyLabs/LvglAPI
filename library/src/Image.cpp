@@ -7,7 +7,7 @@ Image::Image(const char *name) {
   set_user_data(m_object, name);
 }
 
-Image::Info Image::find(const char *name, const Size size) {
+Image::Info Image::find_image(const char *name, const Size size) {
   const auto count = []() {
     int offset = 0;
     while (api()->get_image(offset) != nullptr) {
@@ -35,12 +35,10 @@ Image::Info Image::find(const char *name, const Size size) {
           return true;
         }
         if (image_info.width() > size.width()) {
-          printf("bad width\n");
           return false;
         }
 
         if (image_info.height() > size.height()) {
-          printf("bad height\n");
           return false;
         }
 
@@ -48,11 +46,9 @@ Image::Info Image::find(const char *name, const Size size) {
       }();
 
       if (is_size_ok) {
-        printf("found image %s\n", image_info.name());
         return image_info;
       }
     }
   }
-  printf("image not found\n");
   return {};
 }

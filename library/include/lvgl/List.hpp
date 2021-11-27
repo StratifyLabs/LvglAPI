@@ -210,10 +210,11 @@ public:
   public:
     explicit Data(const char *name = "") : UserDataBase(name) {}
 
-  private:
-    API_AB(Data, allow_multiple, false);
-    API_AF(Data, const char *, checked_symbol, LV_SYMBOL_OK);
-    API_AF(Data, const char *, not_checked_symbol, "");
+    API_PUBLIC_BOOL(Data,allow_multiple, false);
+
+    API_PMAZ(checked_symbol, Data, const char *, LV_SYMBOL_OK);
+    API_PMAZ(not_checked_symbol, Data, const char *, "");
+
   };
 
   explicit FormList(Data &user_data);
@@ -230,14 +231,15 @@ public:
     using Callback = void (*)(lv_event_t *);
     explicit ItemData(const char *name) : UserDataBase(name) {}
 
-  private:
-    API_AF(ItemData, const char *, symbol, "");
-    API_AF(ItemData, ItemType, type, ItemType::boolean);
-    API_AC(ItemData, var::KeyString, value);
-    API_AF(ItemData, Callback, clicked_callback, nullptr);
+    API_PMAZ(clicked_callback, ItemData, Callback, nullptr);
+    API_PMAZ(symbol, ItemData, const char *, "");
+    API_PMAZ(type, ItemData, ItemType, ItemType::boolean);
+    API_PMAZ(value, ItemData, var::KeyString, {});
+
   };
 
   FormList &add_item(const ItemData &item_data);
+  FormList& update_item_value(const char * item_name, const char * item_value);
 
 };
 

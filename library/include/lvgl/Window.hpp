@@ -51,6 +51,8 @@ class FileSystemWindow : public ObjectAccess<FileSystemWindow> {
 public:
   enum class ExitStatus { null, closed, selected, cancelled };
 
+  static const char * root_drive_path();
+
   class Data : public UserDataAccess<Data> {
   public:
     explicit Data(const char *name = "") : UserDataBase(name) {}
@@ -63,7 +65,7 @@ public:
     API_PMAZ(exit_status, Data, ExitStatus, ExitStatus::null);
     API_PMAZ(file_symbol, Data, const char *, LV_SYMBOL_FILE);
 
-    // members start with is_
+    // members start with `is_`
     API_PUBLIC_BOOL(Data, select_file, false);
     API_PUBLIC_BOOL(Data, select_folder, false);
     API_PUBLIC_BOOL(Data, show_hidden, false);

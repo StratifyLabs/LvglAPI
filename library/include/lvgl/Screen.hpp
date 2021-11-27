@@ -3,6 +3,7 @@
 
 #include "Object.hpp"
 #include "Theme.hpp"
+#include "Event.hpp"
 
 namespace lvgl {
 
@@ -21,7 +22,7 @@ public:
     fade_on = LV_SCR_LOAD_ANIM_FADE_ON
   };
 
-  Screen();
+  Screen(const char * name);
 
   explicit Screen(lv_obj_t *value) { m_object = value; }
 
@@ -37,10 +38,43 @@ public:
     chrono::MicroTime period,
     chrono::MicroTime delay,
     IsAutoRemove is_auto_remove) {
+    execute_load(animation, period, delay, is_auto_remove);
+    return *this;
+  }
+
+  struct Transition {
+    API_PUBLIC_MEMBER_AZ(animation,Transition,LoadAnimation,LoadAnimation::none);
+    API_PUBLIC_MEMBER_AZ(delay,Transition,chrono::MicroTime,chrono::MicroTime());
+    API_PUBLIC_MEMBER_AZ(period,Transition,chrono::MicroTime,chrono::MicroTime());
+  };
+
+  Screen &load(
+    const Transition & transition,
+    IsAutoRemove is_auto_remove = IsAutoRemove::no) {
+    execute_load(transition.animation, transition.period, transition.delay, is_auto_remove);
+    return *this;
+  }
+
+  static void remove_screen(const char * name);
+
+  static Screen find_screen(const char * name);
+
+  static var::Vector<lv_obj_t*> & screen_list(){
+    return m_screen_list;
+  }
+
+private:
+  static var::Vector<lv_obj_t*> m_screen_list;
+
+  void execute_load(    LoadAnimation animation,
+            chrono::MicroTime period,
+            chrono::MicroTime delay,
+            IsAutoRemove is_auto_remove){
+    Event::send(Screen(api()->disp_get_scr_act(nullptr)), EventCode::exited);
     api()->scr_load_anim(
       m_object, lv_scr_load_anim_t(animation), period.milliseconds(),
       delay.milliseconds(), bool(is_auto_remove));
-    return *this;
+    Event::send(Screen(m_object), EventCode::entered);
   }
 };
 

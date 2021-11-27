@@ -26,6 +26,7 @@ namespace lvgl {}
 #include "lvgl/PeriodicTimer.hpp"
 #include "lvgl/Roller.hpp"
 #include "lvgl/Runtime.hpp"
+#include "lvgl/Screen.hpp"
 #include "lvgl/Slider.hpp"
 #include "lvgl/Spinner.hpp"
 #include "lvgl/Switch.hpp"
