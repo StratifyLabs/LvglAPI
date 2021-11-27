@@ -166,7 +166,7 @@ static lv_res_t decoder_open(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *ds
       error =
         lodepng_decode32(&img_data, &png_width, &png_height, png_data, png_data_size);
       if (needs_free) {
-        lv_mem_free(png_data); /*Free the loaded file*/
+        lv_mem_free((void*)png_data); /*Free the loaded file*/
       }
       if (error) {
         LV_LOG_WARN("error %u: %s\n", error, lodepng_error_text(error));
@@ -201,7 +201,7 @@ static void decoder_close(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *dsc) 
   LV_UNUSED(decoder); /*Unused*/
 
   if (dsc->img_data) {
-    free(dsc->img_data);
+    free((void*)(dsc->img_data));
     dsc->img_data = NULL;
   }
 }
