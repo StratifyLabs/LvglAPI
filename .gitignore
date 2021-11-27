@@ -1,5 +1,6 @@
 
 lvgl/lvgl/
+lodepng/lodepng/
 cmake_arm/
 cmake_link/
 *.user
