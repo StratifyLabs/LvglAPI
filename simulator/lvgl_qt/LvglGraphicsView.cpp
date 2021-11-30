@@ -39,11 +39,21 @@ void LvglGraphicsView::initialize_devices() {
 #endif
 }
 
+void LvglGraphicsView::resize(lvgl::Size size) { m_resize = size; }
+
 void LvglGraphicsView::tick() {
-  lv_tick_inc(LvglRenderer::tick_perios_ms);
+  {
+    //mutex??
+    if (m_resize.width() && m_resize.height()) {
+      m_renderer.resize(m_resize);
+      m_resize = lvgl::Size();
+    }
+  }
+
+  lv_tick_inc(LvglRenderer::tick_period_ms);
   lv_task_handler();
 
-  QGraphicsScene *scene = this->scene();
+  auto *scene = this->scene();
   scene->clear();
 
   const auto *item = scene->addPixmap(m_renderer.pixmap());
@@ -135,7 +145,6 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
     }
 
     data->key = [&](int key, KeyEvent::IsClipboard is_clipboard) -> int {
-
       if (key == Qt::Key_PageUp) {
         return LV_KEY_NEXT;
       }
@@ -161,13 +170,13 @@ void LvglGraphicsView::read_keyboard(lv_indev_drv_t *device, lv_indev_data_t *da
         return LV_KEY_DOWN;
       }
       if (key == Qt::Key_Right) {
-        if( view->is_control() ){
+        if (view->is_control()) {
           return LV_KEY_END;
         }
         return LV_KEY_RIGHT;
       }
       if (key == Qt::Key_Left) {
-        if( view->is_control() ){
+        if (view->is_control()) {
           return LV_KEY_HOME;
         }
         return LV_KEY_LEFT;

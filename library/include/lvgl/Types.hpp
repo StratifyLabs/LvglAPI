@@ -57,14 +57,15 @@ private:
 
 class Size {
 public:
+  Size() = default;
   Size(lv_coord_t w, lv_coord_t h) : m_width(w), m_height(h) {}
 
   API_NO_DISCARD lv_coord_t width() const { return m_width; }
   API_NO_DISCARD lv_coord_t height() const { return m_height; }
 
 private:
-  lv_coord_t m_width;
-  lv_coord_t m_height;
+  lv_coord_t m_width = 0;
+  lv_coord_t m_height = 0;
 };
 
 class Area {

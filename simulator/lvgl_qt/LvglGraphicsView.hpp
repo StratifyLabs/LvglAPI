@@ -26,6 +26,8 @@ public:
   LvglGraphicsView(QWidget *parent = nullptr);
   LvglGraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
 
+  void resize(lvgl::Size size);
+
   void tick();
   lv_indev_t *keyboard_device() { return m_keyboard_device; }
   Qt::Key key() const noexcept;
@@ -38,6 +40,10 @@ public:
 
   const var::Queue<lvgl::WheelEvent> & wheel_event_queue() const {
     return m_wheel_event_queue;
+  }
+
+  LvglRenderer & renderer(){
+    return m_renderer;
   }
 
 private:
@@ -73,6 +79,8 @@ private:
   static void read_mouse_wheel(lv_indev_drv_t *device, lv_indev_data_t *data);
 
   void initialize_devices();
+
+  lvgl::Size m_resize;
 };
 
 #endif // LVGLGRAPHICSVIEW_HPP
