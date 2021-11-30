@@ -143,8 +143,7 @@ void Runtime::initialize_display() {
   lv_init();
 
   const auto pixel_count = m_display_size.width() * m_display_size.height();
-  m_display_frame0.resize(pixel_count);
-  m_display_frame1.resize(pixel_count);
+  allocate_frames(m_display_size);
 
   lv_disp_draw_buf_init(
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
@@ -160,7 +159,7 @@ void Runtime::initialize_display() {
   m_display_driver.user_data = this;
   m_display_driver.full_refresh = 1;
 
-  lv_disp_drv_register(&m_display_driver);
+  m_display = lv_disp_drv_register(&m_display_driver);
 }
 
 void Runtime::initialize_devices() {
@@ -202,6 +201,7 @@ void Runtime::update_events() {
     if (event.is_valid()) {
       handle_keyboard_event(event);
       handle_mouse_event(event);
+      handle_window_event(event);
 
       if (event.type() == window::EventType::quit) {
         set_stopped();
@@ -211,6 +211,23 @@ void Runtime::update_events() {
   }
 
   update_wheel_event();
+}
+
+void Runtime::handle_window_event(const window::Event &event) {
+  if (event.type() == window::EventType::window) {
+    const auto window_event = event.get_window();
+    switch (window_event.window_type()) {
+    case window::WindowEvent::WindowType::resized: {
+      const auto size = window_event.data_size();
+      resize_display(
+        window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
+    } break;
+    case window::WindowEvent::WindowType::size_changed:
+      break;
+    default:
+      break;
+    }
+  }
 }
 
 void Runtime::handle_mouse_event(const window::Event &event) {
@@ -271,12 +288,47 @@ void Runtime::update_wheel_event() {
         if (current.get_scroll_bottom() != 0 || current.get_scroll_y() != 0) {
           const auto scroll_y = current.get_scroll_y();
           current.get<lvgl::Container>().scroll_to_y(
-            scroll_y + -1 * wheel_event.delta.y() * scroll_wheel_multiplier(), IsAnimate::yes);
+            scroll_y + -1 * wheel_event.delta.y() * scroll_wheel_multiplier(),
+            IsAnimate::yes);
           break;
         }
       }
     }
   } while (wheel_event.type != WheelEvent::Type::null);
+}
+
+void Runtime::resize_display(const window::Size &size) {
+
+  auto &inactive_frame = m_active_frame_buffer == m_display_frame0.data()
+                           ? m_display_frame1
+                           : m_display_frame0;
+  auto &active_frame = m_active_frame_buffer == m_display_frame0.data()
+                         ? m_display_frame0
+                         : m_display_frame0;
+  const auto pixel_count = size.width() * size.height();
+
+  inactive_frame.resize(pixel_count);
+  m_display_size = size;
+  m_active_frame_buffer = inactive_frame.data();
+
+  m_display_driver.hor_res = size.width();
+  m_display_driver.ver_res = size.height();
+
+  m_texture = window::Texture(
+    m_renderer, window::PixelFormat::argb8888, window::Texture::Access::target, size);
+
+  // update_window();
+  active_frame.resize(pixel_count);
+
+  lv_disp_draw_buf_init(
+    &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
+  lv_disp_drv_update(m_display, &m_display_driver);
+}
+
+void Runtime::allocate_frames(const window::Size &size) {
+  const auto pixel_count = size.width() * size.height();
+  m_display_frame0.resize(pixel_count);
+  m_display_frame1.resize(pixel_count);
 }
 
 void Runtime::flush(
@@ -491,8 +543,9 @@ WheelEvent Runtime::get_wheel_event() {
 
   WheelEvent result{
     WheelEvent::Type::pixel,
-    lvgl::Point(wheel_event.point().x()*m_dpi_scale, wheel_event.point().y()*m_dpi_scale),
-    lvgl::Point(event.position.x()*m_dpi_scale, event.position.y()* m_dpi_scale)};
+    lvgl::Point(
+      wheel_event.point().x() * m_dpi_scale, wheel_event.point().y() * m_dpi_scale),
+    lvgl::Point(event.position.x() * m_dpi_scale, event.position.y() * m_dpi_scale)};
 
   events.pop();
 

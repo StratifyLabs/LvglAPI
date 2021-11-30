@@ -52,6 +52,14 @@ public:
     const window::Size &size,
     window::Window::Flags flags);
 
+  window::Window & window(){
+    return m_window;
+  }
+
+  const window::Window & window() const {
+    return m_window;
+  }
+
   Group & keyboard_group(){
     return m_group;
   }
@@ -112,6 +120,7 @@ private:
   lv_indev_t *m_mouse_device = nullptr;
   lvgl::Group m_group;
 
+  lv_disp_t * m_display;
   lv_disp_draw_buf_t m_display_buffer{};
   lv_disp_drv_t m_display_driver{};
   var::Vector<lv_color_t> m_display_frame0;
@@ -119,6 +128,7 @@ private:
   lv_color_t *m_active_frame_buffer = nullptr;
   window::Size m_display_size;
   float m_dpi_scale = 1.0f;
+
   API_AF(Runtime,u32,scroll_wheel_multiplier,20);
 
   void initialize_display();
@@ -129,7 +139,9 @@ private:
 
   void handle_mouse_event(const window::Event &event);
   void handle_keyboard_event(const window::Event &event);
-  void handle_mouse_wheel_event(const window::Event &event);
+  void handle_window_event(const window::Event &event);
+  void resize_display(const window::Size & size);
+  void allocate_frames(const window::Size & size);
 
   lvgl::WheelEvent get_wheel_event();
 
