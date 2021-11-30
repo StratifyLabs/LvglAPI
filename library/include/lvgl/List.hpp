@@ -232,7 +232,7 @@ public:
     explicit ItemData(const char *name) : UserDataBase(name) {}
 
     API_PMAZ(clicked_callback, ItemData, Callback, nullptr);
-    API_PMAZ(symbol, ItemData, const char *, "");
+    API_PMAZ(symbol, ItemData, const char *, nullptr);
     API_PMAZ(type, ItemData, ItemType, ItemType::boolean);
     API_PMAZ(value, ItemData, var::KeyString, {});
 

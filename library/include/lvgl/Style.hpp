@@ -1,6 +1,8 @@
 #ifndef LVGLAPI_LVGL_STYLE_HPP
 #define LVGLAPI_LVGL_STYLE_HPP
 
+#include <array>
+
 #include <api/api.hpp>
 #include <chrono/MicroTime.hpp>
 

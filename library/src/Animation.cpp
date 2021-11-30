@@ -46,4 +46,5 @@ const char * Animation::to_cstring(Path value){
     LVGL_PROPERTY_CASE(Path, bounce);
     LVGL_PROPERTY_CASE(Path, invalid);
   }
+  return "unknown";
 }
