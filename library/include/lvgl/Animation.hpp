@@ -20,8 +20,12 @@ public:
     ease_out,
     ease_in_out,
     overshoot,
-    bounce
+    bounce,
+    invalid
   };
+
+  static Path path_from_cstring(const char * value);
+  static const char * to_cstring(Path value);
 
   Animation() { api()->anim_init(&m_anim); }
 

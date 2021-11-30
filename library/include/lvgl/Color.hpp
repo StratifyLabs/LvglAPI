@@ -26,6 +26,7 @@ enum class Palette {
   blue_grey = LV_PALETTE_BLUE_GREY,
   grey = LV_PALETTE_GREY,
   none = LV_PALETTE_NONE,
+  invalid
 };
 
 enum class PaletteLevel {
@@ -60,7 +61,7 @@ public:
     lv_color_hsv_t m_hsv{};
   };
 
-  Color();
+  Color() = default;
 
   constexpr explicit Color(lv_color_t color) : m_color(color) {}
 
@@ -147,7 +148,7 @@ public:
   static Color amber(PaletteLevel level = PaletteLevel::default_) {
     return get_palette(Palette::amber, level);
   }
-  static Color orange(PaletteLevel level = PaletteLevel::default_) {
+  static Color deep_orangeorange(PaletteLevel level = PaletteLevel::default_) {
     return get_palette(Palette::orange, level);
   }
   static Color deep_orange(PaletteLevel level = PaletteLevel::default_) {
@@ -159,6 +160,9 @@ public:
   static Color grey(PaletteLevel level = PaletteLevel::default_) {
     return get_palette(Palette::grey, level);
   }
+
+  static const char * to_cstring(Palette value);
+  static Palette palette_from_cstring(const char * value);
 
 private:
   lv_color_t m_color{};

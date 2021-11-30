@@ -169,14 +169,16 @@ enum class EventCode {
 enum class TextDecoration {
   none = LV_TEXT_DECOR_NONE,
   underline = LV_TEXT_DECOR_UNDERLINE,
-  strikethrough = LV_TEXT_DECOR_STRIKETHROUGH
+  strikethrough = LV_TEXT_DECOR_STRIKETHROUGH,
+  invalid
 };
 
 enum class TextAlignment {
   auto_ = LV_TEXT_ALIGN_AUTO,
   left = LV_TEXT_ALIGN_LEFT,
   center = LV_TEXT_ALIGN_CENTER,
-  right = LV_TEXT_ALIGN_RIGHT
+  right = LV_TEXT_ALIGN_RIGHT,
+  invalid
 };
 
 enum class BorderSide {
@@ -186,13 +188,15 @@ enum class BorderSide {
   left = LV_BORDER_SIDE_LEFT,
   right = LV_BORDER_SIDE_RIGHT,
   full = LV_BORDER_SIDE_FULL,
-  internal = LV_BORDER_SIDE_INTERNAL
+  internal = LV_BORDER_SIDE_INTERNAL,
+  invalid
 };
 
 enum class GradientDirection {
   none = LV_GRAD_DIR_NONE,
+  vertical = LV_GRAD_DIR_VER,
   horizontal = LV_GRAD_DIR_HOR,
-  vertical = LV_GRAD_DIR_VER
+  invalid
 };
 
 enum class BaseDirection {
@@ -200,7 +204,8 @@ enum class BaseDirection {
   left_to_right = LV_BASE_DIR_LTR,
   right_to_left = LV_BASE_DIR_RTL,
   neutral = LV_BASE_DIR_NEUTRAL,
-  weak = LV_BASE_DIR_WEAK
+  weak = LV_BASE_DIR_WEAK,
+  invalid
 };
 
 enum class Direction {
@@ -211,7 +216,8 @@ enum class Direction {
   bottom = LV_DIR_BOTTOM,
   horizontal = LV_DIR_HOR,
   vertical = LV_DIR_VER,
-  all = LV_DIR_ALL
+  all = LV_DIR_ALL,
+  invalid
 };
 
 API_OR_ENUM_CLASS(Direction)
@@ -239,7 +245,8 @@ enum class Alignment {
   out_left_bottom = LV_ALIGN_OUT_LEFT_BOTTOM,
   out_right_top = LV_ALIGN_OUT_RIGHT_TOP,
   out_right_middle = LV_ALIGN_OUT_RIGHT_MID,
-  out_right_bottom = LV_ALIGN_OUT_RIGHT_BOTTOM
+  out_right_bottom = LV_ALIGN_OUT_RIGHT_BOTTOM,
+  invalid
 };
 
 enum class Property {
@@ -474,7 +481,8 @@ enum class FlexFlow {
   row_wrap_reverse = LV_FLEX_FLOW_ROW_WRAP_REVERSE,
   column_wrap = LV_FLEX_FLOW_COLUMN_WRAP,
   column_reverse = LV_FLEX_FLOW_COLUMN_REVERSE,
-  column_wrap_reverse = LV_FLEX_FLOW_COLUMN_WRAP_REVERSE
+  column_wrap_reverse = LV_FLEX_FLOW_COLUMN_WRAP_REVERSE,
+  invalid
 };
 
 enum class FlexAlign {
@@ -483,7 +491,8 @@ enum class FlexAlign {
   center = LV_FLEX_ALIGN_CENTER,
   space_evenly = LV_FLEX_ALIGN_SPACE_EVENLY,
   space_around = LV_FLEX_ALIGN_SPACE_AROUND,
-  space_between = LV_FLEX_ALIGN_SPACE_BETWEEN
+  space_between = LV_FLEX_ALIGN_SPACE_BETWEEN,
+  invalid
 };
 
 class SetFlexAlign {
@@ -507,7 +516,8 @@ enum class State {
   user2 = LV_STATE_USER_2,
   user3 = LV_STATE_USER_3,
   user4 = LV_STATE_USER_4,
-  any = LV_STATE_ANY
+  any = LV_STATE_ANY,
+  invalid = LV_STATE_ANY-1
 };
 
 API_OR_ENUM_CLASS(State)
@@ -516,19 +526,22 @@ enum class ScrollBarMode {
   off = LV_SCROLLBAR_MODE_OFF,
   on = LV_SCROLLBAR_MODE_ON,
   active = LV_SCROLLBAR_MODE_ACTIVE,
-  auto_ = LV_SCROLLBAR_MODE_AUTO
+  auto_ = LV_SCROLLBAR_MODE_AUTO,
+  invalid
 };
 
 enum class ScrollSnap {
   off = LV_SCROLL_SNAP_NONE,
   start = LV_SCROLL_SNAP_START,
   end = LV_SCROLL_SNAP_END,
-  center = LV_SCROLL_SNAP_CENTER
+  center = LV_SCROLL_SNAP_CENTER,
+  invalid
 };
 
 enum class IsAnimate {
   no = LV_ANIM_OFF,
   yes = LV_ANIM_ON,
+  invalid,
   repeat_infinite = LV_ANIM_REPEAT_INFINITE
 };
 
@@ -581,12 +594,14 @@ enum class Key {
 enum class BlendMode {
   normal = LV_BLEND_MODE_NORMAL,
   additive = LV_BLEND_MODE_ADDITIVE,
-  subtractive = LV_BLEND_MODE_SUBTRACTIVE
+  subtractive = LV_BLEND_MODE_SUBTRACTIVE,
+  invalid
 };
 
 enum class Opacity {
   transparent = LV_OPA_TRANSP,
   x0 = LV_OPA_0,
+  invalid = 1,
   x10 = LV_OPA_10,
   x20 = LV_OPA_20,
   x30 = LV_OPA_30,
@@ -598,7 +613,7 @@ enum class Opacity {
   x90 = LV_OPA_90,
   x100 = LV_OPA_100,
   cover = LV_OPA_COVER,
-  opaque = LV_OPA_COVER
+  opaque = LV_OPA_COVER,
 };
 
 enum class MixRatio {

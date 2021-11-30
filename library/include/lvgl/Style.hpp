@@ -30,9 +30,7 @@ public:
 
   API_NO_DISCARD Color color() const { return Color(m_value.color); }
 
-  lv_style_value_t * style_value(){
-    return &m_value;
-  }
+  lv_style_value_t *style_value() { return &m_value; }
 
 private:
   friend class Object;
@@ -40,57 +38,79 @@ private:
   lv_style_value_t m_value = {};
 };
 
+struct ConstProperty {
+  constexpr ConstProperty(Property prop_value, s32 number)
+    : property{lv_style_prop_t(prop_value), .value = {.num = number}} {}
+
+  constexpr ConstProperty(Property prop_value, lv_color_t color)
+    : property{.prop = lv_style_prop_t(prop_value), .value = {.color = color}} {}
+
+  constexpr ConstProperty(Property prop_value, const void * ptr)
+    : property{.prop = lv_style_prop_t(prop_value), .value = {.ptr = ptr}} {}
+
+  const lv_style_const_prop_t property;
+};
+
+template <size_t count> struct PropertyList {
+  constexpr PropertyList(std::initializer_list<ConstProperty> list)
+    : property_list{list} {};
+  const std::array<ConstProperty, count> property_list;
+};
+
 class Style : public Api {
 public:
   Style() { api()->style_init(&m_style); }
 
-  static const char * to_cstring(Property property);
-  static Property property_from_cstring(const char * value);
+  static const char *to_cstring(Property property);
+  static Property property_from_cstring(const char *value);
 
-  static const char * to_cstring(TextDecoration value);
-  static TextDecoration text_decoration_from_cstring(const char * value);
+  static const char *to_cstring(TextDecoration value);
+  static TextDecoration text_decoration_from_cstring(const char *value);
 
-  static const char * to_cstring(TextAlignment value);
-  static TextAlignment text_alignment_from_cstring(const char * value);
+  static const char *to_cstring(TextAlignment value);
+  static TextAlignment text_alignment_from_cstring(const char *value);
 
-  static const char * to_cstring(BorderSide value);
-  static BorderSide border_side_from_cstring(const char * value);
+  static const char *to_cstring(BorderSide value);
+  static BorderSide border_side_from_cstring(const char *value);
 
-  static const char * to_cstring(GradientDirection value);
-  static GradientDirection gradient_direction_from_cstring(const char * value);
+  static const char *to_cstring(GradientDirection value);
+  static GradientDirection gradient_direction_from_cstring(const char *value);
 
-  static const char * to_cstring(BaseDirection value);
-  static BaseDirection base_direction_from_cstring(const char * value);
+  static const char *to_cstring(BaseDirection value);
+  static BaseDirection base_direction_from_cstring(const char *value);
 
-  static const char * to_cstring(Direction value);
-  static Direction direction_from_cstring(const char * value);
+  static const char *to_cstring(Direction value);
+  static Direction direction_from_cstring(const char *value);
 
-  static const char * to_cstring(Alignment value);
-  static Alignment alignment_from_cstring(const char * value);
+  static const char *to_cstring(Alignment value);
+  static Alignment alignment_from_cstring(const char *value);
 
-  static const char * to_cstring(FlexFlow value);
-  static FlexFlow flex_flow_from_cstring(const char * value);
+  static const char *to_cstring(FlexFlow value);
+  static FlexFlow flex_flow_from_cstring(const char *value);
 
-  static const char * to_cstring(FlexAlign value);
-  static FlexAlign flex_align_from_cstring(const char * value);
+  static const char *to_cstring(FlexAlign value);
+  static FlexAlign flex_align_from_cstring(const char *value);
 
-  static const char * to_cstring(State value);
-  static State state_from_cstring(const char * value);
+  static const char *to_cstring(State value);
+  static State state_from_cstring(const char *value);
 
-  static const char * to_cstring(ScrollBarMode value);
-  static ScrollBarMode scroll_bar_mode_from_cstring(const char * value);
+  static const char *to_cstring(ScrollBarMode value);
+  static ScrollBarMode scroll_bar_mode_from_cstring(const char *value);
 
-  static const char * to_cstring(ScrollSnap value);
-  static ScrollSnap scroll_snap_mode_from_cstring(const char * value);
+  static const char *to_cstring(ScrollSnap value);
+  static ScrollSnap scroll_snap_mode_from_cstring(const char *value);
 
-  static const char * to_cstring(IsAnimate value);
-  static IsAnimate is_animate_mode_from_cstring(const char * value);
+  static const char *to_cstring(IsAnimate value);
+  static IsAnimate is_animate_mode_from_cstring(const char *value);
 
-  static const char * to_cstring(Part value);
-  static Part part_mode_from_cstring(const char * value);
+  static const char *to_cstring(Part value);
+  static Part part_from_cstring(const char *value);
 
-  static const char * to_cstring(BlendMode value);
-  static BlendMode blend_mode_from_cstring(const char * value);
+  static const char *to_cstring(BlendMode value);
+  static BlendMode blend_mode_from_cstring(const char *value);
+
+  static const char *to_cstring(Opacity value);
+  static Opacity opacity_from_cstring(const char *value);
 
 
   API_NO_DISCARD PropertyValue get_property_value(Property property) const {
@@ -100,18 +120,14 @@ public:
     return result;
   }
 
-  Style & set_property(Property property, PropertyValue value){
+  Style &set_property(Property property, PropertyValue value) {
     api()->style_set_prop(&m_style, lv_style_prop_t(property), value.m_value);
     return *this;
   }
 
-  Style &set_width(lv_coord_t value) {
-    return set_property(Property::width, value);
-  }
+  Style &set_width(lv_coord_t value) { return set_property(Property::width, value); }
 
-  Style &fill_width() {
-    return set_width(100_percent);
-  }
+  Style &fill_width() { return set_width(100_percent); }
 
   Style &set_minimum_width(lv_coord_t value) {
     return set_property(Property::minimum_width, value);
@@ -121,13 +137,9 @@ public:
     return set_property(Property::maximum_width, value);
   }
 
-  Style &set_height(lv_coord_t value) {
-    return set_property(Property::height, value);
-  }
+  Style &set_height(lv_coord_t value) { return set_property(Property::height, value); }
 
-  Style &fill_height() {
-    return set_height(100_percent);
-  }
+  Style &fill_height() { return set_height(100_percent); }
 
   Style &set_minimum_height(lv_coord_t value) {
     return set_property(Property::minimum_height, value);
@@ -137,13 +149,9 @@ public:
     return set_property(Property::maximum_height, value);
   }
 
-  Style &set_x(lv_coord_t value) {
-    return set_property(Property::x, value);
-  }
+  Style &set_x(lv_coord_t value) { return set_property(Property::x, value); }
 
-  Style &set_y(lv_coord_t value) {
-    return set_property(Property::y, value);
-  }
+  Style &set_y(lv_coord_t value) { return set_property(Property::y, value); }
 
   Style &set_alignment(Alignment value) {
     return set_property(Property::alignment, s32(value));
@@ -205,17 +213,13 @@ public:
     return set_property(Property::column_padding, value);
   }
 
-  Style &set_radius(lv_coord_t value) {
-    return set_property(Property::radius, value);
-  }
+  Style &set_radius(lv_coord_t value) { return set_property(Property::radius, value); }
 
   Style &set_clip_corner(bool value) {
     return set_property(Property::clip_corner, value);
   }
 
-  Style &set_opacity(lv_opa_t value) {
-    return set_property(Property::opacity, value);
-  }
+  Style &set_opacity(lv_opa_t value) { return set_property(Property::opacity, value); }
 
   Style &set_color_filter_descriptor(const lv_color_filter_dsc_t *value) {
     return set_property(Property::color_filter_descriptor, PropertyValue(value));
@@ -241,9 +245,7 @@ public:
     return set_property(Property::blend_mode, s32(value));
   }
 
-  Style &set_layout(uint16_t value) {
-    return set_property(Property::layout, s32(value));
-  }
+  Style &set_layout(uint16_t value) { return set_property(Property::layout, s32(value)); }
 
   Style &set_flex_layout() { return set_layout(*api()->layout_flex); }
 
@@ -354,9 +356,7 @@ public:
     return set_property(Property::border_post, value);
   }
 
-  Style &set_text_color(Color value) {
-    return set_property(Property::text_color, value);
-  }
+  Style &set_text_color(Color value) { return set_property(Property::text_color, value); }
 
   Style &set_text_color_filtered(Color value) {
     return set_property(Property::text_color_filtered, value);
@@ -464,9 +464,7 @@ public:
     return set_property(Property::line_rounded, value);
   }
 
-  Style &set_line_color(Color value) {
-    return set_property(Property::line_color, value);
-  }
+  Style &set_line_color(Color value) { return set_property(Property::line_color, value); }
 
   Style &set_line_color_filtered(Color value) {
     return set_property(Property::line_color_filtered, value);
@@ -484,9 +482,7 @@ public:
     return set_property(Property::arc_rounded, value);
   }
 
-  Style &set_arc_color(Color value) {
-    return set_property(Property::arc_color, value);
-  }
+  Style &set_arc_color(Color value) { return set_property(Property::arc_color, value); }
 
   Style &set_arc_color_filtered(Color value) {
     return set_property(Property::arc_color_filtered, value);
