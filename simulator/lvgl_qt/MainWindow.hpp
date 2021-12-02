@@ -16,7 +16,7 @@ class MainWindow final : public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow();
 
   lvgl::Group & keyboard_group(){
     return m_group;
@@ -37,6 +37,8 @@ private:
 
   void * m_view = nullptr;
   lvgl::WheelEvent get_wheel_event();
+
+  void resizeEvent(QResizeEvent * event);
 
 };
 
