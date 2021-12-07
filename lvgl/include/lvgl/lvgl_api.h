@@ -34,6 +34,16 @@ typedef struct {
 
 typedef struct {
   const char *name;
+  const lv_style_t * style;
+} lvgl_api_style_descriptor_t;
+
+typedef struct {
+  const char *name;
+  const lv_theme_t * theme;
+} lvgl_api_theme_descriptor_t;
+
+typedef struct {
+  const char *name;
   const lv_img_dsc_t * image;
 } lvgl_api_image_descriptor_t;
 
@@ -853,6 +863,7 @@ typedef struct {
   //system
   const lvgl_api_font_descriptor_t * (*get_font)(int offset);
   const lvgl_api_image_descriptor_t * (*get_image)(int offset);
+  const lvgl_api_theme_descriptor_t * (*get_theme)(int offset);
 
   const lv_obj_class_t * obj_class;
   const lv_obj_class_t * animation_image_class;
@@ -918,6 +929,7 @@ void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t * (*callback)(i
 #define LVGL_REQUEST_STOP MCU_API_REQUEST_CODE('l', 's', 't', 'p')
 #define LVGL_REQUEST_GET_FONT MCU_API_REQUEST_CODE('l', 'f', 'n', 't')
 #define LVGL_REQUEST_GET_IMAGE MCU_API_REQUEST_CODE('l', 'i', 'm', 'g')
+#define LVGL_REQUEST_GET_THEME MCU_API_REQUEST_CODE('l', 't', 'h', 'm')
 
 typedef struct {
   u16 offset;
@@ -929,7 +941,10 @@ typedef struct {
   const lvgl_api_image_descriptor_t * descriptor;
 } lvgl_api_image_request_t;
 
-
+typedef struct {
+  u16 offset;
+  const lvgl_api_theme_descriptor_t * descriptor;
+} lvgl_api_theme_request_t;
 
 #endif
 

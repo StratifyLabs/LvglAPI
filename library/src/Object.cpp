@@ -1,5 +1,6 @@
 #include "lvgl/Object.hpp"
 #include "lvgl/Event.hpp"
+#include "lvgl/Theme.hpp"
 
 lvgl::LvglApi lvgl::Api::m_api;
 
@@ -7,7 +8,7 @@ using namespace lvgl;
 
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
-  if( !is_valid() ){
+  if (!is_valid()) {
     return Object();
   }
   auto get = find_child(name);
@@ -34,6 +35,17 @@ Object Object::find_child(const char *name) const {
     }
   }
   return {};
+}
+
+void Object::add_style_from_theme(var::StringView name, Selector selector) {
+  const auto theme = Theme::get_theme(*this);
+  const auto item_list = name.split(" ");
+  for (const auto &item : item_list) {
+    const auto *style = theme.find(item);
+    if (style) {
+      api()->obj_add_style(m_object, (lv_style_t *)style, selector.value());
+    }
+  }
 }
 
 void Object::set_user_data(lv_obj_t *obj, const char *name) {

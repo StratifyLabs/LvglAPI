@@ -1,7 +1,8 @@
 #ifndef LVGLAPI_LVGL_TILEVIEW_HPP
 #define LVGLAPI_LVGL_TILEVIEW_HPP
 
-#include "Container.hpp"
+#include "Generic.hpp"
+#include "Object.hpp"
 
 namespace lvgl {
 
@@ -26,20 +27,7 @@ public:
   TileView &add_tile(
     const char *name,
     const Location &location,
-    void (*configure)(Container) = nullptr) {
-    Container obj(api()->tileview_add_tile(
-      m_object, location.column(), location.row(), lv_dir_t(location.direction())));
-    set_user_data(obj.object(), name);
-
-    if( api()->tileview_get_tile_act(m_object) == nullptr ){
-      api()->obj_set_tile(m_object, obj.object(), LV_ANIM_OFF);
-    }
-
-    if (configure) {
-      configure(obj);
-    }
-    return *this;
-  }
+    void (*configure)(Generic) = nullptr);
 
   API_NO_DISCARD Object get_active_tile() const {
     return Object(api()->tileview_get_tile_act(m_object));
@@ -62,7 +50,7 @@ public:
   }
 
   // must create the TileView with NavigationContext for these to work
-  TileView &go_forward(const char * name, void (*configure)(Container));
+  TileView &go_forward(const char * name, void (*configure)(Generic));
   TileView &go_forward(){
     return go_forward("", nullptr);
   }

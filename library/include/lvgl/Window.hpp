@@ -2,7 +2,7 @@
 #define LVGLAPI_LVGL_WINDOW_HPP
 
 #include "Button.hpp"
-#include "Container.hpp"
+#include "Generic.hpp"
 #include "Label.hpp"
 
 namespace lvgl {
@@ -39,11 +39,11 @@ public:
     return *this;
   }
 
-  API_NO_DISCARD Container get_header() const {
-    return Container(api()->win_get_header(m_object));
+  API_NO_DISCARD Generic get_header() const {
+    return Generic(api()->win_get_header(m_object));
   }
-  API_NO_DISCARD Container get_content() const {
-    return Container(api()->win_get_content(m_object));
+  API_NO_DISCARD Generic get_content() const {
+    return Generic(api()->win_get_content(m_object));
   }
 };
 

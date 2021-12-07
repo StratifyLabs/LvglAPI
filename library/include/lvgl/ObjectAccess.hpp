@@ -247,6 +247,16 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived &add_style(const lv_style_t * native_style, Selector selector = Selector()) {
+    api()->obj_add_style(m_object, (lv_style_t *)native_style, selector.value());
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &add_style(const var::StringView name, Selector selector = Selector()) {
+    add_style_from_theme(name, selector);
+    return static_cast<Derived &>(*this);
+  }
+
   Derived &remove_style(const Style &style, Selector selector = Selector()) {
     api()->obj_remove_style(m_object, style.style(), selector.value());
     return static_cast<Derived &>(*this);

@@ -12,11 +12,12 @@ set(SOURCES
 	lvgl/Checkbox.hpp
 	lvgl/Color.hpp
 	lvgl/ColorPicker.hpp
-	lvgl/Container.hpp
+	lvgl/Generic.hpp
 	lvgl/Draw.hpp
 	lvgl/DropDownList.hpp
 	lvgl/Event.hpp
 	lvgl/Font.hpp
+	lvgl/Generic.hpp
 	lvgl/Group.hpp
 	lvgl/Image.hpp
 	lvgl/ImageButton.hpp

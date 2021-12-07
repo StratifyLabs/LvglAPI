@@ -1,4 +1,4 @@
-#include "lvgl/Container.hpp"
+#include "lvgl/Generic.hpp"
 #include "lvgl/Label.hpp"
 
 using namespace lvgl;

@@ -4,7 +4,7 @@
 #include <fs/File.hpp>
 #include <var/View.hpp>
 
-#include "Container.hpp"
+#include "Generic.hpp"
 #include "Label.hpp"
 #include "ObjectAccess.hpp"
 
@@ -268,8 +268,7 @@ public:
   }
 
   FileTextArea &set_text_static(const char *value) {
-    Container(reinterpret_cast<lv_textarea_t *>(object())->label)
-      .get<Label>()
+    Label(reinterpret_cast<lv_textarea_t *>(object())->label)
       .set_text_static(value);
     return *this;
   }
@@ -281,7 +280,7 @@ public:
   }
 
   API_NO_DISCARD Label get_label() const {
-    return Container(api()->textarea_get_label(m_object)).get<Label>();
+    return Label(api()->textarea_get_label(m_object));
   }
 
   API_NO_DISCARD int get_cursor_position() const { return api()->textarea_get_cursor_pos(m_object); }

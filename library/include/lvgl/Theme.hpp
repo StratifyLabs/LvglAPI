@@ -3,6 +3,7 @@
 
 #include "ObjectAccess.hpp"
 #include "Font.hpp"
+#include "Style.hpp"
 
 namespace lvgl {
 
@@ -38,6 +39,7 @@ public:
     return *this;
   }
 
+  const lv_style_t * find(var::StringView name) const;
 
   lv_theme_t * native_value(){
     return m_theme;

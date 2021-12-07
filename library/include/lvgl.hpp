@@ -12,7 +12,7 @@ namespace lvgl {}
 #include "lvgl/Calendar.hpp"
 #include "lvgl/Chart.hpp"
 #include "lvgl/Color.hpp"
-#include "lvgl/Container.hpp"
+#include "lvgl/Generic.hpp"
 #include "lvgl/Draw.hpp"
 #include "lvgl/Event.hpp"
 #include "lvgl/Font.hpp"

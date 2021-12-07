@@ -3,6 +3,7 @@
 
 const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset);
 const lvgl_api_image_descriptor_t *lvgl_api_get_image(int offset);
+const lvgl_api_theme_descriptor_t *lvgl_api_get_theme(int offset);
 
 const lvgl_api_t lvgl_api = {
   .sos_api =
@@ -806,6 +807,7 @@ const lvgl_api_t lvgl_api = {
   // system
   .get_font = lvgl_api_get_font,
   .get_image = lvgl_api_get_image,
+  .get_theme = lvgl_api_get_theme,
 
   // class resolution
   .obj_class = &lv_obj_class,
@@ -863,6 +865,11 @@ const lvgl_api_image_descriptor_t *(*lvgl_api_get_image_callback)(int) = NULL;
 void lvgl_api_set_image_callback(const lvgl_api_image_descriptor_t *(*callback)(int)) {
   lvgl_api_get_image_callback = callback;
 }
+
+const lvgl_api_theme_descriptor_t *(*lvgl_api_get_theme_callback)(int) = NULL;
+void lvgl_api_set_theme_callback(const lvgl_api_theme_descriptor_t *(*callback)(int)) {
+  lvgl_api_get_theme_callback = callback;
+}
 #endif
 
 const lvgl_api_font_descriptor_t *lvgl_api_get_font(int offset) {
@@ -886,6 +893,19 @@ const lvgl_api_image_descriptor_t *lvgl_api_get_image(int offset) {
 #else
   if (lvgl_api_get_image_callback) {
     return lvgl_api_get_image_callback(offset);
+  }
+  return NULL;
+#endif
+}
+
+const lvgl_api_theme_descriptor_t *lvgl_api_get_theme(int offset) {
+#if defined __StratifyOS__
+  lvgl_api_image_request_t request = {.offset = offset};
+  kernel_request(LVGL_REQUEST_GET_THEME, &request);
+  return request.descriptor;
+#else
+  if (lvgl_api_get_theme_callback) {
+    return lvgl_api_get_theme_callback(offset);
   }
   return NULL;
 #endif

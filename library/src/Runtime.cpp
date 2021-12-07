@@ -5,7 +5,7 @@
 #include <chrono/ClockTimer.hpp>
 
 #if defined __link
-#include "lvgl/Container.hpp"
+#include "lvgl/Generic.hpp"
 #include <window/Clipboard.hpp>
 #include <window/Event.hpp>
 #endif
@@ -287,7 +287,7 @@ void Runtime::update_wheel_event() {
       for (Object current = object; current.is_valid(); current = current.get_parent()) {
         if (current.get_scroll_bottom() != 0 || current.get_scroll_y() != 0) {
           const auto scroll_y = current.get_scroll_y();
-          current.get<lvgl::Container>().scroll_to_y(
+          current.get<lvgl::Generic>().scroll_to_y(
             scroll_y + -1 * wheel_event.delta.y() * scroll_wheel_multiplier(),
             IsAnimate::yes);
           break;

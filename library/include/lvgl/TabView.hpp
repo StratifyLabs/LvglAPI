@@ -2,7 +2,7 @@
 #define LVGLAPI_LVGL_TABVIEW_HPP
 
 #include "ButtonMatrix.hpp"
-#include "Container.hpp"
+#include "Generic.hpp"
 
 namespace lvgl {
 
@@ -25,8 +25,8 @@ public:
   TabView &add_tab(
     const char *name,
     const char *title,
-    void (*setup)(Container) = nullptr) {
-    Container obj(api()->tabview_add_tab(m_object, title));
+    void (*setup)(Generic) = nullptr) {
+    Generic obj(api()->tabview_add_tab(m_object, title));
     set_user_data(obj.object(), name);
     if (setup) {
       setup(obj);
@@ -34,8 +34,8 @@ public:
     return *this;
   }
 
-  TabView &add_tab(const char *title, void (*setup)(Container) = nullptr) {
-    Container obj(api()->tabview_add_tab(m_object, title));
+  TabView &add_tab(const char *title, void (*setup)(Generic) = nullptr) {
+    Generic obj(api()->tabview_add_tab(m_object, title));
     set_user_data(obj.object(), title);
     if (setup) {
       setup(obj);
@@ -43,17 +43,17 @@ public:
     return *this;
   }
 
-  TabView &add_content(size_t tab, void (*setup)(Container)) {
+  TabView &add_content(size_t tab, void (*setup)(Generic)) {
     API_ASSERT(setup != nullptr);
-    Container container(get_tab(tab).object());
+    Generic container(get_tab(tab).object());
     if (setup) {
       setup(container);
     }
     return *this;
   }
 
-  API_NO_DISCARD Container get_content() const {
-    return Container(api()->tabview_get_content(m_object));
+  API_NO_DISCARD Generic get_content() const {
+    return Generic(api()->tabview_get_content(m_object));
   }
 
   API_NO_DISCARD ButtonMatrix get_buttons() const {
@@ -62,13 +62,13 @@ public:
 
   API_NO_DISCARD size_t get_active_tab_offset() const { return api()->tabview_get_tab_act(m_object); }
 
-  API_NO_DISCARD Container get_tab(size_t i) const {
+  API_NO_DISCARD Generic get_tab(size_t i) const {
     API_ASSERT(get_content().object());
     API_ASSERT(i < get_content().get_child_count());
-    return Container(get_content().get_child(i).object());
+    return Generic(get_content().get_child(i).object());
   }
 
-  API_NO_DISCARD Container get_active_tab() const { return get_tab(get_active_tab_offset()); }
+  API_NO_DISCARD Generic get_active_tab() const { return get_tab(get_active_tab_offset()); }
 
 };
 

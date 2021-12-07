@@ -313,6 +313,8 @@ public:
 protected:
   lv_obj_t *m_object = nullptr;
 
+  void add_style_from_theme(var::StringView name, Selector selector = Selector());
+
   friend class TabView;
   friend class Display;
 

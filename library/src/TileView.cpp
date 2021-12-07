@@ -1,6 +1,6 @@
 #include "lvgl/TileView.hpp"
 #include "lvgl/Event.hpp"
-#include "lvgl/Container.hpp"
+#include "lvgl/Generic.hpp"
 
 using namespace lvgl;
 
@@ -24,7 +24,7 @@ Object TileView::get_tile(const Location &location) const {
   return Object();
 }
 
-TileView &TileView::go_forward(const char *name, void (*configure)(Container)) {
+TileView &TileView::go_forward(const char *name, void (*configure)(Generic)) {
   auto active_location = get_active_tile_location();
   auto next_location = Location(active_location).set_column(active_location.column() + 1);
 
@@ -56,5 +56,23 @@ TileView &TileView::go_backward() {
 
   set_tile(next_location).update_layout();
   Event::send(get_active_tile(), EventCode::entered);
+  return *this;
+}
+
+TileView &TileView::add_tile(
+  const char *name,
+  const TileView::Location &location,
+  void (*configure)(Generic)) {
+  Generic obj(api()->tileview_add_tile(
+    m_object, location.column(), location.row(), lv_dir_t(location.direction())));
+  set_user_data(obj.object(), name);
+
+  if( api()->tileview_get_tile_act(m_object) == nullptr ){
+    api()->obj_set_tile(m_object, obj.object(), LV_ANIM_OFF);
+  }
+
+  if (configure) {
+    configure(obj);
+  }
   return *this;
 }

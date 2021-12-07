@@ -2,7 +2,7 @@
 #define LVGLAPI_LVGL_LIST_HPP
 
 #include "Button.hpp"
-#include "Container.hpp"
+#include "Generic.hpp"
 #include "Label.hpp"
 
 namespace lvgl {
