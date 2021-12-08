@@ -6,6 +6,22 @@ lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
 
+
+void Object::construct_object(const char * name){
+  m_object = api()->obj_create(screen_object());
+  set_user_data(m_object, name);
+}
+
+void Object::construct_label(const char * name){
+  m_object = api()->label_create(screen_object());
+  set_user_data(m_object, name);
+}
+
+void Object::construct_button(const char * name){
+  m_object = api()->btn_create(screen_object());
+  set_user_data(m_object, name);
+}
+
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
   if (!is_valid()) {
@@ -63,6 +79,16 @@ void Object::delete_user_data(lv_event_t *e) {
   if (auto *value = UserData::get_user_data(e->target->user_data); value) {
     delete value;
   }
+}
+
+bool Object::is_name_matched(const Object &child, const char *name) {
+  const auto child_name = child.name();
+  if (
+    (child_name != nullptr)
+    && ((child_name == name) || (var::StringView(child.name()) == name))) {
+    return true;
+  }
+  return false;
 }
 
 #define CLASS_TYPE_CASE(x, y)                                                            \

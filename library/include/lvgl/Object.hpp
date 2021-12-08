@@ -311,25 +311,19 @@ public:
   }
 
 protected:
+  friend class TabView;
+  friend class Display;
   lv_obj_t *m_object = nullptr;
 
   void add_style_from_theme(var::StringView name, Selector selector = Selector());
 
-  friend class TabView;
-  friend class Display;
-
   explicit Object(lv_obj_t *obj) : m_object(obj) {}
   static void set_user_data(lv_obj_t *obj, const char *name);
+  static bool is_name_matched(const Object &child, const char *name);
 
-  static bool is_name_matched(const Object &child, const char *name) {
-    const auto child_name = child.name();
-    if (
-      (child_name != nullptr)
-      && ((child_name == name) || (var::StringView(child.name()) == name))) {
-      return true;
-    }
-    return false;
-  }
+  void construct_object(const char * name);
+  void construct_label(const char * name);
+  void construct_button(const char * name);
 
   API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const {
     lv_style_value_t value;

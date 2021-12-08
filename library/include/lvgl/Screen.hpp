@@ -1,9 +1,8 @@
 #ifndef LVGLAPI_LVGL_SCREEN_HPP
 #define LVGLAPI_LVGL_SCREEN_HPP
 
-#include "Object.hpp"
-#include "Theme.hpp"
 #include "Event.hpp"
+#include "Theme.hpp"
 
 namespace lvgl {
 
@@ -22,7 +21,7 @@ public:
     fade_on = LV_SCR_LOAD_ANIM_FADE_ON
   };
 
-  Screen(const char * name);
+  Screen(const char *name);
 
   explicit Screen(lv_obj_t *value) { m_object = value; }
 
@@ -43,33 +42,31 @@ public:
   }
 
   struct Transition {
-    API_PUBLIC_MEMBER_AZ(animation,Transition,LoadAnimation,LoadAnimation::none);
-    API_PUBLIC_MEMBER_AZ(delay,Transition,chrono::MicroTime,chrono::MicroTime());
-    API_PUBLIC_MEMBER_AZ(period,Transition,chrono::MicroTime,chrono::MicroTime());
+    API_PUBLIC_MEMBER_AZ(animation, Transition, LoadAnimation, LoadAnimation::none);
+    API_PUBLIC_MEMBER_AZ(delay, Transition, chrono::MicroTime, chrono::MicroTime());
+    API_PUBLIC_MEMBER_AZ(period, Transition, chrono::MicroTime, chrono::MicroTime());
   };
 
-  Screen &load(
-    const Transition & transition,
-    IsAutoRemove is_auto_remove = IsAutoRemove::no) {
-    execute_load(transition.animation, transition.period, transition.delay, is_auto_remove);
+  Screen &
+  load(const Transition &transition, IsAutoRemove is_auto_remove = IsAutoRemove::no) {
+    execute_load(
+      transition.animation, transition.period, transition.delay, is_auto_remove);
     return *this;
   }
 
-  static void remove_screen(const char * name);
+  static void remove_screen(const char *name);
+  static Screen find_screen(const char *name);
 
-  static Screen find_screen(const char * name);
-
-  static var::Vector<lv_obj_t*> & screen_list(){
-    return m_screen_list;
-  }
+  static var::Vector<lv_obj_t *> &screen_list() { return m_screen_list; }
 
 private:
-  static var::Vector<lv_obj_t*> m_screen_list;
+  static var::Vector<lv_obj_t *> m_screen_list;
 
-  void execute_load(    LoadAnimation animation,
-            chrono::MicroTime period,
-            chrono::MicroTime delay,
-            IsAutoRemove is_auto_remove){
+  void execute_load(
+    LoadAnimation animation,
+    chrono::MicroTime period,
+    chrono::MicroTime delay,
+    IsAutoRemove is_auto_remove) {
     Event::send(Screen(api()->disp_get_scr_act(nullptr)), EventCode::exited);
     api()->scr_load_anim(
       m_object, lv_scr_load_anim_t(animation), period.milliseconds(),
@@ -83,10 +80,15 @@ public:
   using LoadAnimation = Screen::LoadAnimation;
 
   Screen get_active_screen() { return Screen(api()->disp_get_scr_act(m_display)); }
-  Screen get_previous_screen() { return Screen(api()->disp_get_scr_act(m_display)); }
+  Screen get_previous_screen() { return Screen(api()->disp_get_scr_prev(m_display)); }
 
-  API_NO_DISCARD Object get_top_layer() const { return Object(api()->disp_get_layer_top(m_display)); }
-  API_NO_DISCARD Object get_system_layer() const { return Object(api()->disp_get_layer_sys(m_display)); }
+  API_NO_DISCARD Object get_top_layer() const {
+    return Object(api()->disp_get_layer_top(m_display));
+  }
+
+  API_NO_DISCARD Object get_system_layer() const {
+    return Object(api()->disp_get_layer_sys(m_display));
+  }
 
   API_NO_DISCARD chrono::MicroTime get_inactive_time() const {
     return chrono::MicroTime(api()->disp_get_inactive_time(m_display) * 1000);
@@ -144,9 +146,13 @@ public:
     return api()->disp_get_ver_res(m_display);
   }
 
-  API_NO_DISCARD bool is_antialiasing() const { return api()->disp_get_antialiasing(m_display); }
+  API_NO_DISCARD bool is_antialiasing() const {
+    return api()->disp_get_antialiasing(m_display);
+  }
 
-  API_NO_DISCARD lv_coord_t get_dots_per_inch() const { return api()->disp_get_dpi(m_display); }
+  API_NO_DISCARD lv_coord_t get_dots_per_inch() const {
+    return api()->disp_get_dpi(m_display);
+  }
 
   enum class Rotation {
     none = LV_DISP_ROT_NONE,
@@ -160,9 +166,13 @@ public:
     return *this;
   }
 
-  API_NO_DISCARD Rotation get_rotation() const { return Rotation(api()->disp_get_rotation(m_display)); }
+  API_NO_DISCARD Rotation get_rotation() const {
+    return Rotation(api()->disp_get_rotation(m_display));
+  }
 
-  API_NO_DISCARD Theme get_theme() const { return Theme(api()->disp_get_theme(m_display)); }
+  API_NO_DISCARD Theme get_theme() const {
+    return Theme(api()->disp_get_theme(m_display));
+  }
 
 private:
   explicit Display(lv_disp_t *value) : m_display(value) {}

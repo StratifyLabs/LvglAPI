@@ -13,16 +13,12 @@ using LvglApi = api::Api<lvgl_api_t, LVGL_API_REQUEST>;
 
 enum class IsAssertOnFail { no, yes };
 
-
 class Api : public api::ExecutionContext {
 public:
   static LvglApi &api() { return m_api; }
 
 protected:
-
-  static lv_obj_t * screen_object(){
-    return api()->disp_get_scr_act(nullptr);
-  }
+  static lv_obj_t *screen_object() { return api()->disp_get_scr_act(nullptr); }
 
 private:
   static LvglApi m_api;
@@ -46,9 +42,7 @@ public:
 
   API_NO_DISCARD lv_coord_t x() const { return m_point.x; }
   API_NO_DISCARD lv_coord_t y() const { return m_point.y; }
-
   API_NO_DISCARD lv_point_t *point() { return &m_point; }
-
   API_NO_DISCARD const lv_point_t *point() const { return &m_point; }
 
 private:
@@ -79,8 +73,10 @@ public:
   }
 
   lv_area_t *area() { return &m_area; }
-
   API_NO_DISCARD const lv_area_t *area() const { return &m_area; }
+
+  Size get_size() const { return Size(m_area.x2 - m_area.x1, m_area.y2 - m_area.y1); }
+  Point get_point() const { return Point(m_area.x1, m_area.y1); }
 
 private:
   friend class Object;
@@ -518,7 +514,7 @@ enum class State {
   user3 = LV_STATE_USER_3,
   user4 = LV_STATE_USER_4,
   any = LV_STATE_ANY,
-  invalid = LV_STATE_ANY-1
+  invalid = LV_STATE_ANY - 1
 };
 
 API_OR_ENUM_CLASS(State)
@@ -566,8 +562,10 @@ public:
   // selector can be an or'd combo of parts and states
 
   // allow implicit conversion
-  Selector(Part part) : m_selector(lv_style_selector_t(part)) {} // NOLINT(google-explicit-constructor)
-  Selector(State state) : m_selector(lv_style_selector_t(state)) {} // NOLINT(google-explicit-constructor)
+  Selector(Part part)
+    : m_selector(lv_style_selector_t(part)) {} // NOLINT(google-explicit-constructor)
+  Selector(State state)
+    : m_selector(lv_style_selector_t(state)) {} // NOLINT(google-explicit-constructor)
 
   Selector(Part part, State state)
     : m_selector(lv_style_selector_t(part) | lv_style_selector_t(state)) {}
@@ -688,7 +686,7 @@ struct WheelEvent {
   Point delta;
   Point mouse;
 
-  using Callback = WheelEvent (*)(void*);
+  using Callback = WheelEvent (*)(void *);
 };
 
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
@@ -696,5 +694,12 @@ inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
 }
 
 } // namespace lvgl
+
+namespace printer {
+class Printer;
+Printer &operator<<(Printer &printer, const lvgl::Size &a);
+Printer &operator<<(Printer &printer, const lvgl::Area &a);
+Printer &operator<<(Printer &printer, const lvgl::Point &a);
+} // namespace printer
 
 #endif // LVGLAPI_LVGL_TYPES_HPP

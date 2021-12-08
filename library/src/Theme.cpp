@@ -13,7 +13,7 @@ const lv_style_t *Theme::find(const var::StringView name) const {
   lvgl_api_style_descriptor_t * descriptor;
   do {
     descriptor = callback(offset++);
-    if( name == descriptor->name ){
+    if( descriptor && (name == descriptor->name) ){
       return descriptor->style;
     }
   } while( descriptor != nullptr );

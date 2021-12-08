@@ -37,6 +37,7 @@ set(SOURCES
 	TabView.cpp
 	Table.cpp
 	TextArea.cpp
+	Types.cpp
 	Theme.cpp
 	TileView.cpp
 	Window.cpp
