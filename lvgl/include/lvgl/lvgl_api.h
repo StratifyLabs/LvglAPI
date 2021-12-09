@@ -48,6 +48,17 @@ typedef struct {
 } lvgl_api_image_descriptor_t;
 
 typedef struct {
+  const lv_style_t * style;
+  lv_style_selector_t selector;
+} lvgl_api_apply_style_with_selector_t;
+
+typedef struct {
+  int (*condition)(lv_theme_t *, lv_obj_t *);
+  int style_selector_count;
+  const lvgl_api_apply_style_with_selector_t * style_selector_list;
+} lvgl_api_apply_style_t;
+
+typedef struct {
   api_t sos_api;
 
   uint32_t (*timer_handler)();
