@@ -8,6 +8,7 @@
 
 #if defined __link
 #include <var/Queue.hpp>
+#include <chrono/ClockTimer.hpp>
 #include <window/Texture.hpp>
 #include <window/Event.hpp>
 #endif
@@ -101,6 +102,10 @@ private:
     no, yes
   };
 
+  enum class IsPressed {
+    no, yes
+  };
+
   struct KeyEvent {
     window::Event::State state;
     window::KeyModifier modifier;
@@ -114,19 +119,26 @@ private:
     window::Point position;
   };
 
+  struct MouseButtonEvent {
+    window::Point point;
+    IsPressed is_pressed;
+  };
+
   window::Window m_window;
   window::Renderer m_renderer;
   window::Texture m_texture;
-  var::Queue<window::Event> m_mouse_event_queue;
+  var::Queue<MouseButtonEvent> m_mouse_event_queue;
   var::Queue<KeyEvent> m_keyboard_event_queue;
   var::Queue<MouseWheelEvent> m_mouse_wheel_event_queue;
   window::Point m_mouse_position;
+  window::Point m_mouse_restore_position;
   window::EventState m_mouse_state;
   lv_indev_drv_t m_keyboard_driver{};
   lv_indev_drv_t m_mouse_driver{};
   lv_indev_t *m_keyboard_device = nullptr;
   lv_indev_t *m_mouse_device = nullptr;
   lvgl::Group m_group;
+  chrono::ClockTimer m_mouse_wheel_timer;
 
   lv_disp_t * m_display;
   lv_disp_draw_buf_t m_display_buffer{};
@@ -137,7 +149,7 @@ private:
   window::Size m_display_size;
   float m_dpi_scale = 1.0f;
 
-  API_AF(Runtime,u32,scroll_wheel_multiplier,20);
+  API_AF(Runtime,u32,scroll_wheel_multiplier,5);
 
   void initialize_display();
   void initialize_devices();

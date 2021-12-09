@@ -40,7 +40,7 @@ Runtime::Runtime() {
 #endif
 
 Runtime &Runtime::loop() {
-  while (is_stopped() == false) {
+  while (!is_stopped()) {
     refresh();
   }
 
@@ -176,6 +176,8 @@ void Runtime::initialize_devices() {
   m_mouse_driver.type = LV_INDEV_TYPE_POINTER;
   m_mouse_driver.user_data = this;
   m_mouse_driver.read_cb = read_mouse_callback;
+  m_mouse_driver.scroll_throw = 1;
+  m_mouse_driver.long_press_time = 800;
   m_mouse_device = lv_indev_drv_register(&m_mouse_driver);
 }
 
@@ -210,6 +212,13 @@ void Runtime::update_events() {
     has_events = event.is_valid();
   }
 
+  if (m_mouse_wheel_timer > 10_milliseconds) {
+    m_mouse_wheel_timer.reset();
+    m_mouse_event_queue.push({m_mouse_position, IsPressed::no});
+    m_mouse_state = window::Event::State::released;
+    m_mouse_position = m_mouse_restore_position;
+  }
+
   update_wheel_event();
 }
 
@@ -234,18 +243,35 @@ void Runtime::handle_mouse_event(const window::Event &event) {
   switch (event.type()) {
   case window::EventType::mouse_button_up:
   case window::EventType::mouse_button_down:
-    m_mouse_event_queue.push(event);
+    m_mouse_event_queue.push(
+      {event.get_mouse_button().point(),
+       event.type() == window::EventType::mouse_button_up ? IsPressed::no
+                                                          : IsPressed::yes});
+
+    m_mouse_position = event.get_mouse_button().point();
     m_mouse_state = event.type() == window::EventType::mouse_button_up
                       ? window::Event::State::released
                       : window::Event::State::pressed;
     break;
   case window::EventType::mouse_motion:
     // may need to scale this
-    m_mouse_position = event.get_mouse_motion().point();
+    if (m_mouse_wheel_timer.is_running() == false) {
+      m_mouse_position = event.get_mouse_motion().point();
+    }
+    m_mouse_restore_position = event.get_mouse_motion().point();
     break;
-  case window::EventType::mouse_wheel:
-    m_mouse_wheel_event_queue.push({event, m_mouse_position});
-    break;
+  case window::EventType::mouse_wheel: {
+    // m_mouse_wheel_event_queue.push({event, m_mouse_position});
+    const auto delta_point = window::Point(
+      event.get_mouse_wheel().point().x() * -1 * scroll_wheel_multiplier(),
+      event.get_mouse_wheel().point().y() * scroll_wheel_multiplier());
+    if (!m_mouse_wheel_timer.is_running()) {
+      m_mouse_event_queue.push({m_mouse_position, IsPressed::yes});
+      m_mouse_state = window::Event::State::pressed;
+    }
+    m_mouse_position += delta_point;
+    m_mouse_wheel_timer.restart();
+  } break;
   default:
     break;
   }
@@ -274,25 +300,33 @@ void Runtime::handle_keyboard_event(const window::Event &event) {
   }
 }
 
+extern "C" void _lv_indev_scroll_throw_handler(_lv_indev_proc_t *proc);
+
 void Runtime::update_wheel_event() {
   WheelEvent wheel_event;
   do {
     wheel_event = get_wheel_event();
     if (wheel_event.type != WheelEvent::Type::null) {
 
-      // advance the scroll on the current object?
       auto object = screen().find(wheel_event.mouse);
+#if 0
 
       // look for the first scrollable parent
       for (Object current = object; current.is_valid(); current = current.get_parent()) {
         if (current.get_scroll_bottom() != 0 || current.get_scroll_y() != 0) {
           const auto scroll_y = current.get_scroll_y();
+
+          //scroll_by() is a lower level call
+          //but using it causes the window to jump past the end
+          //without bouncing back
+
           current.get<lvgl::Generic>().scroll_to_y(
             scroll_y + -1 * wheel_event.delta.y() * scroll_wheel_multiplier(),
             IsAnimate::yes);
           break;
         }
       }
+#endif
     }
   } while (wheel_event.type != WheelEvent::Type::null);
 }
@@ -375,13 +409,12 @@ void Runtime::read_mouse_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t *da
   auto &events = self->m_mouse_event_queue;
 
   if (events.count()) {
-    const auto &event = events.front().get_mouse_button();
-    const auto point = event.point();
+    const auto &event = events.front();
+    const auto point = event.point;
     data->point.x = point.x() * self->m_dpi_scale;
     data->point.y = point.y() * self->m_dpi_scale;
-    data->state = (event.type() == window::EventType::mouse_button_down)
-                    ? LV_INDEV_STATE_PRESSED
-                    : LV_INDEV_STATE_RELEASED;
+    data->state = (event.is_pressed == IsPressed::yes) ? LV_INDEV_STATE_PRESSED
+                                                       : LV_INDEV_STATE_RELEASED;
     events.pop();
   } else {
     const auto mouse_point = self->m_mouse_position;
