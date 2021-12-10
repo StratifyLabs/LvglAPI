@@ -212,7 +212,7 @@ void Runtime::update_events() {
     has_events = event.is_valid();
   }
 
-  if (m_mouse_wheel_timer > 10_milliseconds) {
+  if (m_mouse_wheel_timer.milliseconds() > period().milliseconds()*4) {
     m_mouse_wheel_timer.reset();
     m_mouse_event_queue.push({m_mouse_position, IsPressed::no});
     m_mouse_state = window::Event::State::released;

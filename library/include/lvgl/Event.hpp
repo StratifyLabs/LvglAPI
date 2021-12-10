@@ -7,11 +7,13 @@
 
 namespace lvgl {
 
+using LvglEvent = lv_event_t*;
+
 class Event {
 public:
-  using Callback = void (*)(lv_event_t *);
+  using Callback = void (*)(LvglEvent);
 
-  explicit Event(lv_event_t *event);
+  explicit Event(LvglEvent event);
 
   API_NO_DISCARD EventCode code() const { return EventCode(m_event->code); }
 

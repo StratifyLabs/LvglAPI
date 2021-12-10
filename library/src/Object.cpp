@@ -22,6 +22,12 @@ void Object::construct_button(const char * name){
   set_user_data(m_object, name);
 }
 
+void Object::construct_list(const char * name){
+  m_object = api()->list_create(screen_object());
+  set_user_data(m_object, name);
+}
+
+
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
   if (!is_valid()) {
@@ -89,6 +95,20 @@ bool Object::is_name_matched(const Object &child, const char *name) {
     return true;
   }
   return false;
+}
+
+lv_coord_t Object::get_local_style_as_coord(Property property, Selector selector) const {
+  lv_style_value_t value;
+  api()->obj_get_local_style_prop(
+    m_object, lv_style_prop_t(property), &value, selector.value());
+  return lv_coord_t(value.num);
+}
+
+Color Object::get_local_style_as_color(Property property, Selector selector) const {
+  lv_style_value_t value;
+  api()->obj_get_local_style_prop(
+    m_object, lv_style_prop_t(property), &value, selector.value());
+  return Color{value.color};
 }
 
 #define CLASS_TYPE_CASE(x, y)                                                            \

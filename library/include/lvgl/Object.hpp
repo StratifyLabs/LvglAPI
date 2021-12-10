@@ -321,24 +321,13 @@ protected:
   static void set_user_data(lv_obj_t *obj, const char *name);
   static bool is_name_matched(const Object &child, const char *name);
 
-  void construct_object(const char * name);
-  void construct_label(const char * name);
-  void construct_button(const char * name);
+  API_MAYBE_UNUSED void construct_object(const char * name);
+  API_MAYBE_UNUSED void construct_label(const char * name);
+  API_MAYBE_UNUSED void construct_button(const char * name);
+  API_MAYBE_UNUSED void construct_list(const char * name);
 
-  API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const {
-    lv_style_value_t value;
-    api()->obj_get_local_style_prop(
-      m_object, lv_style_prop_t(property), &value, selector.value());
-    return value.num;
-  }
-
-  API_NO_DISCARD Color get_local_style_as_color(Property property, Selector selector) const {
-    lv_style_value_t value;
-    api()->obj_get_local_style_prop(
-      m_object, lv_style_prop_t(property), &value, selector.value());
-    return Color{value.color};
-  }
-
+  API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const;
+  API_NO_DISCARD Color get_local_style_as_color(Property property, Selector selector) const;
   API_NO_DISCARD UserData *get_user_data() const { return UserData::get_user_data(m_object->user_data); }
 
 private:
