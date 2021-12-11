@@ -160,7 +160,7 @@ const lvgl_api_t lvgl_api = {
   .obj_get_parent = lv_obj_get_parent,
   .obj_get_child = lv_obj_get_child,
   .obj_get_child_cnt = lv_obj_get_child_cnt,
-  .obj_get_child_id = lv_obj_get_child_id,
+  .obj_get_index = lv_obj_get_index,
   .obj_tree_walk = lv_obj_tree_walk,
 
   // obj class

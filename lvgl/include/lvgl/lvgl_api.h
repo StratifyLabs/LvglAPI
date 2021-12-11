@@ -211,7 +211,7 @@ typedef struct {
   struct _lv_obj_t * (*obj_get_parent)(const struct _lv_obj_t * obj);
   struct _lv_obj_t * (*obj_get_child)(const struct _lv_obj_t * obj, int32_t id);
   uint32_t (*obj_get_child_cnt)(const struct _lv_obj_t * obj);
-  uint32_t (*obj_get_child_id)(const struct _lv_obj_t * obj);
+  uint32_t (*obj_get_index)(const struct _lv_obj_t * obj);
   void (*obj_tree_walk)(struct _lv_obj_t * start_obj, lv_obj_tree_walk_cb_t cb, void * user_data);
 
   //obj class

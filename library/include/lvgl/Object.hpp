@@ -204,7 +204,7 @@ public:
   }
 
   API_NO_DISCARD u32 get_child_count() const { return api()->obj_get_child_cnt(m_object); }
-  API_NO_DISCARD u32 get_child_id() const { return api()->obj_get_child_id(m_object); }
+  API_NO_DISCARD u32 get_index() const { return api()->obj_get_index(m_object); }
   API_NO_DISCARD Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
   API_NO_DISCARD Object get_child(s32 id) const { return Object(api()->obj_get_child(m_object, id)); }
 
