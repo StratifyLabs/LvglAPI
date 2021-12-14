@@ -6,22 +6,22 @@
 namespace lvgl {
 
 
-class Checkbox : public ObjectAccess<Checkbox>{
+class CheckBox : public ObjectAccess<CheckBox>{
 public:
 
-  explicit Checkbox(const char * name = "");
-  explicit Checkbox(lv_obj_t * object){ m_object = object; }
+  explicit CheckBox(const char * name = "");
+  explicit CheckBox(lv_obj_t * object){ m_object = object; }
 
   static const lv_obj_class_t * get_class(){
     return api()->checkbox_class;
   }
 
-  Checkbox & set_text(const char * text){
+  CheckBox & set_text(const char * text){
     api()->checkbox_set_text(object(), text);
     return *this;
   }
 
-  Checkbox & set_text_static(const char * text){
+  CheckBox & set_text_static(const char * text){
     api()->checkbox_set_text_static(object(), text);
     return *this;
   }

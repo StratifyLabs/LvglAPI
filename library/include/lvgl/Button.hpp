@@ -9,8 +9,8 @@ namespace lvgl {
 
 class Button : public ObjectAccess<Button> {
 public:
-  explicit Button(const char *name = "");
-  explicit Button(lv_obj_t *object) { m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Button);
+
 
   static const lv_obj_class_t *get_class() { return api()->button_class; }
 

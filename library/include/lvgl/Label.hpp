@@ -17,8 +17,8 @@ public:
     clip = LV_LABEL_LONG_CLIP
   };
 
-  explicit Label(const char * name = "");
-  explicit Label(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Label);
+
 
   static const lv_obj_class_t * get_class(){
     return api()->label_class;

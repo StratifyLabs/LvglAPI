@@ -673,6 +673,7 @@ const lvgl_api_t lvgl_api = {
   .meter_set_indicator_end_value = lv_meter_set_indicator_end_value,
 
   // spinbox
+  .spinbox_create = lv_spinbox_create,
   .spinbox_set_value = lv_spinbox_set_value,
   .spinbox_set_rollover = lv_spinbox_set_rollover,
   .spinbox_set_digit_format = lv_spinbox_set_digit_format,

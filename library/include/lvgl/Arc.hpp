@@ -15,8 +15,7 @@ public:
 
   static const lv_obj_class_t *get_class() { return api()->arc_class; }
 
-  explicit Arc(const char *name = "");
-  explicit Arc(lv_obj_t *object) { m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Arc);
 
   Arc &set_start_angle(u16 value) {
     api()->arc_set_start_angle(m_object, value);

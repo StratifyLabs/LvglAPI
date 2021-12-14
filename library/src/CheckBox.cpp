@@ -1,8 +1,8 @@
-#include "lvgl/Checkbox.hpp"
+#include "lvgl/CheckBox.hpp"
 
 using namespace lvgl;
 
-Checkbox::Checkbox(const char * name){
+CheckBox::CheckBox(const char * name){
   m_object = api()->checkbox_create(screen_object());
   set_user_data(m_object,name);
 }

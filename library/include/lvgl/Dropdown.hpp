@@ -8,58 +8,58 @@
 namespace lvgl {
 
 
-class DropDownList : public ObjectAccess<DropDownList>
+class Dropdown : public ObjectAccess<Dropdown>
 {
 public:
-  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(DropDownList);
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Dropdown);
 
   static const lv_obj_class_t * get_class(){
     return api()->dropdown_class;
   }
 
-  DropDownList& add_option(const char * option, u32 pos = LV_DROPDOWN_POS_LAST){
+  Dropdown & add_option(const char * option, u32 pos = LV_DROPDOWN_POS_LAST){
     api()->dropdown_add_option(m_object, option, pos);
     return *this;
   }
 
   static constexpr auto options_separator = '\n';
 
-  DropDownList& set_options(const char * options){
+  Dropdown & set_options(const char * options){
     api()->dropdown_set_options(m_object, options);
     return *this;
   }
 
-  DropDownList& set_options_static(const char * options){
+  Dropdown & set_options_as_static(const char * options){
     api()->dropdown_set_options_static(m_object, options);
     return *this;
   }
 
-  DropDownList& set_text(const char * text){
+  Dropdown & set_text(const char * text){
     api()->dropdown_set_text(m_object, text);
     return *this;
   }
 
-  DropDownList& clear_options(){
+  Dropdown & clear_options(){
     api()->dropdown_clear_options(m_object);
     return *this;
   }
 
-  DropDownList& set_selected(u16 position){
+  Dropdown & set_selected(u16 position){
     api()->dropdown_set_selected(m_object, position);
     return *this;
   }
 
-  DropDownList& set_direction(Direction direction){
+  Dropdown & set_direction(Direction direction){
     api()->dropdown_set_dir(m_object, lv_dir_t(direction));
     return *this;
   }
 
-  DropDownList& set_symbol(const void * symbol){
+  Dropdown & set_symbol(const void * symbol){
     api()->dropdown_set_symbol(m_object, symbol);
     return *this;
   }
 
-  DropDownList& set_highlight_selected(bool value = true){
+  Dropdown & set_highlight_selected(bool value = true){
     api()->dropdown_set_selected_highlight(m_object, value);
     return *this;
   }
@@ -98,19 +98,19 @@ public:
     return Direction(api()->dropdown_get_dir(m_object));
   }
 
-  DropDownList& open(){
+  Dropdown & open(){
     api()->dropdown_open(m_object);
     return *this;
   }
 
-  DropDownList& close(){
+  Dropdown & close(){
     api()->dropdown_close(m_object);
     return *this;
   }
 
 };
 
-using DropDown = DropDownList;
+using DropDown = Dropdown;
 
 }
 

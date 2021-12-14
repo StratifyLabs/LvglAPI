@@ -6,11 +6,10 @@
 namespace lvgl {
 
 
-class Spinbox : public ObjectAccess<Spinbox>
+class SpinBox : public ObjectAccess<SpinBox>
 {
 public:
-  explicit Spinbox(const char * name = "");
-  explicit Spinbox(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(SpinBox);
 
   static const lv_obj_class_t * get_class(){
     return api()->spinbox_class;

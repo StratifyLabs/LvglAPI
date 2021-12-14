@@ -8,8 +8,7 @@ namespace lvgl {
 
 class Canvas : public ObjectAccess<Canvas> {
 public:
-  explicit Canvas(const char * name = "");
-  explicit Canvas(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Canvas);
 
   static const lv_obj_class_t * get_class(){
     return api()->canvas_class;

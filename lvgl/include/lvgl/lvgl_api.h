@@ -735,6 +735,7 @@ typedef struct {
   void (*meter_set_indicator_end_value)(lv_obj_t * obj, lv_meter_indicator_t * indic, int32_t value);
 
   //spinbox
+  lv_obj_t * (*spinbox_create)(lv_obj_t * obj);
   void (*spinbox_set_value)(lv_obj_t * obj, int32_t i);
   void (*spinbox_set_rollover)(lv_obj_t * obj, bool b);
   void (*spinbox_set_digit_format)(lv_obj_t * obj, uint8_t digit_count, uint8_t separator_position);

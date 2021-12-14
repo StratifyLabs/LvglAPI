@@ -1,7 +1,9 @@
 #include <printer/Printer.hpp>
 #include <var/StackString.hpp>
 
+
 #include "lvgl/Font.hpp"
+#include "lvgl/macros.hpp"
 
 namespace printer {
 Printer &operator<<(Printer &printer, const lvgl::Font::Info &a) {
@@ -14,34 +16,54 @@ Printer &operator<<(Printer &printer, const lvgl::Font::Info &a) {
 
 using namespace lvgl;
 
-#define STYLE_CASE(x)                                                                    \
-  case Style::x:                                                                         \
-    return MCU_STRINGIFY(x)
-
 const char *Font::to_cstring(Style style) {
   switch (style) {
-    STYLE_CASE(any);
-    STYLE_CASE(thin);
-    STYLE_CASE(thin_italic);
-    STYLE_CASE(extra_light);
-    STYLE_CASE(extra_light_italic);
-    STYLE_CASE(light);
-    STYLE_CASE(light_italic);
-    STYLE_CASE(regular);
-    STYLE_CASE(regular_italic);
-    STYLE_CASE(medium);
-    STYLE_CASE(medium_italic);
-    STYLE_CASE(semi_bold);
-    STYLE_CASE(semi_bold_italic);
-    STYLE_CASE(bold);
-    STYLE_CASE(bold_italic);
-    STYLE_CASE(extra_bold);
-    STYLE_CASE(extra_bold_italic);
-    STYLE_CASE(icons);
+    LVGL_PROPERTY_CASE(Style,any);
+    LVGL_PROPERTY_CASE(Style,thin);
+    LVGL_PROPERTY_CASE(Style,thin_italic);
+    LVGL_PROPERTY_CASE(Style,extra_light);
+    LVGL_PROPERTY_CASE(Style,extra_light_italic);
+    LVGL_PROPERTY_CASE(Style,light);
+    LVGL_PROPERTY_CASE(Style,light_italic);
+    LVGL_PROPERTY_CASE(Style,regular);
+    LVGL_PROPERTY_CASE(Style,regular_italic);
+    LVGL_PROPERTY_CASE(Style,medium);
+    LVGL_PROPERTY_CASE(Style,medium_italic);
+    LVGL_PROPERTY_CASE(Style,semi_bold);
+    LVGL_PROPERTY_CASE(Style,semi_bold_italic);
+    LVGL_PROPERTY_CASE(Style,bold);
+    LVGL_PROPERTY_CASE(Style,bold_italic);
+    LVGL_PROPERTY_CASE(Style,extra_bold);
+    LVGL_PROPERTY_CASE(Style,extra_bold_italic);
+    LVGL_PROPERTY_CASE(Style,icons);
   }
 
   return "unknown";
 }
+
+Font::Style Font::style_from_cstring(const char * name){
+  const var::StringView value_stringview = name;
+  LVGL_PROPERTY_STRING_CASE(Style,any)
+  LVGL_PROPERTY_STRING_CASE(Style,thin)
+  LVGL_PROPERTY_STRING_CASE(Style,thin_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,extra_light)
+  LVGL_PROPERTY_STRING_CASE(Style,extra_light_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,light)
+  LVGL_PROPERTY_STRING_CASE(Style,light_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,regular)
+  LVGL_PROPERTY_STRING_CASE(Style,regular_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,medium)
+  LVGL_PROPERTY_STRING_CASE(Style,medium_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,semi_bold)
+  LVGL_PROPERTY_STRING_CASE(Style,semi_bold_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,bold)
+  LVGL_PROPERTY_STRING_CASE(Style,bold_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,extra_bold)
+  LVGL_PROPERTY_STRING_CASE(Style,extra_bold_italic)
+  LVGL_PROPERTY_STRING_CASE(Style,icons)
+  return Style::any;
+}
+
 
 #if USE_FILE_FONT
 Font::Font(const var::PathString &path) {

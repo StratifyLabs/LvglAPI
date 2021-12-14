@@ -31,6 +31,11 @@ void Object::construct_list(const char *name) {
   set_user_data(m_object, name);
 }
 
+void Object::construct_dropdown(const char *name) {
+  m_object = api()->dropdown_create(screen_object());
+  set_user_data(m_object, name);
+}
+
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
   if (!is_valid()) {

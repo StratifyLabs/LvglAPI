@@ -1,8 +1,7 @@
-#include "lvgl/DropDownList.hpp"
+#include "lvgl/Dropdown.hpp"
 
 using namespace lvgl;
 
-DropDownList::DropDownList(const char * name){
-  m_object = api()->dropdown_create(screen_object());
-  set_user_data(m_object,name);
+Dropdown::Dropdown(const char * name){
+  construct_dropdown(name);
 }

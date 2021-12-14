@@ -21,9 +21,7 @@ public:
     number = LV_KEYBOARD_MODE_NUMBER
   };
 
-  explicit Keyboard(const char * name = "");
-  explicit Keyboard(lv_obj_t * object){ m_object = object; }
-
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Keyboard);
 
   static const lv_obj_class_t * get_class(){
     return api()->keyboard_class;

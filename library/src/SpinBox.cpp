@@ -1,8 +1,8 @@
-#include "lvgl/Spinbox.hpp"
+#include "lvgl/SpinBox.hpp"
 
 using namespace lvgl;
 
-Spinbox::Spinbox(const char * name){
-  //m_object = api()->spinbox_create(screen_object());
+SpinBox::SpinBox(const char * name){
+  m_object = api()->spinbox_create(screen_object());
   set_user_data(m_object,name);
 }

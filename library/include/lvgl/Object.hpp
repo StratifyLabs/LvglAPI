@@ -388,6 +388,7 @@ protected:
   API_MAYBE_UNUSED void construct_line(const char * name);
   API_MAYBE_UNUSED void construct_button(const char * name);
   API_MAYBE_UNUSED void construct_list(const char * name);
+  API_MAYBE_UNUSED void construct_dropdown(const char * name);
 
   API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const;
   API_NO_DISCARD Color get_local_style_as_color(Property property, Selector selector) const;

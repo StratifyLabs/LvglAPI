@@ -9,12 +9,12 @@ set(SOURCES
 	lvgl/Calendar.hpp
 	lvgl/Canvas.hpp
 	lvgl/Chart.hpp
-	lvgl/Checkbox.hpp
+	lvgl/CheckBox.hpp
 	lvgl/Color.hpp
 	lvgl/ColorPicker.hpp
 	lvgl/Generic.hpp
 	lvgl/Draw.hpp
-	lvgl/DropDownList.hpp
+  lvgl/Dropdown.hpp
 	lvgl/Event.hpp
 	lvgl/Font.hpp
 	lvgl/Generic.hpp

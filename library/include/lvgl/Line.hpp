@@ -8,8 +8,7 @@ namespace lvgl {
 
 class Line : public ObjectAccess<Line> {
 public:
-  explicit Line(const char * name = "");
-  explicit Line(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Line);
 
   static const lv_obj_class_t * get_class(){
     return api()->line_class;

@@ -38,6 +38,7 @@ public:
   };
 
   static const char* to_cstring(Style style);
+  static Style style_from_cstring(const char * name);
 
   class Info {
   public:
