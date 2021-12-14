@@ -11,8 +11,7 @@ namespace lvgl {
 class DropDownList : public ObjectAccess<DropDownList>
 {
 public:
-  explicit DropDownList(const char * name = "");
-  explicit DropDownList(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(DropDownList);
 
   static const lv_obj_class_t * get_class(){
     return api()->dropdown_class;
