@@ -29,7 +29,7 @@ public:
     return *this;
   }
 
-  Label & set_text_static(const char * value){
+  Label &set_text_as_static(const char * value){
     api()->label_set_text_static(m_object, value);
     return *this;
   }

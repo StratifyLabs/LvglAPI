@@ -14,8 +14,8 @@ public:
 
   static const lv_obj_class_t *get_class() { return api()->button_class; }
 
-  Button & add_static_label(const char * text){
-    return add(Label().set_text_static(text).center());
+  Button & add_label_as_static(const char * text){
+    return add(Label().set_text_as_static(text).center());
   }
 
   Button & add_label(const char * text){

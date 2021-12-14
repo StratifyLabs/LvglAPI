@@ -98,8 +98,8 @@ public:
     return *this;
   }
 
-  TextArea &set_text_static(const char *value) {
-    Label(reinterpret_cast<lv_textarea_t *>(object())->label).set_text_static(value);
+  TextArea &set_text_as_static(const char *value) {
+    Label(reinterpret_cast<lv_textarea_t *>(object())->label).set_text_as_static(value);
     return *this;
   }
 
@@ -268,8 +268,7 @@ public:
   }
 
   FileTextArea &set_text_static(const char *value) {
-    Label(reinterpret_cast<lv_textarea_t *>(object())->label)
-      .set_text_static(value);
+    Label(reinterpret_cast<lv_textarea_t *>(object())->label).set_text_as_static(value);
     return *this;
   }
 
