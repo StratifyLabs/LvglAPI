@@ -152,6 +152,7 @@ const lvgl_api_t lvgl_api = {
   .obj_clean = lv_obj_clean,
   .obj_del_anim_ready_cb = lv_obj_del_anim_ready_cb,
   .obj_del_async = lv_obj_del_async,
+  .obj_del_delayed = lv_obj_del_delayed,
   .obj_set_parent = lv_obj_set_parent,
   .obj_move_foreground = lv_obj_move_foreground,
   .obj_move_background = lv_obj_move_background,

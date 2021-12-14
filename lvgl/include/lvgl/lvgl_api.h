@@ -203,6 +203,7 @@ typedef struct {
   void (*obj_clean)(struct _lv_obj_t * obj);
   void (*obj_del_anim_ready_cb)(lv_anim_t * a);
   void (*obj_del_async)(struct _lv_obj_t * obj);
+  void (*obj_del_delayed)(struct _lv_obj_t * obj, u32 delay_ms);
   void (*obj_set_parent)(struct _lv_obj_t * obj, struct _lv_obj_t * parent);
   void (*obj_move_foreground)(struct _lv_obj_t * obj);
   void (*obj_move_background)(struct _lv_obj_t * obj);
