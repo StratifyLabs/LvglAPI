@@ -121,6 +121,10 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/extra/layouts/grid/lv_grid.h
   ${SOURCES_PREFIX}/extra/layouts/lv_layouts.h
   ${SOURCES_PREFIX}/extra/lv_extra.c
+  ${SOURCES_PREFIX}/extra/libs/png/lodepng.c
+  ${SOURCES_PREFIX}/extra/libs/png/lodepng.h
+  ${SOURCES_PREFIX}/extra/libs/png/lv_png.c
+  ${SOURCES_PREFIX}/extra/libs/png/lv_png.h
   ${SOURCES_PREFIX}/extra/themes/basic/lv_theme_basic.c
   ${SOURCES_PREFIX}/extra/themes/basic/lv_theme_basic.h
   ${SOURCES_PREFIX}/extra/themes/default/lv_theme_default.h
@@ -261,6 +265,33 @@ set(PRIVATE_SOURCELIST
 
 if(SOS_IS_ARM)
   set(LIB_OPTION kernel)
+  set(GPU_SOURCELIST "")
+  set(GPU_INCLUDE_DIRECTORY "")
+endif()
+
+if(SOS_IS_LINK)
+  set(GPU_SOURCELIST
+    ${SOURCES_PREFIX}/gpu/lv_gpu_sdl.h
+    ${SOURCES_PREFIX}/gpu/lv_gpu_sdl.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_arc.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_blend.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_img.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_label.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_line.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_draw_rect.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_lru.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_lru.h
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_mask.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_mask.h
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_stack_blur.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_stack_blur.h
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_texture_cache.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_texture_cache.h
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_utils.c
+    ${SOURCES_PREFIX}/gpu/sdl/lv_gpu_sdl_utils.h
+    )
+
+  set(GPU_INCLUDE_DIRECTORY ${SOURCES_PREFIX}/gpu/sdl)
 endif()
 
 sos_sdk_library_target(RELEASE ${PROJECT_NAME} "${LIB_OPTION}" release ${SOS_ARCH})
@@ -271,6 +302,7 @@ target_sources(${RELEASE_TARGET}
   PUBLIC
   PRIVATE
   ${PRIVATE_SOURCELIST}
+  ${GPU_SOURCELIST}
   )
 
 target_compile_definitions(${RELEASE_TARGET}
@@ -289,10 +321,12 @@ target_include_directories(${RELEASE_TARGET}
   $<INSTALL_INTERFACE:include/lvgl>
   $<INSTALL_INTERFACE:include/lvgl/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl>
+  $<BUILD_INTERFACE:${SOURCES_PREFIX}/extra/libs/png/>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${LVGL_CONFIG_PATH}>
+  $<BUILD_INTERFACE:${GPU_INCLUDE_DIRECTORY}>
   PRIVATE
   )
 
@@ -303,19 +337,10 @@ sos_sdk_copy_target(${RELEASE_TARGET} ${DEBUG_TARGET})
 if(SOS_IS_LINK)
   if(NOT LVGL_NO_STRATIFY_OS)
     set(DEPENDENCIES StratifyOS)
-
-    if(LODEPNG_DEFINITIONS)
-      set(DEPENDENCIES ${DEPENDENCIES} lodepng)
-    endif()
-
     target_compile_definitions(${RELEASE_TARGET} PUBLIC _LVGL_HAS_STRATIFY_OS=1)
     target_compile_definitions(${DEBUG_TARGET} PUBLIC _LVGL_HAS_STRATIFY_OS=1)
   else()
     set(DEPENDENCIES "")
-
-    if(LODEPNG_DEFINITIONS)
-      set(DEPENDENCIES ${DEPENDENCIES} lodepng)
-    endif()
 
   endif()
   sos_sdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${SOS_ARCH} "${DEPENDENCIES}")

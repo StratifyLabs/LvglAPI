@@ -2,12 +2,14 @@
 // Created by Tyler Gilbert on 11/26/21.
 //
 
-#if defined __lodepng || 1
+#include "lvgl_api.h"
+
+
+#if LV_USE_PNG
 
 #include "lodepng.h"
 #include <stdlib.h>
 
-#include "lvgl_api.h"
 
 /**
  * If the display is not in 32 bit format (ARGB888) then covert the image to the current
@@ -139,9 +141,11 @@ static lv_res_t decoder_open(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *ds
                                   just loaded into the RAM*/
       size_t png_data_size;    /*Size of `png_data` in bytes*/
 
-
       lv_fs_file_t f;
       lv_fs_res_t res = lv_fs_open(&f, fn, LV_FS_MODE_RD);
+      if( res != LV_RES_OK ){
+        return res;
+      }
       lv_fs_drv_t *drv = lv_fs_get_drv(fn[0]);
 
       int needs_free = 0;
@@ -152,6 +156,7 @@ static lv_res_t decoder_open(lv_img_decoder_t *decoder, lv_img_decoder_dsc_t *ds
         png_data_size = file->entry->size;
       } else {
         //TODO need to load the file from memory
+
 
       }
 

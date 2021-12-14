@@ -66,8 +66,58 @@ protected:
   using UserDataBase = UserDataAccess<Derived>;
 };
 
+
+
 class Object : public Api {
 public:
+
+  class Iterator {
+  public:
+
+    Iterator() = default;
+
+    Iterator(lv_obj_t * value, size_t index){
+      m_object_value = value;
+      m_index = index;
+    }
+
+
+    bool operator!=(Iterator const &a) const noexcept {
+      return m_index != a.m_index;
+    }
+
+    Object operator*() const noexcept {
+      return Object(m_object_value).get_child(m_index);
+    }
+
+    Iterator &operator++() {
+      m_index++;
+      return *this;
+    }
+
+
+  private:
+    lv_obj_t * m_object_value = nullptr;
+    size_t m_index = 0;
+  };
+
+  Iterator begin() const noexcept {
+    return Iterator(m_object, 0);
+  }
+
+  Iterator end() const noexcept {
+    return Iterator(m_object, get_child_count());
+  }
+
+  Iterator cbegin() const noexcept {
+    return Iterator(m_object, 0);
+  }
+
+  Iterator cend() const noexcept {
+    return Iterator(m_object, get_child_count());
+  }
+
+
   static constexpr lv_coord_t content_size = LV_SIZE_CONTENT;
   static constexpr lv_coord_t size_from_content = LV_SIZE_CONTENT;
 
@@ -259,6 +309,11 @@ public:
     }
   }
 
+  template <class TargetClass> API_NO_DISCARD TargetClass find_parent(const char * name) {
+    static_assert(std::is_base_of<Object, TargetClass>::value);
+    return find_parent_by_name(name).get<TargetClass>();
+  }
+
   API_NO_DISCARD Object find_child(const char *name) const;
   API_NO_DISCARD Object find(Point point){
     return Object(api()->indev_search_obj(m_object, point.point()));
@@ -323,6 +378,7 @@ protected:
 
   API_MAYBE_UNUSED void construct_object(const char * name);
   API_MAYBE_UNUSED void construct_label(const char * name);
+  API_MAYBE_UNUSED void construct_line(const char * name);
   API_MAYBE_UNUSED void construct_button(const char * name);
   API_MAYBE_UNUSED void construct_list(const char * name);
 
@@ -338,6 +394,8 @@ private:
   static void delete_user_data(lv_event_t *);
 
   Object find_object_worker(const char *name) const;
+
+  Object find_parent_by_name(const char * name) const;
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)

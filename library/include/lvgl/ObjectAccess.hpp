@@ -4,19 +4,22 @@
 #include <var/StringView.hpp>
 
 #include "Color.hpp"
-#include "Object.hpp"
 #include "Group.hpp"
+#include "Object.hpp"
 
 namespace lvgl {
 
 template <class Derived> class ObjectAccess : public Object {
 public:
-
-  Derived& add_to_group(Group & group){
+  Derived &add_to_group(Group &group) {
     group.add(*this);
     return static_cast<Derived &>(*this);
   }
 
+  const Derived &add_to_default_group() const {
+    Group::get_default().add(*this);
+    return static_cast<const Derived &>(*this);
+  }
 
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
@@ -247,7 +250,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add_style(const lv_style_t * native_style, Selector selector = Selector()) {
+  Derived &add_style(const lv_style_t *native_style, Selector selector = Selector()) {
     api()->obj_add_style(m_object, (lv_style_t *)native_style, selector.value());
     return static_cast<Derived &>(*this);
   }
@@ -289,10 +292,10 @@ public:
 
   Derived &add_event_callback(
     EventCode event_code,
-    void *context,
+    void *user_data,
     void (*event_callback)(lv_event_t *)) {
     api()->obj_add_event_cb(
-      m_object, event_callback, static_cast<lv_event_code_t>(event_code), context);
+      m_object, event_callback, static_cast<lv_event_code_t>(event_code), user_data);
     return static_cast<Derived &>(*this);
   }
 
@@ -776,5 +779,9 @@ private:
 };
 
 } // namespace lvgl
+
+#define LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(CLASS_NAME)                               \
+  explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }                           \
+  CLASS_NAME(const char *name = "")
 
 #endif // LVGLAPI_LVGL_OBJECTACCESS_HPP

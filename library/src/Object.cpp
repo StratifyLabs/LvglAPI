@@ -6,27 +6,30 @@ lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
 
-
-void Object::construct_object(const char * name){
+void Object::construct_object(const char *name) {
   m_object = api()->obj_create(screen_object());
   set_user_data(m_object, name);
 }
 
-void Object::construct_label(const char * name){
+void Object::construct_label(const char *name) {
   m_object = api()->label_create(screen_object());
   set_user_data(m_object, name);
 }
 
-void Object::construct_button(const char * name){
+void Object::construct_line(const char *name) {
+  m_object = api()->line_create(screen_object());
+  set_user_data(m_object, name);
+}
+
+void Object::construct_button(const char *name) {
   m_object = api()->btn_create(screen_object());
   set_user_data(m_object, name);
 }
 
-void Object::construct_list(const char * name){
+void Object::construct_list(const char *name) {
   m_object = api()->list_create(screen_object());
   set_user_data(m_object, name);
 }
-
 
 Object Object::find_object_worker(const char *name) const {
   // recursively find the child
@@ -57,6 +60,17 @@ Object Object::find_child(const char *name) const {
     }
   }
   return {};
+}
+
+Object Object::find_parent_by_name(const char *name) const {
+  auto current = get_parent();
+  while (current.object()) {
+    if (current.name() == name) {
+      return current;
+    }
+    current = current.get_parent();
+  }
+  return Object();
 }
 
 void Object::add_style_from_theme(var::StringView name, Selector selector) {

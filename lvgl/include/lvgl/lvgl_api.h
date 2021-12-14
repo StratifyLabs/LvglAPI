@@ -72,7 +72,7 @@ typedef struct {
   lv_event_code_t (*event_get_code)(lv_event_t * e);
   void * (*event_get_param)(lv_event_t * e);
   void * (*event_get_user_data)(lv_event_t * e);
-  uint32_t (*event_register_id)(void);
+  uint32_t (*event_register_id)();
   struct _lv_event_dsc_t * (*obj_add_event_cb)(struct _lv_obj_t * obj, lv_event_cb_t event_cb, lv_event_code_t filter, void * user_data);
   bool (*obj_remove_event_cb)(struct _lv_obj_t * obj, lv_event_cb_t event_cb);
   bool (*obj_remove_event_dsc)(struct _lv_obj_t * obj, struct _lv_event_dsc_t * event_dsc);
@@ -221,10 +221,10 @@ typedef struct {
 
 
   //group
-  lv_group_t * (*group_create)(void);
+  lv_group_t * (*group_create)();
   void (*group_del)(lv_group_t * group);
   void (*group_set_default)(lv_group_t * group);
-  lv_group_t * (*group_get_default)(void);
+  lv_group_t * (*group_get_default)();
   void (*group_add_obj)(lv_group_t * group, struct _lv_obj_t * obj);
   void (*group_remove_obj)(lv_obj_t * obj);
   void (*group_remove_all_objs)(lv_group_t * group);
@@ -246,7 +246,7 @@ typedef struct {
   //indev
   void (*indev_read_timer_cb)(lv_timer_t * timer);
   void (*indev_enable)(lv_indev_t * indev, bool en);
-  lv_indev_t * (*indev_get_act)(void);
+  lv_indev_t * (*indev_get_act)();
   lv_indev_type_t (*indev_get_type)(const lv_indev_t * indev);
   void (*indev_reset)(lv_indev_t * indev, lv_obj_t * obj);
   void (*indev_reset_long_press)(lv_indev_t * indev);
@@ -260,7 +260,7 @@ typedef struct {
   lv_obj_t * (*indev_get_scroll_obj)(const lv_indev_t * indev);
   void (*indev_get_vect)(const lv_indev_t * indev, lv_point_t * point);
   void (*indev_wait_release)(lv_indev_t * indev);
-  lv_obj_t * (*indev_get_obj_act)(void);
+  lv_obj_t * (*indev_get_obj_act)();
   lv_timer_t * (*indev_get_read_timer)(lv_disp_t * indev);
   lv_obj_t * (*indev_search_obj)(lv_obj_t * obj, lv_point_t * point);
 
@@ -269,11 +269,11 @@ typedef struct {
   void (*anim_init)(lv_anim_t * a);
   lv_anim_t * (*anim_start)(const lv_anim_t * a);
   bool (*anim_del)(void * var, lv_anim_exec_xcb_t exec_cb);
-  void (*anim_del_all)(void);
+  void (*anim_del_all)();
   lv_anim_t * (*anim_get)(void * var, lv_anim_exec_xcb_t exec_cb);
-  uint16_t (*anim_count_running)(void);
+  uint16_t (*anim_count_running)();
   uint32_t (*anim_speed_to_time)(uint32_t speed, int32_t start, int32_t end);
-  void (*anim_refr_now)(void);
+  void (*anim_refr_now)();
   int32_t (*anim_path_linear)(const lv_anim_t * a);
   int32_t (*anim_path_ease_in)(const lv_anim_t * a);
   int32_t (*anim_path_ease_out)(const lv_anim_t * a);
@@ -325,20 +325,20 @@ typedef struct {
   int32_t (*map)(int32_t x, int32_t min_in, int32_t max_in, int32_t min, int32_t max);
   uint32_t (*rand)(uint32_t min, uint32_t max);
   //misc/mem
-  void (*mem_init)(void);
-  void (*mem_deinit)(void);
+  void (*mem_init)();
+  void (*mem_deinit)();
   void * (*_mem_alloc)(size_t size);
   void (*mem_free)(void * data);
   void * (*mem_realloc)(void * data_p, size_t new_size);
-  lv_res_t (*mem_test)(void);
+  lv_res_t (*mem_test)();
   void (*mem_monitor)(lv_mem_monitor_t * mon_p);
   void * (*mem_buf_get)(uint32_t size);
   void (*mem_buf_release)(void * p);
-  void (*mem_buf_free_all)(void);
+  void (*mem_buf_free_all)();
   //misc/style
   void (*style_init)(lv_style_t * style);
   void (*style_reset)(lv_style_t * style);
-  lv_style_prop_t (*style_register_prop)(void);
+  lv_style_prop_t (*style_register_prop)();
   bool (*style_remove_prop)(lv_style_t * style, lv_style_prop_t prop);
   void (*style_set_prop)(lv_style_t * style, lv_style_prop_t prop, lv_style_value_t value);
   lv_res_t (*style_get_prop)(lv_style_t * style, lv_style_prop_t prop, lv_style_value_t * value);
@@ -346,7 +346,7 @@ typedef struct {
   lv_style_value_t (*style_prop_get_default)(lv_style_prop_t prop);
   bool (*style_is_empty)(const lv_style_t * style);
   //misc/timer
-  lv_timer_t *(*timer_create_basic)(void);
+  lv_timer_t *(*timer_create_basic)();
   lv_timer_t *(*timer_create)(lv_timer_cb_t timer_xcb, uint32_t period, void * user_data);
   void(*timer_del)(lv_timer_t * timer);
   void(*timer_pause)(lv_timer_t * timer);
@@ -357,7 +357,7 @@ typedef struct {
   void(*timer_set_repeat_count)(lv_timer_t * timer, int32_t repeat_count);
   void(*timer_reset)(lv_timer_t * timer);
   void(*timer_enable)(bool en);
-  uint8_t(*timer_get_idle)(void);
+  uint8_t(*timer_get_idle)();
   lv_timer_t *(*timer_get_next)(lv_timer_t * timer);
 
   //refresh
@@ -529,7 +529,7 @@ typedef struct {
   void (*btnmatrix_set_ctrl_map)(lv_obj_t * obj, const lv_btnmatrix_ctrl_t ctrl_map[]);
   void (*btnmatrix_set_selected_btn)(lv_obj_t * obj, uint16_t btn_id);
   void (*btnmatrix_set_btn_ctrl)(lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl);
-  void (*btnmatrix_clear_btn_ctrl)(const lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl);
+  void (*btnmatrix_clear_btn_ctrl)(lv_obj_t * obj, uint16_t btn_id, lv_btnmatrix_ctrl_t ctrl);
   void (*btnmatrix_set_btn_ctrl_all)(lv_obj_t * obj, lv_btnmatrix_ctrl_t ctrl);
   void (*btnmatrix_clear_btn_ctrl_all)(lv_obj_t * obj, lv_btnmatrix_ctrl_t ctrl);
   void (*btnmatrix_set_btn_width)(lv_obj_t * obj, uint16_t btn_id, uint8_t width);
@@ -640,7 +640,7 @@ typedef struct {
   lv_obj_t * (*switch_create)(lv_obj_t * parent);
 
   //extra
-  void (*extra_init)(void);
+  void (*extra_init)();
 
   //extra widgets
   //calendar
@@ -654,8 +654,8 @@ typedef struct {
   lv_calendar_date_t * (*calendar_get_highlighted_dates)(const lv_obj_t * calendar);
   uint16_t (*calendar_get_highlighted_dates_num)(const lv_obj_t * calendar);
   lv_res_t (*calendar_get_pressed_date)(const lv_obj_t * calendar, lv_calendar_date_t * date);
-  lv_obj_t * (*calendar_header_arrow_create)(lv_obj_t * parent, lv_obj_t * calendar, lv_coord_t btn_size);
-  lv_obj_t * (*calendar_header_dropdown_create)(lv_obj_t * parent, lv_obj_t * calendar);
+  lv_obj_t * (*calendar_header_arrow_create)(lv_obj_t * parent);
+  lv_obj_t * (*calendar_header_dropdown_create)(lv_obj_t * parent);
 
   //chart
   lv_obj_t * (*chart_create)(lv_obj_t * parent);
@@ -822,7 +822,7 @@ typedef struct {
 
   //extra layouts
   //flex
-  void (*flex_init)(void);
+  void (*flex_init)();
   void (*obj_set_flex_flow)(lv_obj_t * obj, lv_flex_flow_t flow);
   void (*obj_set_flex_align)(lv_obj_t * obj, lv_flex_align_t main_place, lv_flex_align_t cross_place, lv_flex_align_t track_cross_place);
   void (*obj_set_flex_grow)(lv_obj_t * obj, uint8_t grow);
@@ -837,7 +837,7 @@ typedef struct {
   void (*obj_set_style_flex_track_place)(lv_obj_t * obj, lv_flex_align_t value, lv_style_selector_t selector);
   void (*obj_set_style_flex_grow)(lv_obj_t * obj, uint8_t value, lv_style_selector_t selector);
   //grid
-  void (*grid_init)(void);
+  void (*grid_init)();
   void (*obj_set_grid_dsc_array)(lv_obj_t * obj, const lv_coord_t col_dsc[], const lv_coord_t row_dsc[]);
   void (*obj_set_grid_align)(lv_obj_t * obj, lv_grid_align_t column_align, lv_grid_align_t row_align);
   void (*obj_set_grid_cell)(lv_obj_t * obj, lv_grid_align_t column_align, uint8_t col_pos, uint8_t col_span,

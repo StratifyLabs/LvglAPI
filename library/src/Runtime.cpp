@@ -94,13 +94,14 @@ Runtime &Runtime::refresh() {
   }
 #endif
 
-  api()->timer_handler();
   timer.stop();
   const auto elapsed = timer.micro_time();
   if (period() > timer) {
     const auto remaining = period() - elapsed;
     chrono::wait(remaining);
   }
+
+  api()->timer_handler();
   api()->tick_inc(
     elapsed > period() ? elapsed.milliseconds()
                        : period().milliseconds() * increment_scale());
@@ -132,9 +133,11 @@ Runtime::Runtime(
     task = {};
   }
 
-  m_texture.set_blend_mode(window::BlendMode::blend)
-    .update(m_active_frame_buffer, m_display_size.width() * sizeof(u32));
+  m_texture.set_blend_mode(window::BlendMode::blend);
 
+#if !LV_USE_GPU_SDL
+  m_texture.update(m_active_frame_buffer, m_display_size.width() * sizeof(u32));
+#endif
   initialize_display();
   initialize_devices();
 }
@@ -145,10 +148,14 @@ void Runtime::initialize_display() {
   const auto pixel_count = m_display_size.width() * m_display_size.height();
   allocate_frames(m_display_size);
 
+#if LV_USE_GPU_SDL
+  lv_disp_draw_buf_init(
+    &m_display_buffer, m_texture.native_value(), nullptr, pixel_count);
+#else
   lv_disp_draw_buf_init(
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
-
   m_active_frame_buffer = m_display_frame0.data();
+#endif
 
   lv_disp_drv_init(&m_display_driver);
 
@@ -157,7 +164,8 @@ void Runtime::initialize_display() {
   m_display_driver.draw_buf = &m_display_buffer;
   m_display_driver.flush_cb = flush_callback;
   m_display_driver.user_data = this;
-  m_display_driver.full_refresh = 1;
+  m_display_driver.full_refresh = !LV_USE_GPU_SDL;
+  m_display_driver.antialiasing = 1;
 
   m_display = lv_disp_drv_register(&m_display_driver);
 }
@@ -170,6 +178,9 @@ void Runtime::initialize_devices() {
   m_keyboard_device = lv_indev_drv_register(&m_keyboard_driver);
 
   m_group = lvgl::Group::create();
+
+  // make this the default group
+  m_group.set_default();
   lv_indev_set_group(m_keyboard_device, m_group.group());
 
   lv_indev_drv_init(&m_mouse_driver);
@@ -183,16 +194,31 @@ void Runtime::initialize_devices() {
 
 void Runtime::update_window() {
 
+  auto update_transparency = [&]() {
+#if LV_COLOR_SCREEN_TRANSP
+    m_renderer
+      .set_draw_color(window::RgbaColor().set_red(0xff).set_alpha(0xff))
+        m_renderer.set_draw_color(window::RgbaColor().set_red(0xff).set_alpha(0xff))
+      .draw_rectanle(window::Rectangle(
+        window::Point(0, 0),
+        window::Size(m_display_size.width(), m_display_size.height())));
+#endif
+  };
+
+#if LV_USE_GPU_SDL
+  m_renderer.clear_target().clear();
+
+  update_transparency();
+
+  m_texture.set_blend_mode(window::BlendMode::blend);
+  m_renderer.clear_clip_rectangle().copy(m_texture).present().set_target(m_texture);
+
+#else
   m_texture.update(m_active_frame_buffer, m_display_size.width() * sizeof(u32));
   m_renderer.clear();
-
-#if LV_COLOR_SCREEN_TRANSP
-  m_renderer.set_draw_color(window::RgbaColor().set_red(0xff).set_alpha(0xff))
-    .draw_rectanle(
-      window::Rectangle(window::Point(0, 0), window::Size(SDL_HOR_RES, SDL_VER_RES)));
-#endif
-
+  update_transparency();
   m_renderer.copy(m_texture).present();
+#endif
 }
 
 void Runtime::update_events() {
@@ -205,6 +231,16 @@ void Runtime::update_events() {
       handle_mouse_event(event);
       handle_window_event(event);
 
+      if (event.type() == window::EventType::window) {
+        const auto is_update =
+          event.get_window().window_type() == window::WindowEvent::WindowType::exposed
+          || event.get_window().window_type()
+               == window::WindowEvent::WindowType::take_focus;
+        if (is_update) {
+          update_window();
+        }
+      }
+
       if (event.type() == window::EventType::quit) {
         set_stopped();
       }
@@ -212,7 +248,7 @@ void Runtime::update_events() {
     has_events = event.is_valid();
   }
 
-  if (m_mouse_wheel_timer.milliseconds() > period().milliseconds()*4) {
+  if (m_mouse_wheel_timer.milliseconds() > period().milliseconds() * 4) {
     m_mouse_wheel_timer.reset();
     m_mouse_event_queue.push({m_mouse_position, IsPressed::no});
     m_mouse_state = window::Event::State::released;
@@ -261,16 +297,72 @@ void Runtime::handle_mouse_event(const window::Event &event) {
     m_mouse_restore_position = event.get_mouse_motion().point();
     break;
   case window::EventType::mouse_wheel: {
+
+    const auto is_scrollable = [&]() {
+      auto object = screen().find(lvgl::Point(
+        m_mouse_position.x() * m_dpi_scale, m_mouse_position.y() * m_dpi_scale));
+      while (object.object()) {
+        if (!object.has_flag(Flags::scrollable)) {
+          if (object.has_flag(Flags::scroll_chain)) {
+            object = object.get_parent();
+          } else {
+            object = Object();
+          }
+          continue;
+        }
+
+        const auto direction = object.get_scroll_direction();
+
+        const auto scroll_top = object.get_scroll_top();
+        const auto scroll_bottom = object.get_scroll_bottom();
+        const auto scroll_left = object.get_scroll_left();
+        const auto scroll_right = object.get_scroll_right();
+        const auto scroll_x = object.get_scroll_x();
+        const auto scroll_y = object.get_scroll_y();
+
+        if (scroll_x > 0 && direction & Direction::horizontal) {
+          return true;
+        }
+
+        if (scroll_y > 0 && direction & Direction::vertical) {
+          return true;
+        }
+
+        if (scroll_top > 0 && direction & Direction::top) {
+          return true;
+        }
+
+        if (scroll_bottom > 0 && direction & Direction::bottom) {
+          return true;
+        }
+
+        if (scroll_left > 0 && direction & Direction::left) {
+          return true;
+        }
+
+        if (scroll_right > 0 && direction & Direction::right) {
+          return true;
+        }
+
+        object = object.get_parent();
+      }
+
+      return false;
+    }();
+
     // m_mouse_wheel_event_queue.push({event, m_mouse_position});
-    const auto delta_point = window::Point(
-      event.get_mouse_wheel().point().x() * -1 * scroll_wheel_multiplier(),
-      event.get_mouse_wheel().point().y() * scroll_wheel_multiplier());
-    if (!m_mouse_wheel_timer.is_running()) {
-      m_mouse_event_queue.push({m_mouse_position, IsPressed::yes});
-      m_mouse_state = window::Event::State::pressed;
+    if (is_scrollable) {
+      const auto delta_point = window::Point(
+        event.get_mouse_wheel().point().x() * -1 * scroll_wheel_multiplier(),
+        event.get_mouse_wheel().point().y() * scroll_wheel_multiplier());
+
+      if (!m_mouse_wheel_timer.is_running()) {
+        m_mouse_event_queue.push({m_mouse_position, IsPressed::yes});
+        m_mouse_state = window::Event::State::pressed;
+      }
+      m_mouse_position += delta_point;
+      m_mouse_wheel_timer.restart();
     }
-    m_mouse_position += delta_point;
-    m_mouse_wheel_timer.restart();
   } break;
   default:
     break;
@@ -332,37 +424,48 @@ void Runtime::update_wheel_event() {
 }
 
 void Runtime::resize_display(const window::Size &size) {
+  const auto pixel_count = size.width() * size.height();
 
+#if !LV_USE_GPU_SDL
   auto &inactive_frame = m_active_frame_buffer == m_display_frame0.data()
                            ? m_display_frame1
                            : m_display_frame0;
   auto &active_frame = m_active_frame_buffer == m_display_frame0.data()
                          ? m_display_frame0
                          : m_display_frame0;
-  const auto pixel_count = size.width() * size.height();
 
   inactive_frame.resize(pixel_count);
-  m_display_size = size;
   m_active_frame_buffer = inactive_frame.data();
+#endif
 
+  m_display_size = size;
   m_display_driver.hor_res = size.width();
   m_display_driver.ver_res = size.height();
 
   m_texture = window::Texture(
     m_renderer, window::PixelFormat::argb8888, window::Texture::Access::target, size);
 
-  // update_window();
-  active_frame.resize(pixel_count);
+#if !LV_USE_GPU_SDL
+  active_frame.resize(pixel_count).fill(lv_color_white());
+#endif
 
+#if LV_USE_GPU_SDL
+  lv_disp_draw_buf_init(
+    &m_display_buffer, m_texture.native_value(), nullptr, pixel_count);
+#else
   lv_disp_draw_buf_init(
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
+#endif
+
   lv_disp_drv_update(m_display, &m_display_driver);
 }
 
 void Runtime::allocate_frames(const window::Size &size) {
+#if !LV_USE_GPU_SDL
   const auto pixel_count = size.width() * size.height();
   m_display_frame0.resize(pixel_count);
   m_display_frame1.resize(pixel_count);
+#endif
 }
 
 void Runtime::flush(
@@ -372,27 +475,26 @@ void Runtime::flush(
 
   const lv_coord_t hres = display_driver->hor_res;
   const lv_coord_t vres = display_driver->ver_res;
-  auto *self = reinterpret_cast<Runtime *>(display_driver->user_data);
 
   /*Return if the area is out the screen*/
   if (area->x2 < 0 || area->y2 < 0 || area->x1 > hres - 1 || area->y1 > vres - 1) {
     lv_disp_flush_ready(display_driver);
     return;
   }
-  self->m_active_frame_buffer = colors;
 
-  // monitor.sdl_refr_qry = true;
+#if !LV_USE_GPU_SDL
+  auto *self = reinterpret_cast<Runtime *>(display_driver->user_data);
+  self->m_active_frame_buffer = colors;
+#endif
 
   /* TYPICALLY YOU DO NOT NEED THIS
    * If it was the last part to refresh update the texture of the window.*/
   if (lv_disp_flush_is_last(display_driver)) {
-    // monitor_sdl_refr(NULL);
+    update_window();
   }
 
   /*IMPORTANT! It must be called to tell the system the flush is ready*/
   lv_disp_flush_ready(display_driver);
-
-  update_window();
 }
 
 void Runtime::flush_callback(

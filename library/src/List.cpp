@@ -21,6 +21,14 @@ List &List::add_button(
     Button button(object);
     setup(button);
   }
+
+  for (u32 i = 0; i < get_child_count(); i++) {
+    get_child(i).get<Generic>().set_border_side(BorderSide::bottom);
+  }
+
+  // last item has no border
+  Button(object).set_border_side(BorderSide::none);
+
   return *this;
 }
 

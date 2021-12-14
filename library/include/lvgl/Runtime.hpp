@@ -143,9 +143,11 @@ private:
   lv_disp_t * m_display;
   lv_disp_draw_buf_t m_display_buffer{};
   lv_disp_drv_t m_display_driver{};
+#if !LV_USE_GPU_SDL
   var::Vector<lv_color_t> m_display_frame0;
   var::Vector<lv_color_t> m_display_frame1;
   lv_color_t *m_active_frame_buffer = nullptr;
+#endif
   window::Size m_display_size;
   float m_dpi_scale = 1.0f;
 
