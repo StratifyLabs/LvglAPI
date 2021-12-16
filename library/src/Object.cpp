@@ -1,5 +1,7 @@
-#include "lvgl/Object.hpp"
+#include <var/StackString.hpp>
+
 #include "lvgl/Event.hpp"
+#include "lvgl/Object.hpp"
 #include "lvgl/Theme.hpp"
 
 lvgl::LvglApi lvgl::Api::m_api;
@@ -76,6 +78,24 @@ Object Object::find_parent_by_name(const char *name) const {
     current = current.get_parent();
   }
   return Object();
+}
+
+void Object::find_names_add_state(const var::StringViewList &name_list, State state) {
+  for (const auto &name : name_list) {
+    auto *object = find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
+    if (object) {
+      api()->obj_add_state(object, lv_state_t(state));
+    }
+  }
+}
+
+void Object::find_names_clear_state(const var::StringViewList &name_list, State state) {
+  for (const auto &name : name_list) {
+    auto *object = find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
+    if (object) {
+      api()->obj_clear_state(object, lv_state_t(state));
+    }
+  }
 }
 
 void Object::add_style_from_theme(var::StringView name, Selector selector) {

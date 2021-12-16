@@ -383,6 +383,9 @@ protected:
   static void set_user_data(lv_obj_t *obj, const char *name);
   static bool is_name_matched(const Object &child, const char *name);
 
+  void find_names_add_state(const var::StringViewList &name_list, State state);
+  void find_names_clear_state(const var::StringViewList &name_list, State state);
+
   API_MAYBE_UNUSED void construct_object(const char * name);
   API_MAYBE_UNUSED void construct_label(const char * name);
   API_MAYBE_UNUSED void construct_line(const char * name);

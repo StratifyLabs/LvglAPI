@@ -41,6 +41,16 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived &add_state(const var::StringViewList & name_list, State state){
+    find_names_add_state(name_list, state);
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived &clear_state(const var::StringViewList & name_list, State state){
+    find_names_clear_state(name_list, state);
+    return static_cast<Derived &>(*this);
+  }
+
   Derived &allocate_special_attributes() {
     api()->obj_allocate_spec_attr(m_object);
     return static_cast<Derived &>(*this);
@@ -769,6 +779,7 @@ public:
     }
     return static_cast<Derived &>(*this);
   }
+
 
   using Callback = void (*)(Derived);
 
