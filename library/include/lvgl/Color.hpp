@@ -1,6 +1,8 @@
 ﻿#ifndef COLOR_HPP
 #define COLOR_HPP
 
+#include <var/StringView.hpp>
+
 #include "Types.hpp"
 
 namespace lvgl {
@@ -162,7 +164,7 @@ public:
   }
 
   static const char * to_cstring(Palette value);
-  static Palette palette_from_cstring(const char * value);
+  static Palette palette_from_string(var::StringView value);
 
 private:
   lv_color_t m_color{};

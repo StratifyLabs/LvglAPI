@@ -24,7 +24,7 @@ public:
     invalid
   };
 
-  static Path path_from_cstring(const char * value);
+  static Path path_from_string(const var::StringView value);
   static const char * to_cstring(Path value);
 
   Animation() { api()->anim_init(&m_anim); }

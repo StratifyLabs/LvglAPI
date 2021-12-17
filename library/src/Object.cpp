@@ -4,6 +4,8 @@
 #include "lvgl/Object.hpp"
 #include "lvgl/Theme.hpp"
 
+#include "lvgl/macros.hpp"
+
 lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
@@ -199,95 +201,85 @@ ClassType Object::get_class_type() const {
   return ClassType::object;
 }
 
-#define PROPERTY_CASE(x, y)                                                              \
-  case x::y:                                                                             \
-    return MCU_STRINGIFY(y)
-
-#define PROPERTY_STRING_CASE(x, y)                                                       \
-  if (value_stringview == MCU_STRINGIFY(x)) {                                            \
-    return x::y;                                                                         \
-  }
-
 const char *Object::to_cstring(ClassType value) {
   switch (value) {
-    PROPERTY_CASE(ClassType, object);
-    PROPERTY_CASE(ClassType, animation_image);
-    PROPERTY_CASE(ClassType, calendar);
-    PROPERTY_CASE(ClassType, calendar_header_arrow);
-    PROPERTY_CASE(ClassType, calendar_header_dropdown);
-    PROPERTY_CASE(ClassType, chart);
-    PROPERTY_CASE(ClassType, colorwheel);
-    PROPERTY_CASE(ClassType, dropdown);
-    PROPERTY_CASE(ClassType, image_button);
-    PROPERTY_CASE(ClassType, keyboard);
-    PROPERTY_CASE(ClassType, led);
-    PROPERTY_CASE(ClassType, list);
-    PROPERTY_CASE(ClassType, list_text);
-    PROPERTY_CASE(ClassType, list_button);
-    PROPERTY_CASE(ClassType, meter);
-    PROPERTY_CASE(ClassType, spangroup);
-    PROPERTY_CASE(ClassType, spinbox);
-    PROPERTY_CASE(ClassType, spinner);
-    PROPERTY_CASE(ClassType, tabview);
-    PROPERTY_CASE(ClassType, tileview);
-    PROPERTY_CASE(ClassType, tileview_tile);
-    PROPERTY_CASE(ClassType, window);
-    PROPERTY_CASE(ClassType, arc);
-    PROPERTY_CASE(ClassType, bar);
-    PROPERTY_CASE(ClassType, button);
-    PROPERTY_CASE(ClassType, button_matrix);
-    PROPERTY_CASE(ClassType, canvas);
-    PROPERTY_CASE(ClassType, checkbox);
-    PROPERTY_CASE(ClassType, image);
-    PROPERTY_CASE(ClassType, line);
-    PROPERTY_CASE(ClassType, label);
-    PROPERTY_CASE(ClassType, message_box);
-    PROPERTY_CASE(ClassType, roller);
-    PROPERTY_CASE(ClassType, slider);
-    PROPERTY_CASE(ClassType, switch_);
-    PROPERTY_CASE(ClassType, table);
-    PROPERTY_CASE(ClassType, textarea);
+    LVGL_PROPERTY_CASE(ClassType, object);
+    LVGL_PROPERTY_CASE(ClassType, animation_image);
+    LVGL_PROPERTY_CASE(ClassType, calendar);
+    LVGL_PROPERTY_CASE(ClassType, calendar_header_arrow);
+    LVGL_PROPERTY_CASE(ClassType, calendar_header_dropdown);
+    LVGL_PROPERTY_CASE(ClassType, chart);
+    LVGL_PROPERTY_CASE(ClassType, colorwheel);
+    LVGL_PROPERTY_CASE(ClassType, dropdown);
+    LVGL_PROPERTY_CASE(ClassType, image_button);
+    LVGL_PROPERTY_CASE(ClassType, keyboard);
+    LVGL_PROPERTY_CASE(ClassType, led);
+    LVGL_PROPERTY_CASE(ClassType, list);
+    LVGL_PROPERTY_CASE(ClassType, list_text);
+    LVGL_PROPERTY_CASE(ClassType, list_button);
+    LVGL_PROPERTY_CASE(ClassType, meter);
+    LVGL_PROPERTY_CASE(ClassType, spangroup);
+    LVGL_PROPERTY_CASE(ClassType, spinbox);
+    LVGL_PROPERTY_CASE(ClassType, spinner);
+    LVGL_PROPERTY_CASE(ClassType, tabview);
+    LVGL_PROPERTY_CASE(ClassType, tileview);
+    LVGL_PROPERTY_CASE(ClassType, tileview_tile);
+    LVGL_PROPERTY_CASE(ClassType, window);
+    LVGL_PROPERTY_CASE(ClassType, arc);
+    LVGL_PROPERTY_CASE(ClassType, bar);
+    LVGL_PROPERTY_CASE(ClassType, button);
+    LVGL_PROPERTY_CASE(ClassType, button_matrix);
+    LVGL_PROPERTY_CASE(ClassType, canvas);
+    LVGL_PROPERTY_CASE(ClassType, checkbox);
+    LVGL_PROPERTY_CASE(ClassType, image);
+    LVGL_PROPERTY_CASE(ClassType, line);
+    LVGL_PROPERTY_CASE(ClassType, label);
+    LVGL_PROPERTY_CASE(ClassType, message_box);
+    LVGL_PROPERTY_CASE(ClassType, roller);
+    LVGL_PROPERTY_CASE(ClassType, slider);
+    LVGL_PROPERTY_CASE(ClassType, switch_);
+    LVGL_PROPERTY_CASE(ClassType, table);
+    LVGL_PROPERTY_CASE(ClassType, textarea);
   }
   return "unknown";
 }
 
-ClassType Object::class_type_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
-  PROPERTY_STRING_CASE(ClassType, animation_image);
-  PROPERTY_STRING_CASE(ClassType, calendar);
-  PROPERTY_STRING_CASE(ClassType, calendar_header_arrow);
-  PROPERTY_STRING_CASE(ClassType, calendar_header_dropdown);
-  PROPERTY_STRING_CASE(ClassType, chart);
-  PROPERTY_STRING_CASE(ClassType, colorwheel);
-  PROPERTY_STRING_CASE(ClassType, dropdown);
-  PROPERTY_STRING_CASE(ClassType, image_button);
-  PROPERTY_STRING_CASE(ClassType, keyboard);
-  PROPERTY_STRING_CASE(ClassType, led);
-  PROPERTY_STRING_CASE(ClassType, list);
-  PROPERTY_STRING_CASE(ClassType, list_text);
-  PROPERTY_STRING_CASE(ClassType, list_button);
-  PROPERTY_STRING_CASE(ClassType, meter);
-  PROPERTY_STRING_CASE(ClassType, spangroup);
-  PROPERTY_STRING_CASE(ClassType, spinbox);
-  PROPERTY_STRING_CASE(ClassType, spinner);
-  PROPERTY_STRING_CASE(ClassType, tabview);
-  PROPERTY_STRING_CASE(ClassType, tileview);
-  PROPERTY_STRING_CASE(ClassType, tileview_tile);
-  PROPERTY_STRING_CASE(ClassType, window);
-  PROPERTY_STRING_CASE(ClassType, arc);
-  PROPERTY_STRING_CASE(ClassType, bar);
-  PROPERTY_STRING_CASE(ClassType, button);
-  PROPERTY_STRING_CASE(ClassType, button_matrix);
-  PROPERTY_STRING_CASE(ClassType, canvas);
-  PROPERTY_STRING_CASE(ClassType, checkbox);
-  PROPERTY_STRING_CASE(ClassType, image);
-  PROPERTY_STRING_CASE(ClassType, line);
-  PROPERTY_STRING_CASE(ClassType, label);
-  PROPERTY_STRING_CASE(ClassType, message_box);
-  PROPERTY_STRING_CASE(ClassType, roller);
-  PROPERTY_STRING_CASE(ClassType, slider);
-  PROPERTY_STRING_CASE(ClassType, switch_);
-  PROPERTY_STRING_CASE(ClassType, table);
-  PROPERTY_STRING_CASE(ClassType, textarea);
+ClassType Object::class_type_from_string(const var::StringView value) {
+  LVGL_PROPERTY_STRING_CASE(ClassType, animation_image);
+  LVGL_PROPERTY_STRING_CASE(ClassType, calendar);
+  LVGL_PROPERTY_STRING_CASE(ClassType, calendar_header_arrow);
+  LVGL_PROPERTY_STRING_CASE(ClassType, calendar_header_dropdown);
+  LVGL_PROPERTY_STRING_CASE(ClassType, chart);
+  LVGL_PROPERTY_STRING_CASE(ClassType, colorwheel);
+  LVGL_PROPERTY_STRING_CASE(ClassType, dropdown);
+  LVGL_PROPERTY_STRING_CASE(ClassType, image_button);
+  LVGL_PROPERTY_STRING_CASE(ClassType, keyboard);
+  LVGL_PROPERTY_STRING_CASE(ClassType, led);
+  LVGL_PROPERTY_STRING_CASE(ClassType, list);
+  LVGL_PROPERTY_STRING_CASE(ClassType, list_text);
+  LVGL_PROPERTY_STRING_CASE(ClassType, list_button);
+  LVGL_PROPERTY_STRING_CASE(ClassType, meter);
+  LVGL_PROPERTY_STRING_CASE(ClassType, spangroup);
+  LVGL_PROPERTY_STRING_CASE(ClassType, spinbox);
+  LVGL_PROPERTY_STRING_CASE(ClassType, spinner);
+  LVGL_PROPERTY_STRING_CASE(ClassType, tabview);
+  LVGL_PROPERTY_STRING_CASE(ClassType, tileview);
+  LVGL_PROPERTY_STRING_CASE(ClassType, tileview_tile);
+  LVGL_PROPERTY_STRING_CASE(ClassType, window);
+  LVGL_PROPERTY_STRING_CASE(ClassType, arc);
+  LVGL_PROPERTY_STRING_CASE(ClassType, bar);
+  LVGL_PROPERTY_STRING_CASE(ClassType, button);
+  LVGL_PROPERTY_STRING_CASE(ClassType, button_matrix);
+  LVGL_PROPERTY_STRING_CASE(ClassType, canvas);
+  LVGL_PROPERTY_STRING_CASE(ClassType, checkbox);
+  LVGL_PROPERTY_STRING_CASE(ClassType, image);
+  LVGL_PROPERTY_STRING_CASE(ClassType, line);
+  LVGL_PROPERTY_STRING_CASE(ClassType, label);
+  LVGL_PROPERTY_STRING_CASE(ClassType, message_box);
+  LVGL_PROPERTY_STRING_CASE(ClassType, roller);
+  LVGL_PROPERTY_STRING_CASE(ClassType, slider);
+  LVGL_PROPERTY_STRING_CASE(ClassType, switch_);
+  LVGL_PROPERTY_STRING_CASE(ClassType, table);
+  LVGL_PROPERTY_STRING_CASE(ClassType, textarea);
   return ClassType::object;
 }

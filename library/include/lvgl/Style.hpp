@@ -47,7 +47,7 @@ struct ConstProperty {
   constexpr ConstProperty(Property prop_value, lv_color_t color)
     : property{.prop = lv_style_prop_t(prop_value), .value = {.color = color}} {}
 
-  constexpr ConstProperty(Property prop_value, const void * ptr)
+  constexpr ConstProperty(Property prop_value, const void *ptr)
     : property{.prop = lv_style_prop_t(prop_value), .value = {.ptr = ptr}} {}
 
   const lv_style_const_prop_t property;
@@ -64,56 +64,55 @@ public:
   Style() { api()->style_init(&m_style); }
 
   static const char *to_cstring(Property property);
-  static Property property_from_cstring(const char *value);
+  static Property property_from_string(var::StringView value);
 
   static const char *to_cstring(TextDecoration value);
-  static TextDecoration text_decoration_from_cstring(const char *value);
+  static TextDecoration text_decoration_from_string(var::StringView value);
 
   static const char *to_cstring(TextAlignment value);
-  static TextAlignment text_alignment_from_cstring(const char *value);
+  static TextAlignment text_alignment_from_string(var::StringView value);
 
   static const char *to_cstring(BorderSide value);
-  static BorderSide border_side_from_cstring(const char *value);
+  static BorderSide border_side_from_string(var::StringView value);
 
   static const char *to_cstring(GradientDirection value);
-  static GradientDirection gradient_direction_from_cstring(const char *value);
+  static GradientDirection gradient_direction_from_string(var::StringView value);
 
   static const char *to_cstring(BaseDirection value);
-  static BaseDirection base_direction_from_cstring(const char *value);
+  static BaseDirection base_direction_from_string(var::StringView value);
 
   static const char *to_cstring(Direction value);
-  static Direction direction_from_cstring(const char *value);
+  static Direction direction_from_string(var::StringView value);
 
   static const char *to_cstring(Alignment value);
-  static Alignment alignment_from_cstring(const char *value);
+  static Alignment alignment_from_string(var::StringView value);
 
   static const char *to_cstring(FlexFlow value);
-  static FlexFlow flex_flow_from_cstring(const char *value);
+  static FlexFlow flex_flow_from_string(var::StringView value);
 
   static const char *to_cstring(FlexAlign value);
-  static FlexAlign flex_align_from_cstring(const char *value);
+  static FlexAlign flex_align_from_string(var::StringView value);
 
   static const char *to_cstring(State value);
-  static State state_from_cstring(const char *value);
+  static State state_from_string(var::StringView value);
 
   static const char *to_cstring(ScrollBarMode value);
-  static ScrollBarMode scroll_bar_mode_from_cstring(const char *value);
+  static ScrollBarMode scroll_bar_mode_from_string(var::StringView value);
 
   static const char *to_cstring(ScrollSnap value);
-  static ScrollSnap scroll_snap_mode_from_cstring(const char *value);
+  static ScrollSnap scroll_snap_mode_from_string(var::StringView value);
 
   static const char *to_cstring(IsAnimate value);
-  static IsAnimate is_animate_mode_from_cstring(const char *value);
+  static IsAnimate is_animate_mode_from_string(var::StringView value);
 
   static const char *to_cstring(Part value);
-  static Part part_from_cstring(const char *value);
+  static Part part_from_string(var::StringView value);
 
   static const char *to_cstring(BlendMode value);
-  static BlendMode blend_mode_from_cstring(const char *value);
+  static BlendMode blend_mode_from_string(var::StringView value);
 
   static const char *to_cstring(Opacity value);
-  static Opacity opacity_from_cstring(const char *value);
-
+  static Opacity opacity_from_string(var::StringView value);
 
   API_NO_DISCARD PropertyValue get_property_value(Property property) const {
     PropertyValue result;

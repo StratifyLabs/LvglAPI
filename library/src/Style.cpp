@@ -107,8 +107,7 @@ const char *Style::to_cstring(Property property) {
 }
 
 
-Property Style::property_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+Property Style::property_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Property, width)
   LVGL_PROPERTY_STRING_CASE(Property, minimum_width)
   LVGL_PROPERTY_STRING_CASE(Property, maximum_width)
@@ -212,8 +211,7 @@ const char *Style::to_cstring(TextDecoration value) {
   }
   return "unknown";
 }
-TextDecoration Style::text_decoration_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+TextDecoration Style::text_decoration_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(TextDecoration, none)
   LVGL_PROPERTY_STRING_CASE(TextDecoration, underline)
   LVGL_PROPERTY_STRING_CASE(TextDecoration, strikethrough)
@@ -230,8 +228,7 @@ const char *Style::to_cstring(TextAlignment value) {
   }
   return "unknown";
 }
-TextAlignment Style::text_alignment_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+TextAlignment Style::text_alignment_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(TextAlignment, auto_);
   LVGL_PROPERTY_STRING_CASE(TextAlignment, left);
   LVGL_PROPERTY_STRING_CASE(TextAlignment, right);
@@ -252,8 +249,7 @@ const char *Style::to_cstring(BorderSide value) {
   }
   return "unknown";
 }
-BorderSide Style::border_side_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+BorderSide Style::border_side_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(BorderSide, none);
   LVGL_PROPERTY_STRING_CASE(BorderSide, bottom);
   LVGL_PROPERTY_STRING_CASE(BorderSide, top);
@@ -273,8 +269,7 @@ const char *Style::to_cstring(GradientDirection value) {
   }
   return "unknown";
 }
-GradientDirection Style::gradient_direction_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+GradientDirection Style::gradient_direction_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(GradientDirection, none);
   LVGL_PROPERTY_STRING_CASE(GradientDirection, horizontal);
   LVGL_PROPERTY_STRING_CASE(GradientDirection, vertical);
@@ -292,8 +287,7 @@ const char *Style::to_cstring(BaseDirection value) {
   }
   return "unknown";
 }
-BaseDirection Style::base_direction_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+BaseDirection Style::base_direction_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(BaseDirection, auto_);
   LVGL_PROPERTY_STRING_CASE(BaseDirection, left_to_right);
   LVGL_PROPERTY_STRING_CASE(BaseDirection, right_to_left);
@@ -316,8 +310,7 @@ const char *Style::to_cstring(Direction value) {
   }
   return "unknown";
 }
-Direction Style::direction_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+Direction Style::direction_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Direction, none);
   LVGL_PROPERTY_STRING_CASE(Direction, left);
   LVGL_PROPERTY_STRING_CASE(Direction, right);
@@ -357,8 +350,7 @@ const char *Style::to_cstring(Alignment value) {
   }
   return "unknown";
 }
-Alignment Style::alignment_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+Alignment Style::alignment_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Alignment, default_);
   LVGL_PROPERTY_STRING_CASE(Alignment, top_left);
   LVGL_PROPERTY_STRING_CASE(Alignment, top_middle);
@@ -398,8 +390,7 @@ const char *Style::to_cstring(FlexFlow value) {
   }
   return "unknown";
 }
-FlexFlow Style::flex_flow_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+FlexFlow Style::flex_flow_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(FlexFlow, row);
   LVGL_PROPERTY_STRING_CASE(FlexFlow, column);
   LVGL_PROPERTY_STRING_CASE(FlexFlow, row_wrap);
@@ -423,8 +414,7 @@ const char *Style::to_cstring(FlexAlign value) {
   }
   return "unknown";
 }
-FlexAlign Style::flex_align_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+FlexAlign Style::flex_align_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(FlexAlign, start);
   LVGL_PROPERTY_STRING_CASE(FlexAlign, end);
   LVGL_PROPERTY_STRING_CASE(FlexAlign, center);
@@ -454,8 +444,7 @@ const char *Style::to_cstring(State value) {
   }
   return "unknown";
 }
-State Style::state_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+State Style::state_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(State, checked);
   LVGL_PROPERTY_STRING_CASE(State, focused);
   LVGL_PROPERTY_STRING_CASE(State, focus_key);
@@ -482,8 +471,7 @@ const char *Style::to_cstring(ScrollBarMode value) {
   }
   return "unknown";
 }
-ScrollBarMode Style::scroll_bar_mode_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+ScrollBarMode Style::scroll_bar_mode_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(ScrollBarMode, off);
   LVGL_PROPERTY_STRING_CASE(ScrollBarMode, on);
   LVGL_PROPERTY_STRING_CASE(ScrollBarMode, active);
@@ -501,8 +489,7 @@ const char *Style::to_cstring(ScrollSnap value) {
   }
   return "unknown";
 }
-ScrollSnap Style::scroll_snap_mode_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+ScrollSnap Style::scroll_snap_mode_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(ScrollSnap, off);
   LVGL_PROPERTY_STRING_CASE(ScrollSnap, start);
   LVGL_PROPERTY_STRING_CASE(ScrollSnap, end);
@@ -519,8 +506,7 @@ const char *Style::to_cstring(IsAnimate value) {
   }
   return "unknown";
 }
-IsAnimate Style::is_animate_mode_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+IsAnimate Style::is_animate_mode_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(IsAnimate, no);
   LVGL_PROPERTY_STRING_CASE(IsAnimate, yes);
   LVGL_PROPERTY_STRING_CASE(IsAnimate, repeat_infinite);
@@ -541,8 +527,7 @@ const char *Style::to_cstring(Part value) {
   }
   return "unknown";
 }
-Part Style::part_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+Part Style::part_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Part, scrollbar);
   LVGL_PROPERTY_STRING_CASE(Part, indicator);
   LVGL_PROPERTY_STRING_CASE(Part, knob);
@@ -563,8 +548,7 @@ const char *Style::to_cstring(BlendMode value) {
   }
   return "unknown";
 }
-BlendMode Style::blend_mode_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+BlendMode Style::blend_mode_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(BlendMode, normal);
   LVGL_PROPERTY_STRING_CASE(BlendMode, additive);
   LVGL_PROPERTY_STRING_CASE(BlendMode, subtractive);
@@ -588,8 +572,7 @@ const char *Style::to_cstring(Opacity value) {
   }
   return "unknown";
 }
-Opacity Style::opacity_from_cstring(const char *value) {
-  const var::StringView value_stringview = value;
+Opacity Style::opacity_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Opacity, transparent);
   LVGL_PROPERTY_STRING_CASE(Opacity, x0);
   LVGL_PROPERTY_STRING_CASE(Opacity, x10);

@@ -23,8 +23,7 @@ Animation & Animation::set_path(Path path){
 }
 
 
-Animation::Path Animation::path_from_cstring(const char * value){
-  const var::StringView value_stringview = value;
+Animation::Path Animation::path_from_string(const var::StringView value){
   LVGL_PROPERTY_STRING_CASE(Path, linear);
   LVGL_PROPERTY_STRING_CASE(Path, step);
   LVGL_PROPERTY_STRING_CASE(Path, ease_in);

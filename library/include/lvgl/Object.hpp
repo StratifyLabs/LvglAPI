@@ -321,7 +321,7 @@ public:
 
   API_NO_DISCARD ClassType get_class_type() const;
   static const char *to_cstring(ClassType value);
-  static ClassType class_type_from_cstring(const char *value);
+  static ClassType class_type_from_string(const var::StringView value);
 
   API_NO_DISCARD Editable is_editable() const { return Editable(api()->obj_is_editable(m_object)); }
 

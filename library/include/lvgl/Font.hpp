@@ -38,7 +38,8 @@ public:
   };
 
   static const char* to_cstring(Style style);
-  static Style style_from_cstring(const char * name);
+  static const char* to_abbreviated_cstring(Style style);
+  static Style style_from_string(var::StringView name);
 
   class Info {
   public:

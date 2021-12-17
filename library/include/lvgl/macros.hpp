@@ -8,7 +8,7 @@
     return MCU_STRINGIFY(y)
 
 #define LVGL_PROPERTY_STRING_CASE(x, y)                                                  \
-  if (value_stringview == MCU_STRINGIFY(y)) {                                            \
+  if (value == MCU_STRINGIFY(y)) {                                            \
     return x::y;                                                                         \
   }
 

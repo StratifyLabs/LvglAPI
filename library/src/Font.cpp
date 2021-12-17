@@ -41,8 +41,32 @@ const char *Font::to_cstring(Style style) {
   return "unknown";
 }
 
-Font::Style Font::style_from_cstring(const char * name){
-  const var::StringView value_stringview = name;
+const char *Font::to_abbreviated_cstring(Style style) {
+  switch (style) {
+  case Style::thin: return "t";
+  case Style::thin_italic: return "ti";
+  case Style::extra_light: return "el";
+  case Style::extra_light_italic: return "eli";
+  case Style::light: return "l";
+  case Style::light_italic: return "li";
+  case Style::regular: return "r";
+  case Style::regular_italic: return "ri";
+  case Style::medium: return "m";
+  case Style::medium_italic: return "mi";
+  case Style::semi_bold: return "sb";
+  case Style::semi_bold_italic: return "sbi";
+  case Style::bold: return "b";
+  case Style::bold_italic: return "bi";
+  case Style::extra_bold: return "eb";
+  case Style::extra_bold_italic: return "ebi";
+  case Style::icons: return "ico";
+  case Style::any: return "any";
+  }
+
+  return "unknown";
+}
+
+Font::Style Font::style_from_string(const var::StringView value){
   LVGL_PROPERTY_STRING_CASE(Style,any)
   LVGL_PROPERTY_STRING_CASE(Style,thin)
   LVGL_PROPERTY_STRING_CASE(Style,thin_italic)
@@ -61,6 +85,59 @@ Font::Style Font::style_from_cstring(const char * name){
   LVGL_PROPERTY_STRING_CASE(Style,extra_bold)
   LVGL_PROPERTY_STRING_CASE(Style,extra_bold_italic)
   LVGL_PROPERTY_STRING_CASE(Style,icons)
+
+  if (value == "t") {
+    return Style::thin;
+  }
+  if (value == "ti") {
+    return Style::thin_italic;
+  }
+  if (value == "el") {
+    return Style::extra_light;
+  }
+  if (value == "eli") {
+    return Style::extra_light_italic;
+  }
+  if (value == "l") {
+    return Style::light;
+  }
+  if (value == "li") {
+    return Style::light_italic;
+  }
+  if (value == "r") {
+    return Style::regular;
+  }
+  if (value == "ri") {
+    return Style::thin;
+  }
+  if (value == "m") {
+    return Style::medium;
+  }
+  if (value == "mi") {
+    return Style::medium_italic;
+  }
+  if (value == "sb") {
+    return Style::semi_bold;
+  }
+  if (value == "sbi") {
+    return Style::semi_bold_italic;
+  }
+  if (value == "b") {
+    return Style::bold;
+  }
+  if (value == "bi") {
+    return Style::bold_italic;
+  }
+  if (value == "eb") {
+    return Style::extra_bold;
+  }
+  if (value == "ebi") {
+    return Style::extra_bold_italic;
+  }
+  if (value == "ico") {
+    return Style::icons;
+  }
+
   return Style::any;
 }
 
@@ -91,60 +168,7 @@ Font::Info::Info(const char *path) {
   m_name = parts.at(0);
   m_point_size = parts.at(2).to_integer();
 
-  m_style = [](const var::StringView value) -> Style {
-    if (value == "t") {
-      return Style::thin;
-    }
-    if (value == "ti") {
-      return Style::thin_italic;
-    }
-    if (value == "el") {
-      return Style::extra_light;
-    }
-    if (value == "eli") {
-      return Style::extra_light_italic;
-    }
-    if (value == "l") {
-      return Style::light;
-    }
-    if (value == "li") {
-      return Style::light_italic;
-    }
-    if (value == "r") {
-      return Style::regular;
-    }
-    if (value == "ri") {
-      return Style::thin;
-    }
-    if (value == "m") {
-      return Style::medium;
-    }
-    if (value == "mi") {
-      return Style::medium_italic;
-    }
-    if (value == "sb") {
-      return Style::semi_bold;
-    }
-    if (value == "sbi") {
-      return Style::semi_bold_italic;
-    }
-    if (value == "b") {
-      return Style::bold;
-    }
-    if (value == "bi") {
-      return Style::bold_italic;
-    }
-    if (value == "eb") {
-      return Style::extra_bold;
-    }
-    if (value == "ebi") {
-      return Style::extra_bold_italic;
-    }
-    if (value == "ico") {
-      return Style::icons;
-    }
-    return Style::any;
-  }(parts.at(1));
+  m_style = style_from_string(parts.at(1));
 }
 
 Font::Info Font::find_best_fit(const Info &info) {
