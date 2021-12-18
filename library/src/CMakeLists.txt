@@ -3,6 +3,7 @@
 set(SOURCES
 	Animation.cpp
 	Arc.cpp
+	AssetFile.cpp
 	Bar.cpp
 	Button.cpp
 	ButtonMatrix.cpp

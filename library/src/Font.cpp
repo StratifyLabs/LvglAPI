@@ -217,3 +217,10 @@ Font::Info Font::find_best_fit(const Info &info) {
   return Info(descriptor_list[best_offset]->name)
     .set_font(descriptor_list[best_offset]->font);
 }
+
+Font::Utf8Character::Utf8Character(u16 value) {
+  m_data[0] = 0xe0 | ((value >> 12) & 0x0f);
+  m_data[1] = 0x80 | ((value >> 6) & 0x3f);
+  m_data[2] = 0x80 | ((value) & 0x3f);
+  m_data[3] = 0;
+}

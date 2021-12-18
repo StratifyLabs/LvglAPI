@@ -78,6 +78,7 @@ private:
 class Display : public Api {
 public:
   using LoadAnimation = Screen::LoadAnimation;
+  explicit Display(lv_disp_t *value) : m_display(value) {}
 
   Screen get_active_screen() { return Screen(api()->disp_get_scr_act(m_display)); }
   Screen get_previous_screen() { return Screen(api()->disp_get_scr_prev(m_display)); }
@@ -175,7 +176,6 @@ public:
   }
 
 private:
-  explicit Display(lv_disp_t *value) : m_display(value) {}
   lv_disp_t *m_display;
 };
 

@@ -7,6 +7,7 @@ namespace lvgl {}
 
 #include "lvgl/Animation.hpp"
 #include "lvgl/Arc.hpp"
+#include "lvgl/AssetFile.hpp"
 #include "lvgl/Bar.hpp"
 #include "lvgl/Button.hpp"
 #include "lvgl/Calendar.hpp"

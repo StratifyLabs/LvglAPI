@@ -151,19 +151,23 @@ void lvgl_api_initialize_filesystem() {
 static void *
 lvgl_api_assetfs_open_cb(struct _lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode) {
   const lvgl_assetfs_header_t *config = drv->user_data;
+  printf("open file %s\n", path);
   for (size_t i = 0; i < config->count; i++) {
     const lvgl_assetfs_dirent_t *entry = config->entries + i;
     if (strncmp(path, entry->name, LVGL_ASSETFS_NAME_MAX) == 0) {
       // it's a match
       lvgl_api_assetfs_file_t *result = lv_mem_alloc(sizeof(lvgl_api_assetfs_file_t));
       if (result == NULL) {
+        printf("alloc failed\n");
         return NULL;
       }
       result->entry = entry;
       result->seek_offset = 0;
+      printf("return entry\n");
       return result;
     }
   }
+  printf("not found\n");
   return NULL;
 }
 

@@ -15,7 +15,6 @@ public:
 
   API_NO_DISCARD const lv_font_t *font() const { return m_font; }
 
-
   enum class Style {
     any,
     thin /*! Thin font (t) */,
@@ -37,9 +36,22 @@ public:
     icons /*! Font is a collection of bitmap icons (ico) */,
   };
 
-  static const char* to_cstring(Style style);
-  static const char* to_abbreviated_cstring(Style style);
+  static const char *to_cstring(Style style);
+  static const char *to_abbreviated_cstring(Style style);
   static Style style_from_string(var::StringView name);
+
+  class Utf8Character {
+  public:
+
+    explicit Utf8Character(u16 value);
+
+    const char * cstring() const {
+      return m_data;
+    }
+
+  private:
+    char m_data[5]= {};
+  };
 
   class Info {
   public:
@@ -56,35 +68,30 @@ public:
      *
      */
 
-    Info()= default;;
-    explicit Info(const char * path);
-    API_NO_DISCARD Font get_font() const {
-      return Font(font());
-    }
+    Info() = default;
+    ;
+    explicit Info(const char *path);
+    API_NO_DISCARD Font get_font() const { return Font(font()); }
 
-    API_NO_DISCARD bool is_valid() const {
-      return point_size() > 0;
-    }
+    API_NO_DISCARD bool is_valid() const { return point_size() > 0; }
 
-    Font operator()() const {
-      return get_font();
-    }
+    Font operator()() const { return get_font(); }
 
   private:
-    API_AF(Info,const lv_font_t*, font, nullptr);
-    API_AF(Info,Style,style,Style::any);
-    API_AF(Info,u16,point_size,0);
-    API_AC(Info,var::NameString,name);
+    API_AF(Info, const lv_font_t *, font, nullptr);
+    API_AF(Info, Style, style, Style::any);
+    API_AF(Info, u16, point_size, 0);
+    API_AC(Info, var::NameString, name);
   };
 
+  static Info find_best_fit(const Info &info);
 
-  static Info find_best_fit(const Info & info);
-
-  static Info find(const char * name, size_t point_size, Style style = Style::any){
-    return find_best_fit(Info().set_name(name).set_point_size(point_size).set_style(style));
+  static Info find(const char *name, size_t point_size, Style style = Style::any) {
+    return find_best_fit(
+      Info().set_name(name).set_point_size(point_size).set_style(style));
   }
 
-  static Info find(size_t point_size, Style style = Style::any){
+  static Info find(size_t point_size, Style style = Style::any) {
     return find_best_fit(Info().set_point_size(point_size).set_style(style));
   }
 
@@ -95,7 +102,7 @@ private:
 } // namespace lvgl
 
 namespace printer {
-Printer & operator<<(Printer & printer, const lvgl::Font::Info & a);
+Printer &operator<<(Printer &printer, const lvgl::Font::Info &a);
 }
 
 #endif // LVGLAPI_LVGL_FONT_HPP

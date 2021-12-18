@@ -309,7 +309,7 @@ public:
     }
   }
 
-  template <class TargetClass> API_NO_DISCARD TargetClass find_parent(const char * name) {
+  template <class TargetClass> API_NO_DISCARD TargetClass find_parent(const char * name) const {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return find_parent_by_name(name).get<TargetClass>();
   }
@@ -392,6 +392,7 @@ protected:
   API_MAYBE_UNUSED void construct_button(const char * name);
   API_MAYBE_UNUSED void construct_list(const char * name);
   API_MAYBE_UNUSED void construct_dropdown(const char * name);
+  API_MAYBE_UNUSED void construct_switch(const char * name);
 
   API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const;
   API_NO_DISCARD Color get_local_style_as_color(Property property, Selector selector) const;

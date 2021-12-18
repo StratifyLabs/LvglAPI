@@ -3,6 +3,7 @@
 set(SOURCES
 	lvgl/Animation.hpp
 	lvgl/Arc.hpp
+	lvgl/AssetFile.hpp
 	lvgl/Bar.hpp
 	lvgl/Button.hpp
 	lvgl/ButtonMatrix.hpp
