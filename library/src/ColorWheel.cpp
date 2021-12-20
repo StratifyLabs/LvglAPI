@@ -2,7 +2,8 @@
 
 using namespace lvgl;
 
-ColorPicker::ColorPicker(const char * name){
+ColorPicker::ColorWheel(const char * name){
+  api()->colorwh
   set_user_data(m_object,name);
 
 }
