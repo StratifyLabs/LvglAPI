@@ -225,7 +225,6 @@ static lv_fs_res_t lvgl_api_assetfs_seek_cb(
   } else if (whence == LV_FS_SEEK_SET) {
     file->seek_offset = pos;
   } else {
-    printf("seek size is %s %ld\n", file->entry->name, file->entry->size);
     file->seek_offset = file->entry->size;
   }
 
@@ -288,7 +287,6 @@ void lvgl_api_mount_asset_filesystem(const void *assetfs, lv_fs_drv_t *drv, char
     lvgl_api_assetfs_dir_read_cb; /*Callback to read a directory's content */
   drv->dir_close_cb = lvgl_api_assetfs_dir_close_cb; /*Callback to close a directory */
 
-  printf("Mount assetfs at %p\n", assetfs);
   drv->user_data = (void *)assetfs; /*Any custom data if required*/
   lv_fs_drv_register(drv);          /*Finally register the drive*/
 }
