@@ -12,7 +12,7 @@ set(SOURCES
 	Chart.cpp
 	Checkbox.cpp
 	Color.cpp
-	ColorPicker.cpp
+  ColorWheel.cpp
   Dropdown.cpp
 	Event.cpp
 	Font.cpp

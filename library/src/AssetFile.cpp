@@ -35,7 +35,14 @@ int AssetFile::interface_lseek(int offset, int whence) const {
     return LV_FS_SEEK_SET;
   }(whence);
 
-  return api()->fs_seek(&m_handle, offset, lv_whence);
+  if( api()->fs_seek(&m_handle, offset, lv_whence) == LV_FS_RES_OK ){
+    u32 location = 0;
+    api()->fs_tell(&m_handle, &location);
+    return location;
+  }
+
+  errno = EIO;
+  return -1;
 }
 
 int AssetFile::interface_read(void *buf, int nbyte) const {

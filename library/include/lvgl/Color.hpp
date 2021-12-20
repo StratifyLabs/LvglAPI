@@ -162,6 +162,12 @@ public:
   static Color grey(PaletteLevel level = PaletteLevel::default_) {
     return get_palette(Palette::grey, level);
   }
+  static Color black(PaletteLevel level = PaletteLevel::default_) {
+    return Color(lv_color_t{.full = 0});
+  }
+  static Color white(PaletteLevel level = PaletteLevel::default_) {
+    return Color(lv_color_t{.full = 0xffffffff});
+  }
 
   static const char * to_cstring(Palette value);
   static Palette palette_from_string(var::StringView value);

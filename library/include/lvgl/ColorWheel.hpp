@@ -5,19 +5,19 @@
 
 namespace lvgl {
 
-
-class ColorPicker : public ObjectAccess<ColorPicker>
-{
+class ColorWheel : public ObjectAccess<ColorWheel> {
 public:
-  explicit ColorPicker(const char * name = "");
-  explicit ColorPicker(lv_obj_t * object){ m_object = object; }
 
-  static const lv_obj_class_t * get_class(){
-    return api()->colorwheel_class;
-  }
+  enum class IsKnobRecolor {
+    no, yes
+  };
 
+  explicit ColorWheel(const char *name = "", IsKnobRecolor is_knob_recolor = IsKnobRecolor::yes);
+  explicit ColorWheel(lv_obj_t *object) { m_object = object; }
+
+  static const lv_obj_class_t *get_class() { return api()->colorwheel_class; }
 };
 
-}
+} // namespace lvgl
 
 #endif // LVGLAPI_LVGL_COLORPICKER_HPP

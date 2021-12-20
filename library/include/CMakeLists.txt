@@ -12,7 +12,7 @@ set(SOURCES
 	lvgl/Chart.hpp
 	lvgl/CheckBox.hpp
 	lvgl/Color.hpp
-	lvgl/ColorPicker.hpp
+  lvgl/ColorWheel.hpp
 	lvgl/Generic.hpp
 	lvgl/Draw.hpp
   lvgl/Dropdown.hpp

@@ -14,6 +14,7 @@ namespace lvgl {}
 #include "lvgl/Chart.hpp"
 #include "lvgl/CheckBox.hpp"
 #include "lvgl/Color.hpp"
+#include "lvgl/ColorWheel.hpp"
 #include "lvgl/Draw.hpp"
 #include "lvgl/Dropdown.hpp"
 #include "lvgl/Event.hpp"
