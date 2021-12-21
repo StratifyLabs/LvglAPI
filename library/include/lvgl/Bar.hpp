@@ -79,10 +79,7 @@ public:
     range = LV_BAR_MODE_RANGE
   };
 
-  Bar &set_mode(Mode value) {
-    api()->bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
-    return *this;
-  }
+  Bar &set_mode(Mode value);
 };
 
 } // namespace lvgl

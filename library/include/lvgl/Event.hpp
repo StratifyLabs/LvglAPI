@@ -15,6 +15,14 @@ public:
 
   explicit Event(LvglEvent event);
 
+  template<class ParentType> static ParentType find_parent(lv_event_t*e, const char * name){
+    return Event(e).target().find_parent<ParentType>(name);
+  }
+
+  template<class ChildType> static ChildType find(lv_event_t*e, const char * name){
+    return Event(e).target().find<ChildType>(name);
+  }
+
   API_NO_DISCARD EventCode code() const { return EventCode(m_event->code); }
 
   static const char *to_cstring(EventCode code);
