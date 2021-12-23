@@ -15,8 +15,12 @@ public:
 
   explicit Event(LvglEvent event);
 
-  template<class ParentType> static ParentType find_parent(lv_event_t*e, const char * name){
-    return Event(e).target().find_parent<ParentType>(name);
+  template<class ParentType> ParentType find_parent(const char * name){
+    return target().find_parent<ParentType>(name);
+  }
+
+  template<class SiblingType> SiblingType find_sibling(const char * name){
+    return target().get_parent().find<SiblingType>(name);
   }
 
   template<class ChildType> static ChildType find(lv_event_t*e, const char * name){

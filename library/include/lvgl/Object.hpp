@@ -120,6 +120,7 @@ public:
 
   static constexpr lv_coord_t content_size = LV_SIZE_CONTENT;
   static constexpr lv_coord_t size_from_content = LV_SIZE_CONTENT;
+  static constexpr lv_coord_t radius_circle = LV_RADIUS_CIRCLE;
 
   using Flags = ::lvgl::Flags;
 

@@ -45,36 +45,27 @@ enum class PaletteLevel {
 
 class Color : public Api {
 public:
-  class Rgb {
-    API_AF(Rgb, u8, red, 0);
-    API_AF(Rgb, u8, green, 0);
-    API_AF(Rgb, u8, blue, 0);
-    API_AF(Rgb, u8, alpha, 255);
+  struct Rgb {
+    API_PUBLIC_MEMBER(Rgb, u8, red, 0);
+    API_PUBLIC_MEMBER(Rgb, u8, green, 0);
+    API_PUBLIC_MEMBER(Rgb, u8, blue, 0);
   };
 
-  class Hsv {
-  public:
-    Hsv() = default;
-    explicit Hsv(lv_color_hsv_t value) : m_hsv(value) {}
-    API_ACCESS_MEMBER_FUNDAMENTAL_WITH_ALIAS(Hsv, u16, hsv, hue, h)
-    API_ACCESS_MEMBER_FUNDAMENTAL_WITH_ALIAS(Hsv, u8, hsv, saturation, s)
-    API_ACCESS_MEMBER_FUNDAMENTAL_WITH_ALIAS(Hsv, u8, hsv, value, v)
-  private:
-    lv_color_hsv_t m_hsv{};
+  struct Hsv {
+    API_PUBLIC_MEMBER(Hsv, u16, hue, 0);
+    API_PUBLIC_MEMBER(Hsv, u8, saturation, 0);
+    API_PUBLIC_MEMBER(Hsv, u8, value, 0);
   };
 
   Color() = default;
 
   constexpr explicit Color(lv_color_t color) : m_color(color) {}
 
-  explicit Color(const Rgb &rgb)
-    : m_color(lv_color_make(rgb.red(), rgb.green(), rgb.blue())) {}
+  explicit Color(const Rgb &rgb) : m_color(lv_color_make(rgb.red, rgb.green, rgb.blue)) {}
   explicit Color(const Hsv &hsv)
-    : m_color(api()->color_hsv_to_rgb(hsv.hue(), hsv.saturation(), hsv.value())) {}
+    : m_color(api()->color_hsv_to_rgb(hsv.hue, hsv.saturation, hsv.value)) {}
 
-  static Color from_hex(u32 hex_value){
-    return Color{lv_color_hex(hex_value)};
-  }
+  static Color from_hex(u32 hex_value) { return Color{lv_color_hex(hex_value)}; }
 
   static Color get_palette(Palette palette, PaletteLevel level = PaletteLevel::default_) {
     const auto l = int(level);
@@ -106,7 +97,15 @@ public:
 
   lv_color_t get_color() const { return m_color; }
 
-  Hsv to_hsv() const { return Hsv(api()->color_to_hsv(m_color)); }
+  Hsv to_hsv() const {
+    auto hsv = api()->color_to_hsv(m_color);
+    return Hsv{hsv.h, hsv.s, hsv.v};
+  }
+
+  Rgb to_rgb() const {
+    auto color = get_color();
+    return Rgb{color.ch.red, color.ch.green, color.ch.blue};
+  }
 
   static Color red(PaletteLevel level = PaletteLevel::default_) {
     return get_palette(Palette::red, level);
@@ -169,7 +168,7 @@ public:
     return Color(lv_color_t{.full = 0xffffffff});
   }
 
-  static const char * to_cstring(Palette value);
+  static const char *to_cstring(Palette value);
   static Palette palette_from_string(var::StringView value);
 
 private:
