@@ -142,7 +142,13 @@ private:
 
   lv_disp_t * m_display;
   lv_disp_draw_buf_t m_display_buffer{};
-  lv_disp_drv_t m_display_driver{};
+
+  typedef struct {
+    lv_disp_drv_t display_driver;
+    Runtime * self;
+  } display_driver_container_t;
+
+  display_driver_container_t m_display_driver_container{};
 #if !LV_USE_GPU_SDL
   var::Vector<lv_color_t> m_display_frame0;
   var::Vector<lv_color_t> m_display_frame1;

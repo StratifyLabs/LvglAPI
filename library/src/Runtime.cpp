@@ -157,17 +157,22 @@ void Runtime::initialize_display() {
   m_active_frame_buffer = m_display_frame0.data();
 #endif
 
-  lv_disp_drv_init(&m_display_driver);
+  lv_disp_drv_init(&m_display_driver_container.display_driver);
 
-  m_display_driver.hor_res = m_display_size.width();
-  m_display_driver.ver_res = m_display_size.height();
-  m_display_driver.draw_buf = &m_display_buffer;
-  m_display_driver.flush_cb = flush_callback;
-  m_display_driver.user_data = this;
-  m_display_driver.full_refresh = !LV_USE_GPU_SDL;
-  m_display_driver.antialiasing = 1;
+  m_display_driver_container.display_driver.hor_res = m_display_size.width();
+  m_display_driver_container.display_driver.ver_res = m_display_size.height();
+  m_display_driver_container.display_driver.draw_buf = &m_display_buffer;
+  m_display_driver_container.display_driver.flush_cb = flush_callback;
+#if LV_USE_GPU_SDL
+  m_display_driver_container.display_driver.user_data = m_renderer.native_value();
+#else
+  m_display_driver_container.display_driver.user_data = this;
+#endif
+  m_display_driver_container.display_driver.full_refresh = !LV_USE_GPU_SDL;
+  m_display_driver_container.display_driver.antialiasing = 1;
 
-  m_display = lv_disp_drv_register(&m_display_driver);
+  m_display = lv_disp_drv_register(&m_display_driver_container.display_driver);
+  m_display_driver_container.self = this;
 }
 
 void Runtime::initialize_devices() {
@@ -207,12 +212,9 @@ void Runtime::update_window() {
 
 #if LV_USE_GPU_SDL
   m_renderer.clear_target().clear();
-
   update_transparency();
-
   m_texture.set_blend_mode(window::BlendMode::blend);
   m_renderer.clear_clip_rectangle().copy(m_texture).present().set_target(m_texture);
-
 #else
   m_texture.update(m_active_frame_buffer, m_display_size.width() * sizeof(u32));
   m_renderer.clear();
@@ -439,8 +441,8 @@ void Runtime::resize_display(const window::Size &size) {
 #endif
 
   m_display_size = size;
-  m_display_driver.hor_res = size.width();
-  m_display_driver.ver_res = size.height();
+  m_display_driver_container.display_driver.hor_res = size.width();
+  m_display_driver_container.display_driver.ver_res = size.height();
 
   m_texture = window::Texture(
     m_renderer, window::PixelFormat::argb8888, window::Texture::Access::target, size);
@@ -457,7 +459,8 @@ void Runtime::resize_display(const window::Size &size) {
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
 #endif
 
-  lv_disp_drv_update(m_display, &m_display_driver);
+  lv_disp_drv_update(m_display, &m_display_driver_container.display_driver);
+
 }
 
 void Runtime::allocate_frames(const window::Size &size) {
@@ -483,6 +486,7 @@ void Runtime::flush(
   }
 
 #if !LV_USE_GPU_SDL
+  //self is not available when using LV_USE_GPU_SDL
   auto *self = reinterpret_cast<Runtime *>(display_driver->user_data);
   self->m_active_frame_buffer = colors;
 #endif
@@ -501,7 +505,8 @@ void Runtime::flush_callback(
   lv_disp_drv_t *display_driver,
   const lv_area_t *area,
   lv_color_t *colors) {
-  auto *runtime = reinterpret_cast<Runtime *>(display_driver->user_data);
+
+  auto *runtime = reinterpret_cast<display_driver_container_t *>(display_driver)->self;
   runtime->flush(display_driver, area, colors);
   lv_disp_flush_ready(display_driver);
 }
