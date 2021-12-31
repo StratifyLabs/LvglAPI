@@ -793,6 +793,6 @@ private:
 
 #define LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(CLASS_NAME)                               \
   explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }                           \
-  CLASS_NAME(const char *name = "")
+  explicit CLASS_NAME(const char *name = "")
 
 #endif // LVGLAPI_LVGL_OBJECTACCESS_HPP
