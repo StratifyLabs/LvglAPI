@@ -104,7 +104,11 @@ public:
 
   Rgb to_rgb() const {
     auto color = get_color();
-    return Rgb{color.ch.red, color.ch.green, color.ch.blue};
+    return Rgb{
+      .red = u8(LV_COLOR_GET_R(color)),
+      .green = u8(LV_COLOR_GET_G(color)),
+      .blue = u8(LV_COLOR_GET_B(color))
+    };
   }
 
   static Color red(PaletteLevel level = PaletteLevel::default_) {
@@ -165,7 +169,7 @@ public:
     return Color(lv_color_t{.full = 0});
   }
   static Color white(PaletteLevel level = PaletteLevel::default_) {
-    return Color(lv_color_t{.full = 0xffffffff});
+    return Color(lv_color_t(LV_COLOR_MAKE(0xff, 0xff, 0xff)));
   }
 
   static const char *to_cstring(Palette value);
