@@ -35,7 +35,7 @@ set(SOURCES
 	lvgl/Runtime.hpp
 	lvgl/Screen.hpp
 	lvgl/Slider.hpp
-	lvgl/Spinbox.hpp
+	lvgl/SpinBox.hpp
 	lvgl/Spinner.hpp
 	lvgl/Style.hpp
 	lvgl/Switch.hpp
