@@ -902,7 +902,7 @@ const lvgl_api_image_descriptor_t *lvgl_api_get_image(int offset) {
 
 const lvgl_api_theme_descriptor_t *lvgl_api_get_theme(int offset) {
 #if defined __StratifyOS__
-  lvgl_api_image_request_t request = {.offset = offset};
+  lvgl_api_theme_request_t request = {.offset = offset};
   kernel_request(LVGL_REQUEST_GET_THEME, &request);
   return request.descriptor;
 #else

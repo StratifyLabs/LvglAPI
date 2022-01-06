@@ -109,7 +109,7 @@ void Object::add_style_from_theme(var::StringView name, Selector selector) {
   const auto theme = Theme::get_theme(*this);
   const auto item_list = name.split(" ");
   for (const auto &item : item_list) {
-    const auto *style = theme.find(item);
+    const auto *style = theme.find_style(item);
     if (style) {
       api()->obj_add_style(m_object, (lv_style_t *)style, selector.value());
     }

@@ -16,9 +16,9 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  const Derived &add_to_default_group() const {
+  Derived &add_to_default_group() {
     Group::get_default().add(*this);
-    return static_cast<const Derived &>(*this);
+    return static_cast<Derived &>(*this);
   }
 
   Derived &add_flag(Flags flags) {

@@ -39,7 +39,10 @@ public:
     return *this;
   }
 
-  const lv_style_t * find(var::StringView name) const;
+  const lv_style_t * find_style(var::StringView name) const;
+
+   static Theme find(var::StringView name);
+
 
   lv_theme_t * native_value(){
     return m_theme;
