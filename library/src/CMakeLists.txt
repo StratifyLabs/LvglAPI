@@ -10,7 +10,7 @@ set(SOURCES
 	Calendar.cpp
 	Canvas.cpp
 	Chart.cpp
-	Checkbox.cpp
+	CheckBox.cpp
 	Color.cpp
   ColorWheel.cpp
   Dropdown.cpp
