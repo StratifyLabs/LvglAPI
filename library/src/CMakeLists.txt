@@ -31,7 +31,7 @@ set(SOURCES
 	Runtime.cpp
 	Screen.cpp
 	Slider.cpp
-	Spinbox.cpp
+	SpinBox.cpp
 	Spinner.cpp
 	Style.cpp
 	Switch.cpp
