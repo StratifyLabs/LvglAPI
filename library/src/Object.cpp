@@ -15,6 +15,11 @@ void Object::construct_object(const char *name) {
   set_user_data(m_object, name);
 }
 
+void Object::construct_canvas(const char *name) {
+  m_object = api()->canvas_create(screen_object());
+  set_user_data(m_object, name);
+}
+
 void Object::construct_label(const char *name) {
   m_object = api()->label_create(screen_object());
   set_user_data(m_object, name);

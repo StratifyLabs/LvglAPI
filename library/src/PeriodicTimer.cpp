@@ -2,13 +2,7 @@
 
 using namespace lvgl;
 
-PeriodicTimer::PeriodicTimer() {
-
-}
-
-PeriodicTimer::PeriodicTimer(lv_timer_t * timer) : m_timer(timer){
-
-}
+PeriodicTimer::PeriodicTimer(lv_timer_t * timer) : m_timer(timer){}
 
 
 PeriodicTimer::PeriodicTimer(

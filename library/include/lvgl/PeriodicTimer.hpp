@@ -12,7 +12,7 @@ public:
 
   using Callback = void (*)(lv_timer_t *);
 
-  PeriodicTimer();
+  PeriodicTimer() = default;
   explicit PeriodicTimer(lv_timer_t * timer);
 
   PeriodicTimer(const char* name, const chrono::MicroTime & period, Callback callback);
@@ -81,6 +81,10 @@ public:
 
   API_NO_DISCARD const char * name() const {
     return reinterpret_cast<char*>(m_timer->user_data);
+  }
+
+  template<class Type> Type * user_data() const {
+    return reinterpret_cast<Type*>(m_timer->user_data);
   }
 
 private:

@@ -3,6 +3,8 @@
 
 #include "ObjectAccess.hpp"
 
+#include "Image.hpp"
+
 namespace lvgl {
 
 
@@ -13,6 +15,14 @@ public:
   static const lv_obj_class_t * get_class(){
     return api()->canvas_class;
   }
+
+  Canvas& set_buffer(void * buf, const Size size, ColorFormat color_format);
+  Canvas& set_pixel(const Point & point, Color color);
+  Canvas& set_pixel(const Point & point, Opacity opacity);
+  Color get_pixel(const Point& point) const;
+
+
+  ImageDescriptor get_image_descriptor() const;
 
 };
 

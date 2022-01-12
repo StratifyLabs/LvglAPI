@@ -246,6 +246,41 @@ enum class Alignment {
   invalid
 };
 
+enum class ColorFormat {
+  unknown = LV_IMG_CF_UNKNOWN,
+  raw = LV_IMG_CF_RAW,
+  raw_alpha = LV_IMG_CF_RAW_ALPHA,
+  chroma_keyed = LV_IMG_CF_RAW_CHROMA_KEYED,
+  true_color = LV_IMG_CF_TRUE_COLOR,
+  true_color_alpha = LV_IMG_CF_TRUE_COLOR_ALPHA,
+  true_color_chroma_keyed = LV_IMG_CF_TRUE_COLOR_CHROMA_KEYED,
+  indexed_1bit = LV_IMG_CF_INDEXED_1BIT,
+  indexed_2bit = LV_IMG_CF_INDEXED_2BIT,
+  indexed_4bit = LV_IMG_CF_INDEXED_4BIT,
+  indexed_8bit = LV_IMG_CF_INDEXED_8BIT,
+  alpha_1bit = LV_IMG_CF_ALPHA_1BIT,
+  alpha_2bit = LV_IMG_CF_ALPHA_2BIT,
+  alpha_4bit = LV_IMG_CF_ALPHA_4BIT,
+  alpha_8bit = LV_IMG_CF_ALPHA_8BIT,
+  reserved_15 = LV_IMG_CF_RESERVED_15,
+  reserved_16 = LV_IMG_CF_RESERVED_16,
+  reserved_17 = LV_IMG_CF_RESERVED_17,
+  reserved_18 = LV_IMG_CF_RESERVED_18,
+  reserved_19 = LV_IMG_CF_RESERVED_19,
+  reserved_20 = LV_IMG_CF_RESERVED_20,
+  reserved_21 = LV_IMG_CF_RESERVED_21,
+  reserved_22 = LV_IMG_CF_RESERVED_22,
+  reserved_23 = LV_IMG_CF_RESERVED_23,
+  encoded_0 = LV_IMG_CF_USER_ENCODED_0,
+  encoded_1 = LV_IMG_CF_USER_ENCODED_1,
+  encoded_2 = LV_IMG_CF_USER_ENCODED_2,
+  encoded_3 = LV_IMG_CF_USER_ENCODED_3,
+  encoded_4 = LV_IMG_CF_USER_ENCODED_4,
+  encoded_5 = LV_IMG_CF_USER_ENCODED_5,
+  encoded_6 = LV_IMG_CF_USER_ENCODED_6,
+  encoded_7 = LV_IMG_CF_USER_ENCODED_7
+};
+
 enum class Property {
   invalid = LV_STYLE_PROP_INV,
   width = LV_STYLE_WIDTH,

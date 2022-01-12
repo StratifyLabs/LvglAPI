@@ -612,7 +612,8 @@ typedef struct {
   //canvas
   lv_obj_t * (*canvas_create)(lv_obj_t * parent);
   void (*canvas_set_buffer)(lv_obj_t * canvas, void * buf, lv_coord_t w, lv_coord_t h, lv_img_cf_t cf);
-  void (*canvas_set_px)(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_color_t c);
+  void (*canvas_set_px_color)(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_color_t c);
+  void (*canvas_set_px_opa)(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y, lv_opa_t c);
   void (*canvas_set_palette)(lv_obj_t * canvas, uint8_t id, lv_color_t c);
   lv_color_t (*canvas_get_px)(lv_obj_t * canvas, lv_coord_t x, lv_coord_t y);
   lv_img_dsc_t * (*canvas_get_img)(lv_obj_t * canvas);

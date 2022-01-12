@@ -559,7 +559,8 @@ const lvgl_api_t lvgl_api = {
   // canvas
   .canvas_create = lv_canvas_create,
   .canvas_set_buffer = lv_canvas_set_buffer,
-  .canvas_set_px = lv_canvas_set_px,
+  .canvas_set_px_color = lv_canvas_set_px_color,
+  .canvas_set_px_opa = lv_canvas_set_px_opa,
   .canvas_set_palette = lv_canvas_set_palette,
   .canvas_get_px = lv_canvas_get_px,
   .canvas_get_img = lv_canvas_get_img,

@@ -388,6 +388,7 @@ protected:
   void find_names_clear_state(const var::StringViewList &name_list, State state);
 
   API_MAYBE_UNUSED void construct_object(const char * name);
+  API_MAYBE_UNUSED void construct_canvas(const char * name);
   API_MAYBE_UNUSED void construct_label(const char * name);
   API_MAYBE_UNUSED void construct_line(const char * name);
   API_MAYBE_UNUSED void construct_button(const char * name);

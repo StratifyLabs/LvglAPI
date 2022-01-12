@@ -117,6 +117,15 @@ public:
   static Info find_image(const char *name) { return find_image(name, Size(0, 0)); }
 };
 
+class ImageDescriptor : public api::ExecutionContext {
+public:
+  ImageDescriptor() = default;
+  explicit ImageDescriptor(lv_img_dsc_t * value) : m_native_value(value){}
+
+private:
+  lv_img_dsc_t * m_native_value = nullptr;
+};
+
 } // namespace lvgl
 
 #endif // LVGLAPI_LVGL_IMAGE_HPP
