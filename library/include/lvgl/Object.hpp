@@ -395,7 +395,6 @@ public:
   void remove_later(const chrono::MicroTime delay) {
     if (m_object) {
       api()->obj_del_delayed(m_object, delay.milliseconds());
-      m_object = nullptr;
     }
   }
 
