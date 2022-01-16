@@ -71,7 +71,7 @@ public:
   explicit Bar(const char *name = "");
   explicit Bar(lv_obj_t *object) { m_object = object; }
 
-  static const lv_obj_class_t *get_class() { return api()->bar_class; }
+  LVGL_OBJECT_ACCESS_GET_CLASS(bar_class)
 
   enum class Mode {
     normal = LV_BAR_MODE_NORMAL,

@@ -126,8 +126,11 @@ void Object::set_user_data(lv_obj_t *obj, const char *name) {
   if (obj->user_data == nullptr) {
     obj->user_data = (void *)name;
     if (auto *user_data = UserData::get_user_data(obj->user_data);
-        user_data && user_data->needs_free()) {
-      api()->obj_add_event_cb(obj, delete_user_data, LV_EVENT_DELETE, nullptr);
+        user_data ) {
+      user_data->m_associated_object = obj;
+      if (user_data->needs_free()) {
+        api()->obj_add_event_cb(obj, delete_user_data, LV_EVENT_DELETE, nullptr);
+      }
     }
   }
 }

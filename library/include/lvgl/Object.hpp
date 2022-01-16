@@ -21,13 +21,17 @@ public:
     return reinterpret_cast<Type *>(const_cast<UserData *>(this));
   }
 
-  API_NO_DISCARD const char *cast_as_name() const { return reinterpret_cast<const char *>(this); }
+  API_NO_DISCARD const char *cast_as_name() const {
+    return reinterpret_cast<const char *>(this);
+  }
 
   API_NO_DISCARD void *cast_as_void() const {
     return reinterpret_cast<void *>(const_cast<UserData *>(this));
   }
 
   API_NO_DISCARD bool needs_free() const { return m_needs_free; }
+
+  API_NO_DISCARD lv_obj_t *associated_object() const { return m_associated_object; }
 
 protected:
   // dynamically allocate the UserData and have it live with the created object
@@ -41,15 +45,22 @@ protected:
 private:
   friend class Object;
 
+  // This returns a pointer to the user data object if it is
+  // a user data object. If it is a plain name (`const char*`)
+  // it returns null
   static UserData *get_user_data(void *user_data) {
     auto *context = reinterpret_cast<UserData *>(user_data);
     return context->m_magic == reinterpret_cast<void *>(magic_function) ? context
                                                                         : nullptr;
   }
 
+  // the magic function is used to determine if the user data points
+  // to a UserData compatible object or to a `const char *`
+  // and is just a plain old name
   static void magic_function() {}
   const void *m_magic = reinterpret_cast<void *>(magic_function);
   const char *m_name = nullptr;
+  lv_obj_t *m_associated_object = nullptr;
   bool m_needs_free = false;
 };
 
@@ -66,25 +77,18 @@ protected:
   using UserDataBase = UserDataAccess<Derived>;
 };
 
-
-
 class Object : public Api {
 public:
-
   class Iterator {
   public:
-
     Iterator() = default;
 
-    Iterator(lv_obj_t * value, size_t index){
+    Iterator(lv_obj_t *value, size_t index) {
       m_object_value = value;
       m_index = index;
     }
 
-
-    bool operator!=(Iterator const &a) const noexcept {
-      return m_index != a.m_index;
-    }
+    bool operator!=(Iterator const &a) const noexcept { return m_index != a.m_index; }
 
     Object operator*() const noexcept {
       return Object(m_object_value).get_child(m_index);
@@ -95,28 +99,18 @@ public:
       return *this;
     }
 
-
   private:
-    lv_obj_t * m_object_value = nullptr;
+    lv_obj_t *m_object_value = nullptr;
     size_t m_index = 0;
   };
 
-  Iterator begin() const noexcept {
-    return Iterator(m_object, 0);
-  }
+  Iterator begin() const noexcept { return Iterator(m_object, 0); }
 
-  Iterator end() const noexcept {
-    return Iterator(m_object, get_child_count());
-  }
+  Iterator end() const noexcept { return Iterator(m_object, get_child_count()); }
 
-  Iterator cbegin() const noexcept {
-    return Iterator(m_object, 0);
-  }
+  Iterator cbegin() const noexcept { return Iterator(m_object, 0); }
 
-  Iterator cend() const noexcept {
-    return Iterator(m_object, get_child_count());
-  }
-
+  Iterator cend() const noexcept { return Iterator(m_object, get_child_count()); }
 
   static constexpr lv_coord_t content_size = LV_SIZE_CONTENT;
   static constexpr lv_coord_t size_from_content = LV_SIZE_CONTENT;
@@ -171,7 +165,9 @@ public:
   API_NO_DISCARD bool is_findable() const { return api()->obj_is_valid(m_object); }
   API_NO_DISCARD bool is_valid() const { return m_object != nullptr; }
 
-  API_NO_DISCARD bool is_layout_positioned() const { return api()->obj_is_layout_positioned(m_object); }
+  API_NO_DISCARD bool is_layout_positioned() const {
+    return api()->obj_is_layout_positioned(m_object);
+  }
 
   API_NO_DISCARD lv_coord_t get_x() const { return api()->obj_get_x(m_object); }
   API_NO_DISCARD lv_coord_t get_x2() const { return api()->obj_get_x2(m_object); }
@@ -188,9 +184,15 @@ public:
     return result;
   }
 
-  API_NO_DISCARD lv_coord_t get_self_width() const { return api()->obj_get_self_width(m_object); }
-  API_NO_DISCARD lv_coord_t get_self_height() const { return api()->obj_get_self_height(m_object); }
-  API_NO_DISCARD lv_coord_t get_content_width() const { return api()->obj_get_content_width(m_object); }
+  API_NO_DISCARD lv_coord_t get_self_width() const {
+    return api()->obj_get_self_width(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_self_height() const {
+    return api()->obj_get_self_height(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_content_width() const {
+    return api()->obj_get_content_width(m_object);
+  }
 
   API_NO_DISCARD lv_coord_t get_content_height() const {
     return api()->obj_get_content_height(m_object);
@@ -218,12 +220,24 @@ public:
     return ScrollSnap(api()->obj_get_scroll_snap_y(m_object));
   }
 
-  API_NO_DISCARD lv_coord_t get_scroll_x() const { return api()->obj_get_scroll_x(m_object); }
-  API_NO_DISCARD lv_coord_t get_scroll_y() const { return api()->obj_get_scroll_y(m_object); }
-  API_NO_DISCARD lv_coord_t get_scroll_top() const { return api()->obj_get_scroll_top(m_object); }
-  API_NO_DISCARD lv_coord_t get_scroll_bottom() const { return api()->obj_get_scroll_bottom(m_object); }
-  API_NO_DISCARD lv_coord_t get_scroll_left() const { return api()->obj_get_scroll_left(m_object); }
-  API_NO_DISCARD lv_coord_t get_scroll_right() const { return api()->obj_get_scroll_right(m_object); }
+  API_NO_DISCARD lv_coord_t get_scroll_x() const {
+    return api()->obj_get_scroll_x(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_scroll_y() const {
+    return api()->obj_get_scroll_y(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_scroll_top() const {
+    return api()->obj_get_scroll_top(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_scroll_bottom() const {
+    return api()->obj_get_scroll_bottom(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_scroll_left() const {
+    return api()->obj_get_scroll_left(m_object);
+  }
+  API_NO_DISCARD lv_coord_t get_scroll_right() const {
+    return api()->obj_get_scroll_right(m_object);
+  }
 
   API_NO_DISCARD Point get_scroll_end() const {
     Point result;
@@ -247,17 +261,24 @@ public:
     return get_local_style_as_coord(Property::bottom_padding, selector);
   }
 
-  API_NO_DISCARD PropertyValue get_property_value(Property property, Selector selector = Selector()) {
+  API_NO_DISCARD PropertyValue
+  get_property_value(Property property, Selector selector = Selector()) {
     PropertyValue result;
     api()->obj_get_local_style_prop(
       m_object, lv_style_prop_t(property), &result.m_value, selector.value());
     return result;
   }
 
-  API_NO_DISCARD u32 get_child_count() const { return api()->obj_get_child_cnt(m_object); }
+  API_NO_DISCARD u32 get_child_count() const {
+    return api()->obj_get_child_cnt(m_object);
+  }
   API_NO_DISCARD u32 get_index() const { return api()->obj_get_index(m_object); }
-  API_NO_DISCARD Object get_parent() const { return Object(api()->obj_get_parent(m_object)); }
-  API_NO_DISCARD Object get_child(s32 id) const { return Object(api()->obj_get_child(m_object, id)); }
+  template <class TargetClass = Object> API_NO_DISCARD TargetClass get_parent() const {
+    return TargetClass(api()->obj_get_parent(m_object));
+  }
+  template <class TargetClass = Object> API_NO_DISCARD TargetClass get_child(s32 id) const {
+    return TargetClass(api()->obj_get_child(m_object, id));
+  }
 
   template <class TargetClass> API_NO_DISCARD TargetClass get() {
     static_assert(std::is_base_of<Object, TargetClass>::value);
@@ -267,28 +288,30 @@ public:
   template <IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
   API_NO_DISCARD Object find_object(const char *name) const {
     auto result = find_object_worker(name);
-    if( (isAssertOnFail == IsAssertOnFail::yes) && !result.is_valid() ){
+    if ((isAssertOnFail == IsAssertOnFail::yes) && !result.is_valid()) {
       API_ASSERT(false);
     }
     return result;
   }
 
-  template <class TargetClass = Object, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
+  template <
+    class TargetClass = Object,
+    IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
   API_NO_DISCARD TargetClass find(const char *name) const {
     return TargetClass(find_object<isAssertOnFail>(name).object());
   }
 
   template <class TargetClass, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
-  API_NO_DISCARD TargetClass find_within(const char * top, const char * bottom) const {
+  API_NO_DISCARD TargetClass find_within(const char *top, const char *bottom) const {
     return find_object(top).find<TargetClass, isAssertOnFail>(bottom);
   }
 
   template <class TargetClass, IsAssertOnFail isAssertOnFail = IsAssertOnFail::yes>
-  API_NO_DISCARD TargetClass find(const std::initializer_list<const char*> list) const {
+  API_NO_DISCARD TargetClass find(const std::initializer_list<const char *> list) const {
     auto current = *this;
-    for(const char * entry: list){
+    for (const char *entry : list) {
       current = current.find_object<isAssertOnFail>(entry);
-      if( !current.is_valid() ){
+      if (!current.is_valid()) {
         return Object().get<TargetClass>();
       }
     }
@@ -310,13 +333,14 @@ public:
     }
   }
 
-  template <class TargetClass> API_NO_DISCARD TargetClass find_parent(const char * name) const {
+  template <class TargetClass>
+  API_NO_DISCARD TargetClass find_parent(const char *name) const {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return find_parent_by_name(name).get<TargetClass>();
   }
 
   API_NO_DISCARD Object find_child(const char *name) const;
-  API_NO_DISCARD Object find(Point point){
+  API_NO_DISCARD Object find(Point point) {
     return Object(api()->indev_search_obj(m_object, point.point()));
   }
 
@@ -324,7 +348,9 @@ public:
   static const char *to_cstring(ClassType value);
   static ClassType class_type_from_string(const var::StringView value);
 
-  API_NO_DISCARD Editable is_editable() const { return Editable(api()->obj_is_editable(m_object)); }
+  API_NO_DISCARD Editable is_editable() const {
+    return Editable(api()->obj_is_editable(m_object));
+  }
 
   lv_obj_t *object() { return m_object; }
   API_NO_DISCARD lv_obj_t *object() const { return m_object; }
@@ -387,18 +413,22 @@ protected:
   void find_names_add_state(const var::StringViewList &name_list, State state);
   void find_names_clear_state(const var::StringViewList &name_list, State state);
 
-  API_MAYBE_UNUSED void construct_object(const char * name);
-  API_MAYBE_UNUSED void construct_canvas(const char * name);
-  API_MAYBE_UNUSED void construct_label(const char * name);
-  API_MAYBE_UNUSED void construct_line(const char * name);
-  API_MAYBE_UNUSED void construct_button(const char * name);
-  API_MAYBE_UNUSED void construct_list(const char * name);
-  API_MAYBE_UNUSED void construct_dropdown(const char * name);
-  API_MAYBE_UNUSED void construct_switch(const char * name);
+  API_MAYBE_UNUSED void construct_object(const char *name);
+  API_MAYBE_UNUSED void construct_canvas(const char *name);
+  API_MAYBE_UNUSED void construct_label(const char *name);
+  API_MAYBE_UNUSED void construct_line(const char *name);
+  API_MAYBE_UNUSED void construct_button(const char *name);
+  API_MAYBE_UNUSED void construct_list(const char *name);
+  API_MAYBE_UNUSED void construct_dropdown(const char *name);
+  API_MAYBE_UNUSED void construct_switch(const char *name);
 
-  API_NO_DISCARD lv_coord_t get_local_style_as_coord(Property property, Selector selector) const;
-  API_NO_DISCARD Color get_local_style_as_color(Property property, Selector selector) const;
-  API_NO_DISCARD UserData *get_user_data() const { return UserData::get_user_data(m_object->user_data); }
+  API_NO_DISCARD lv_coord_t
+  get_local_style_as_coord(Property property, Selector selector) const;
+  API_NO_DISCARD Color
+  get_local_style_as_color(Property property, Selector selector) const;
+  API_NO_DISCARD UserData *get_user_data() const {
+    return UserData::get_user_data(m_object->user_data);
+  }
 
 private:
   friend class Tree;
@@ -409,7 +439,7 @@ private:
 
   Object find_object_worker(const char *name) const;
 
-  Object find_parent_by_name(const char * name) const;
+  Object find_parent_by_name(const char *name) const;
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)

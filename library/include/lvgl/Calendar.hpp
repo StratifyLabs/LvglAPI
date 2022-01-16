@@ -8,12 +8,8 @@ namespace lvgl {
 
 class Calendar : public ObjectAccess<Calendar> {
 public:
-  explicit Calendar(const char * name = "");
-  explicit Calendar(lv_obj_t * object){ m_object = object; }
-
-  static const lv_obj_class_t * get_class(){
-    return api()->calendar_class;
-  }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Calendar);
+  LVGL_OBJECT_ACCESS_GET_CLASS(calendar_class);
 
 };
 

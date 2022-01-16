@@ -15,11 +15,11 @@ public:
 
   explicit Event(LvglEvent event);
 
-  template<class ParentType> ParentType find_parent(const char * name){
+  template<class ParentType = Object> ParentType find_parent(const char * name){
     return target().find_parent<ParentType>(name);
   }
 
-  template<class SiblingType> SiblingType find_sibling(const char * name){
+  template<class SiblingType = Object> SiblingType find_sibling(const char * name){
     return target().get_parent().find<SiblingType>(name);
   }
 

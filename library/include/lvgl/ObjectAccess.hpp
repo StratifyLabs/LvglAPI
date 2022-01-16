@@ -41,12 +41,12 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &add_state(const var::StringViewList & name_list, State state){
+  Derived &add_state(const var::StringViewList &name_list, State state) {
     find_names_add_state(name_list, state);
     return static_cast<Derived &>(*this);
   }
 
-  Derived &clear_state(const var::StringViewList & name_list, State state){
+  Derived &clear_state(const var::StringViewList &name_list, State state) {
     find_names_clear_state(name_list, state);
     return static_cast<Derived &>(*this);
   }
@@ -780,7 +780,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-
   using Callback = void (*)(Derived);
 
   Callback get_setup() const { return m_setup; }
@@ -791,8 +790,14 @@ private:
 
 } // namespace lvgl
 
+#define LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                             \
+  explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }
+
 #define LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(CLASS_NAME)                               \
-  explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }                           \
+  LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                                   \
   explicit CLASS_NAME(const char *name = "")
+
+#define LVGL_OBJECT_ACCESS_GET_CLASS(CLASS_NAME)                                                       \
+  static const lv_obj_class_t *get_class() { return api()->CLASS_NAME; }
 
 #endif // LVGLAPI_LVGL_OBJECTACCESS_HPP

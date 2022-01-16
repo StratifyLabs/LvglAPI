@@ -11,8 +11,7 @@ class Button : public ObjectAccess<Button> {
 public:
   LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Button);
 
-
-  static const lv_obj_class_t *get_class() { return api()->button_class; }
+  LVGL_OBJECT_ACCESS_GET_CLASS(button_class);
 
   Button & add_label_as_static(const char * text){
     return add(Label().set_text_as_static(text).center());
