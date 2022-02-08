@@ -784,20 +784,23 @@ public:
 
   Callback get_setup() const { return m_setup; }
 
+protected:
+  template<class Type> Derived& find_and_set_text_as_static(const char * name, const char * value){
+    find<Type>(name).set_text_as_static(value);
+    return static_cast<Derived &>(*this);
+  }
+
+  template<class Type> Derived& find_and_set_text(const char * name, const char * value){
+    find<Type>(name).set_text(value);
+    return static_cast<Derived &>(*this);
+  }
+
 private:
   Callback m_setup = nullptr;
 };
 
 } // namespace lvgl
 
-#define LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                             \
-  explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }
-
-#define LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(CLASS_NAME)                               \
-  LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                                   \
-  explicit CLASS_NAME(const char *name = "")
-
-#define LVGL_OBJECT_ACCESS_GET_CLASS(CLASS_NAME)                                                       \
-  static const lv_obj_class_t *get_class() { return api()->CLASS_NAME; }
+#include "macros.hpp"
 
 #endif // LVGLAPI_LVGL_OBJECTACCESS_HPP

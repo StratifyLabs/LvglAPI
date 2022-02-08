@@ -17,6 +17,7 @@ public:
   };
 
   explicit Spinner(const Construct &options);
+  explicit Spinner(const char * name);
   explicit Spinner(lv_obj_t *object) { m_object = object; }
 
   static const lv_obj_class_t *get_class() { return api()->spinner_class; }

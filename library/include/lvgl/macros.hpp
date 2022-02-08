@@ -8,8 +8,19 @@
     return MCU_STRINGIFY(y)
 
 #define LVGL_PROPERTY_STRING_CASE(x, y)                                                  \
-  if (value == MCU_STRINGIFY(y)) {                                            \
+  if (value == MCU_STRINGIFY(y)) {                                                       \
     return x::y;                                                                         \
   }
+
+#define LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                             \
+  explicit CLASS_NAME(lv_obj_t *object) { m_object = object; }
+
+#define LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(CLASS_NAME)                               \
+  LVGL_OBJECT_ACCESS_CONSTRUCT_FROM_OBJECT(CLASS_NAME)                                   \
+  explicit CLASS_NAME(const char *name = "")
+
+#define LVGL_OBJECT_ACCESS_GET_CLASS(CLASS_NAME)                                         \
+  static const lv_obj_class_t *get_class() { return api()->CLASS_NAME; }
+
 
 #endif // LVGLAPI_LVGL_MACROS_HPP
