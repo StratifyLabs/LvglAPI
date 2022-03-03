@@ -29,7 +29,7 @@ const lvgl_api_t lvgl_api = {
   .obj_remove_event_dsc = lv_obj_remove_event_dsc,
   .event_get_indev = lv_event_get_indev,
   .event_get_draw_part_dsc = lv_event_get_draw_part_dsc,
-  .event_get_clip_area = lv_event_get_clip_area,
+  //.event_get_clip_area = lv_event_get_clip_area,
   .event_get_old_size = lv_event_get_old_size,
   .event_get_key = lv_event_get_key,
   .event_set_ext_draw_size = lv_event_set_ext_draw_size,
@@ -163,6 +163,7 @@ const lvgl_api_t lvgl_api = {
   .obj_get_child_cnt = lv_obj_get_child_cnt,
   .obj_get_index = lv_obj_get_index,
   .obj_tree_walk = lv_obj_tree_walk,
+  .obj_move_to_index = lv_obj_move_to_index,
 
   // obj class
   .obj_class_init_obj = lv_obj_class_init_obj,
@@ -801,11 +802,6 @@ const lvgl_api_t lvgl_api = {
   .obj_set_style_grid_cell_row_span = lv_obj_set_style_grid_cell_row_span,
   .obj_set_style_grid_cell_x_align = lv_obj_set_style_grid_cell_x_align,
   .obj_set_style_grid_cell_y_align = lv_obj_set_style_grid_cell_y_align,
-
-  // extra themes
-  .theme_default_init = lv_theme_default_init,
-  .theme_mono_init = lv_theme_mono_init,
-  .theme_basic_init = lv_theme_basic_init,
 
   // system
   .get_font = lvgl_api_get_font,

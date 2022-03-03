@@ -45,6 +45,7 @@ set(SOURCES
 	lvgl/Theme.hpp
 	lvgl/TileView.hpp
 	lvgl/Types.hpp
+	lvgl/UserData.hpp
 	lvgl/Window.hpp
 	lvgl/macros.hpp
 	lvgl.hpp

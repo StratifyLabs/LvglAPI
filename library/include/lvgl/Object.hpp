@@ -5,77 +5,9 @@
 
 #include "Font.hpp"
 #include "Style.hpp"
+#include "UserData.hpp"
 
 namespace lvgl {
-
-class UserData {
-  void *operator new(size_t size) { return ::operator new(size); }
-
-public:
-  explicit UserData(const char *name = "") : m_name(name) {}
-  virtual ~UserData() = default;
-
-  API_NO_DISCARD const char *name() const { return m_name ? m_name : "unnamed"; }
-
-  template <typename Type> Type *cast() const {
-    return reinterpret_cast<Type *>(const_cast<UserData *>(this));
-  }
-
-  API_NO_DISCARD const char *cast_as_name() const {
-    return reinterpret_cast<const char *>(this);
-  }
-
-  API_NO_DISCARD void *cast_as_void() const {
-    return reinterpret_cast<void *>(const_cast<UserData *>(this));
-  }
-
-  API_NO_DISCARD bool needs_free() const { return m_needs_free; }
-
-  API_NO_DISCARD lv_obj_t *associated_object() const { return m_associated_object; }
-
-protected:
-  // dynamically allocate the UserData and have it live with the created object
-  // this will be freed when the associated object is removed
-  template <class Derived, typename... Args> static Derived &create(Args... args) {
-    auto *result = new Derived(args...);
-    result->m_needs_free = true;
-    return *result;
-  }
-
-private:
-  friend class Object;
-
-  // This returns a pointer to the user data object if it is
-  // a user data object. If it is a plain name (`const char*`)
-  // it returns null
-  static UserData *get_user_data(void *user_data) {
-    auto *context = reinterpret_cast<UserData *>(user_data);
-    return context->m_magic == reinterpret_cast<void *>(magic_function) ? context
-                                                                        : nullptr;
-  }
-
-  // the magic function is used to determine if the user data points
-  // to a UserData compatible object or to a `const char *`
-  // and is just a plain old name
-  static void magic_function() {}
-  const void *m_magic = reinterpret_cast<void *>(magic_function);
-  const char *m_name = nullptr;
-  lv_obj_t *m_associated_object = nullptr;
-  bool m_needs_free = false;
-};
-
-template <class Derived> class UserDataAccess : public UserData {
-public:
-  explicit UserDataAccess(const char *name = "") : UserData(name) {}
-  virtual ~UserDataAccess() = default;
-
-  template <typename... Args> static Derived &create(Args... args) {
-    return UserData::create<Derived>(args...);
-  }
-
-protected:
-  using UserDataBase = UserDataAccess<Derived>;
-};
 
 class Object : public Api {
 public:
@@ -160,123 +92,56 @@ public:
     return api()->obj_has_class(m_object, TargetClass::get_class());
   }
 
-  static const lv_obj_class_t *get_class() { return api()->obj_class; }
-
-  API_NO_DISCARD bool is_findable() const { return api()->obj_is_valid(m_object); }
+  static const lv_obj_class_t *get_class();
+  API_NO_DISCARD bool is_findable() const;
   API_NO_DISCARD bool is_valid() const { return m_object != nullptr; }
+  API_NO_DISCARD bool is_layout_positioned() const;
 
-  API_NO_DISCARD bool is_layout_positioned() const {
-    return api()->obj_is_layout_positioned(m_object);
-  }
+  API_NO_DISCARD lv_coord_t get_x() const;
+  API_NO_DISCARD lv_coord_t get_x2() const;
+  API_NO_DISCARD lv_coord_t get_y() const;
+  API_NO_DISCARD lv_coord_t get_y2() const;
+  API_NO_DISCARD lv_coord_t get_width() const;
+  API_NO_DISCARD lv_coord_t get_height() const;
+  API_NO_DISCARD Area get_content_coordinates() const;
+  API_NO_DISCARD Area get_coordinates() const;
 
-  API_NO_DISCARD lv_coord_t get_x() const { return api()->obj_get_x(m_object); }
-  API_NO_DISCARD lv_coord_t get_x2() const { return api()->obj_get_x2(m_object); }
-  API_NO_DISCARD lv_coord_t get_y() const { return api()->obj_get_y(m_object); }
-  API_NO_DISCARD lv_coord_t get_y2() const { return api()->obj_get_y2(m_object); }
-  API_NO_DISCARD lv_coord_t get_width() const { return api()->obj_get_width(m_object); }
-  API_NO_DISCARD lv_coord_t get_height() const { return api()->obj_get_height(m_object); }
+  API_NO_DISCARD Size get_size() const;
 
-  API_NO_DISCARD Size get_size() const { return {get_width(), get_height()}; }
+  API_NO_DISCARD Area get_content_area() const;
+  API_NO_DISCARD lv_coord_t get_self_width() const;
+  API_NO_DISCARD lv_coord_t get_self_height() const;
+  API_NO_DISCARD lv_coord_t get_content_width() const;
+  API_NO_DISCARD lv_coord_t get_content_height() const;
+  API_NO_DISCARD bool is_visible(Area &area) const;
+  API_NO_DISCARD bool is_visible() const;
+  API_NO_DISCARD ScrollBarMode get_scrollbar_mode() const;
+  API_NO_DISCARD Direction get_scroll_direction() const;
+  API_NO_DISCARD ScrollSnap get_scroll_snap_x() const;
+  API_NO_DISCARD ScrollSnap get_scroll_snap_y() const;
+  API_NO_DISCARD lv_coord_t get_scroll_x() const;
+  API_NO_DISCARD lv_coord_t get_scroll_y() const;
+  API_NO_DISCARD lv_coord_t get_scroll_top() const;
+  API_NO_DISCARD lv_coord_t get_scroll_bottom() const;
+  API_NO_DISCARD lv_coord_t get_scroll_left() const;
+  API_NO_DISCARD lv_coord_t get_scroll_right() const;
 
-  API_NO_DISCARD Area get_content_area() const {
-    Area result;
-    api()->obj_get_content_coords(m_object, &result.m_area);
-    return result;
-  }
-
-  API_NO_DISCARD lv_coord_t get_self_width() const {
-    return api()->obj_get_self_width(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_self_height() const {
-    return api()->obj_get_self_height(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_content_width() const {
-    return api()->obj_get_content_width(m_object);
-  }
-
-  API_NO_DISCARD lv_coord_t get_content_height() const {
-    return api()->obj_get_content_height(m_object);
-  }
-
-  API_NO_DISCARD bool is_visible(Area &area) const {
-    return api()->obj_area_is_visible(m_object, area.area());
-  }
-
-  API_NO_DISCARD bool is_visible() const { return api()->obj_is_visible(m_object); }
-
-  API_NO_DISCARD ScrollBarMode get_scrollbar_mode() const {
-    return ScrollBarMode(api()->obj_get_scrollbar_mode(m_object));
-  }
-
-  API_NO_DISCARD Direction get_scroll_direction() const {
-    return Direction(api()->obj_get_scroll_dir(m_object));
-  }
-
-  API_NO_DISCARD ScrollSnap get_scroll_snap_x() const {
-    return ScrollSnap(api()->obj_get_scroll_snap_x(m_object));
-  }
-
-  API_NO_DISCARD ScrollSnap get_scroll_snap_y() const {
-    return ScrollSnap(api()->obj_get_scroll_snap_y(m_object));
-  }
-
-  API_NO_DISCARD lv_coord_t get_scroll_x() const {
-    return api()->obj_get_scroll_x(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_scroll_y() const {
-    return api()->obj_get_scroll_y(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_scroll_top() const {
-    return api()->obj_get_scroll_top(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_scroll_bottom() const {
-    return api()->obj_get_scroll_bottom(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_scroll_left() const {
-    return api()->obj_get_scroll_left(m_object);
-  }
-  API_NO_DISCARD lv_coord_t get_scroll_right() const {
-    return api()->obj_get_scroll_right(m_object);
-  }
-
-  API_NO_DISCARD Point get_scroll_end() const {
-    Point result;
-    api()->obj_get_scroll_end(m_object, result.point());
-    return result;
-  }
-
-  API_NO_DISCARD lv_coord_t get_left_padding(Selector selector = Selector()) const {
-    return get_local_style_as_coord(Property::left_padding, selector);
-  }
-
-  API_NO_DISCARD lv_coord_t get_right_padding(Selector selector = Selector()) const {
-    return get_local_style_as_coord(Property::right_padding, selector);
-  }
-
-  API_NO_DISCARD lv_coord_t get_top_padding(Selector selector = Selector()) const {
-    return get_local_style_as_coord(Property::top_padding, selector);
-  }
-
-  API_NO_DISCARD lv_coord_t get_bottom_padding(Selector selector = Selector()) const {
-    return get_local_style_as_coord(Property::bottom_padding, selector);
-  }
-
+  API_NO_DISCARD Point get_scroll_end() const;
+  API_NO_DISCARD lv_coord_t get_left_padding(Selector selector = Selector()) const;
+  API_NO_DISCARD lv_coord_t get_right_padding(Selector selector = Selector()) const;
+  API_NO_DISCARD lv_coord_t get_top_padding(Selector selector = Selector()) const;
+  API_NO_DISCARD lv_coord_t get_bottom_padding(Selector selector = Selector()) const;
   API_NO_DISCARD PropertyValue
-  get_property_value(Property property, Selector selector = Selector()) {
-    PropertyValue result;
-    api()->obj_get_local_style_prop(
-      m_object, lv_style_prop_t(property), &result.m_value, selector.value());
-    return result;
-  }
+  get_property_value(Property property, Selector selector = Selector());
 
-  API_NO_DISCARD u32 get_child_count() const {
-    return api()->obj_get_child_cnt(m_object);
-  }
-  API_NO_DISCARD u32 get_index() const { return api()->obj_get_index(m_object); }
+  API_NO_DISCARD u32 get_child_count() const;
+  API_NO_DISCARD u32 get_index() const;
+
   template <class TargetClass = Object> API_NO_DISCARD TargetClass get_parent() const {
     return TargetClass(api()->obj_get_parent(m_object));
   }
-  template <class TargetClass = Object> API_NO_DISCARD TargetClass get_child(s32 id) const {
+  template <class TargetClass = Object>
+  API_NO_DISCARD TargetClass get_child(s32 id) const {
     return TargetClass(api()->obj_get_child(m_object, id));
   }
 

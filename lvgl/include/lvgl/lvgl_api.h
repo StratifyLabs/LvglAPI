@@ -214,6 +214,7 @@ typedef struct {
   uint32_t (*obj_get_child_cnt)(const struct _lv_obj_t * obj);
   uint32_t (*obj_get_index)(const struct _lv_obj_t * obj);
   void (*obj_tree_walk)(struct _lv_obj_t * start_obj, lv_obj_tree_walk_cb_t cb, void * user_data);
+  void (*obj_move_to_index)(lv_obj_t * obj, int32_t index);
 
   //obj class
   void (*obj_class_init_obj)(struct _lv_obj_t * obj);
@@ -342,7 +343,7 @@ typedef struct {
   lv_style_prop_t (*style_register_prop)();
   bool (*style_remove_prop)(lv_style_t * style, lv_style_prop_t prop);
   void (*style_set_prop)(lv_style_t * style, lv_style_prop_t prop, lv_style_value_t value);
-  lv_res_t (*style_get_prop)(lv_style_t * style, lv_style_prop_t prop, lv_style_value_t * value);
+  lv_res_t (*style_get_prop)(const lv_style_t * style, lv_style_prop_t prop, lv_style_value_t * value);
   void (*style_transition_dsc_init)(lv_style_transition_dsc_t * tr, const lv_style_prop_t props[], lv_anim_path_cb_t path_cb, uint32_t time, uint32_t delay, void * user_data);
   lv_style_value_t (*style_prop_get_default)(lv_style_prop_t prop);
   bool (*style_is_empty)(const lv_style_t * style);
@@ -818,12 +819,10 @@ typedef struct {
   lv_coord_t (*spangroup_get_indent)(lv_obj_t * obj);
   lv_span_mode_t (*spangroup_get_mode)(lv_obj_t * obj);
   lv_coord_t (*spangroup_get_max_line_h)(lv_obj_t * obj);
-  lv_coord_t (*spangroup_get_expand_width)(lv_obj_t * obj);
+  uint32_t (*spangroup_get_expand_width)(lv_obj_t * obj, uint32_t max_width);
   lv_coord_t (*spangroup_get_expand_height)(lv_obj_t * obj, lv_coord_t width);
   void (*spangroup_refr_mode)(lv_obj_t * obj);
 
-
-  //extra layouts
   //flex
   void (*flex_init)();
   void (*obj_set_flex_flow)(lv_obj_t * obj, lv_flex_flow_t flow);
@@ -867,12 +866,6 @@ typedef struct {
   void (*obj_set_style_grid_cell_row_span)(lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
   void (*obj_set_style_grid_cell_x_align)(lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
   void (*obj_set_style_grid_cell_y_align)(lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
-
-
-  //extra themes
-  lv_theme_t * (*theme_default_init)(lv_disp_t * disp, lv_color_t color_primary, lv_color_t color_secondary, bool dark, const lv_font_t * font);
-  lv_theme_t * (*theme_mono_init)(lv_disp_t * disp, bool dark_bg, const lv_font_t * font);
-  lv_theme_t * (*theme_basic_init)(lv_disp_t * disp);
 
   //system
   const lvgl_api_font_descriptor_t * (*get_font)(int offset);

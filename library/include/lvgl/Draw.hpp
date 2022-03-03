@@ -42,25 +42,6 @@ public:
       return Color(m_rectangle->bg_color);
     }
 
-    Rectangle& set_background_gradient_color(Color value){
-      m_rectangle->bg_grad_color = value.get_color();
-      return *this;
-    }
-
-    API_NO_DISCARD auto background_gradient_color() const {
-      return Color(m_rectangle->bg_grad_color);
-    }
-
-    Rectangle& set_main_background_color_stop(u8 value){
-      m_rectangle->bg_main_color_stop = value;
-      return *this;
-    }
-
-    Rectangle& set_gradient_background_color_stop(u8 value){
-      m_rectangle->bg_grad_color_stop = value;
-      return *this;
-    }
-
     Rectangle& set_background_opacity(Opacity value){
       m_rectangle->bg_opa = lv_opa_t(value);
       return *this;

@@ -589,3 +589,42 @@ Opacity Style::opacity_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(Opacity, x100);
   return Opacity::invalid;
 }
+
+const char *Style::to_cstring(PropertyGroup value) {
+  switch (value) {
+    LVGL_PROPERTY_CASE(PropertyGroup, invalid);
+    LVGL_PROPERTY_CASE(PropertyGroup, alignment);
+    LVGL_PROPERTY_CASE(PropertyGroup, animation);
+    LVGL_PROPERTY_CASE(PropertyGroup, arc);
+    LVGL_PROPERTY_CASE(PropertyGroup, background);
+    LVGL_PROPERTY_CASE(PropertyGroup, border);
+    LVGL_PROPERTY_CASE(PropertyGroup, image);
+    LVGL_PROPERTY_CASE(PropertyGroup, line);
+    LVGL_PROPERTY_CASE(PropertyGroup, miscellaneous);
+    LVGL_PROPERTY_CASE(PropertyGroup, outline);
+    LVGL_PROPERTY_CASE(PropertyGroup, padding);
+    LVGL_PROPERTY_CASE(PropertyGroup, shadow);
+    LVGL_PROPERTY_CASE(PropertyGroup, size);
+    LVGL_PROPERTY_CASE(PropertyGroup, text);
+    LVGL_PROPERTY_CASE(PropertyGroup, transform);
+  }
+  return "unknown";
+}
+
+PropertyGroup Style::property_group_from_string(var::StringView value) {
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, alignment);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, animation);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, arc);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, background);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, border);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, image);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, line);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, miscellaneous);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, outline);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, padding);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, shadow);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, size);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, text);
+  LVGL_PROPERTY_STRING_CASE(PropertyGroup, transform);
+  return PropertyGroup::invalid;
+}

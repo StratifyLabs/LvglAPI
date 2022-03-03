@@ -88,11 +88,6 @@ public:
     return *this;
   }
 
-  TextArea &set_text_alignment(TextAlignment value) {
-    api()->textarea_set_align(object(), lv_text_align_t(value));
-    return *this;
-  }
-
   TextArea &set_text(const char *value) {
     api()->textarea_set_text(object(), value);
     return *this;

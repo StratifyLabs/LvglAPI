@@ -114,6 +114,9 @@ public:
   static const char *to_cstring(Opacity value);
   static Opacity opacity_from_string(var::StringView value);
 
+  static const char *to_cstring(PropertyGroup value);
+  static PropertyGroup property_group_from_string(var::StringView value);
+
   API_NO_DISCARD PropertyValue get_property_value(Property property) const {
     PropertyValue result;
     api()->style_get_prop(

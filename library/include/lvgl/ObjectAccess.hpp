@@ -290,6 +290,11 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived &move_to_index(s32 index) {
+    api()->obj_move_to_index(m_object, index);
+    return static_cast<Derived &>(*this);
+  }
+
   Derived &move_to_foreground() {
     api()->obj_move_foreground(m_object);
     return static_cast<Derived &>(*this);

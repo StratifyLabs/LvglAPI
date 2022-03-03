@@ -11,6 +11,7 @@ namespace lvgl {}
 #include "lvgl/Bar.hpp"
 #include "lvgl/Button.hpp"
 #include "lvgl/Calendar.hpp"
+#include "lvgl/Canvas.hpp"
 #include "lvgl/Chart.hpp"
 #include "lvgl/CheckBox.hpp"
 #include "lvgl/Color.hpp"

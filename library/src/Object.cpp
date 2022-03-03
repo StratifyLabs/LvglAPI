@@ -94,7 +94,8 @@ Object Object::find_parent_by_name(const char *name) const {
 
 void Object::find_names_add_state(const var::StringViewList &name_list, State state) {
   for (const auto &name : name_list) {
-    auto *object = find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
+    auto *object =
+      find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
     if (object) {
       api()->obj_add_state(object, lv_state_t(state));
     }
@@ -103,7 +104,8 @@ void Object::find_names_add_state(const var::StringViewList &name_list, State st
 
 void Object::find_names_clear_state(const var::StringViewList &name_list, State state) {
   for (const auto &name : name_list) {
-    auto *object = find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
+    auto *object =
+      find<Object, IsAssertOnFail::no>(var::KeyString(name).cstring()).object();
     if (object) {
       api()->obj_clear_state(object, lv_state_t(state));
     }
@@ -125,8 +127,7 @@ void Object::set_user_data(lv_obj_t *obj, const char *name) {
   API_ASSERT(obj != nullptr);
   if (obj->user_data == nullptr) {
     obj->user_data = (void *)name;
-    if (auto *user_data = UserData::get_user_data(obj->user_data);
-        user_data ) {
+    if (auto *user_data = UserData::get_user_data(obj->user_data); user_data) {
       user_data->m_associated_object = obj;
       if (user_data->needs_free()) {
         api()->obj_add_event_cb(obj, delete_user_data, LV_EVENT_DELETE, nullptr);
@@ -295,4 +296,109 @@ ClassType Object::class_type_from_string(const var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(ClassType, table);
   LVGL_PROPERTY_STRING_CASE(ClassType, textarea);
   return ClassType::object;
+}
+
+u32 Object::get_child_count() const { return api()->obj_get_child_cnt(m_object); }
+
+u32 Object::get_index() const { return api()->obj_get_index(m_object); }
+
+PropertyValue Object::get_property_value(Property property, Selector selector) {
+  PropertyValue result;
+  api()->obj_get_local_style_prop(
+    m_object, lv_style_prop_t(property), &result.m_value, selector.value());
+  return result;
+}
+
+lv_coord_t Object::get_bottom_padding(Selector selector) const {
+  return get_local_style_as_coord(Property::bottom_padding, selector);
+}
+
+lv_coord_t Object::get_top_padding(Selector selector) const {
+  return get_local_style_as_coord(Property::top_padding, selector);
+}
+lv_coord_t Object::get_right_padding(Selector selector) const {
+  return get_local_style_as_coord(Property::right_padding, selector);
+}
+lv_coord_t Object::get_left_padding(Selector selector) const {
+  return get_local_style_as_coord(Property::left_padding, selector);
+}
+Point Object::get_scroll_end() const {
+  Point result;
+  api()->obj_get_scroll_end(m_object, result.point());
+  return result;
+}
+lv_coord_t Object::get_scroll_right() const {
+  return api()->obj_get_scroll_right(m_object);
+}
+lv_coord_t Object::get_scroll_left() const {
+  return api()->obj_get_scroll_left(m_object);
+}
+lv_coord_t Object::get_scroll_bottom() const {
+  return api()->obj_get_scroll_bottom(m_object);
+}
+lv_coord_t Object::get_scroll_top() const {
+  return api()->obj_get_scroll_top(m_object);
+}
+lv_coord_t Object::get_scroll_y() const {
+  return api()->obj_get_scroll_y(m_object);
+}
+lv_coord_t Object::get_scroll_x() const {
+  return api()->obj_get_scroll_x(m_object);
+}
+ScrollSnap Object::get_scroll_snap_y() const {
+  return ScrollSnap(api()->obj_get_scroll_snap_y(m_object));
+}
+ScrollSnap Object::get_scroll_snap_x() const {
+  return ScrollSnap(api()->obj_get_scroll_snap_x(m_object));
+}
+Direction Object::get_scroll_direction() const {
+  return Direction(api()->obj_get_scroll_dir(m_object));
+}
+ScrollBarMode Object::get_scrollbar_mode() const {
+  return ScrollBarMode(api()->obj_get_scrollbar_mode(m_object));
+}
+bool Object::is_visible() const { return api()->obj_is_visible(m_object); }
+bool Object::is_visible(Area &area) const {
+  return api()->obj_area_is_visible(m_object, area.area());
+}
+lv_coord_t Object::get_content_height() const {
+  return api()->obj_get_content_height(m_object);
+}
+lv_coord_t Object::get_content_width() const {
+  return api()->obj_get_content_width(m_object);
+}
+lv_coord_t Object::get_self_height() const {
+  return api()->obj_get_self_height(m_object);
+}
+lv_coord_t Object::get_self_width() const {
+  return api()->obj_get_self_width(m_object);
+}
+Area Object::get_content_area() const {
+  Area result;
+  api()->obj_get_content_coords(m_object, &result.m_area);
+  return result;
+}
+Size Object::get_size() const { return {get_width(), get_height()}; }
+lv_coord_t Object::get_height() const { return api()->obj_get_height(m_object); }
+lv_coord_t Object::get_width() const { return api()->obj_get_width(m_object); }
+lv_coord_t Object::get_y2() const { return api()->obj_get_y2(m_object); }
+lv_coord_t Object::get_y() const { return api()->obj_get_y(m_object); }
+lv_coord_t Object::get_x2() const { return api()->obj_get_x2(m_object); }
+lv_coord_t Object::get_x() const { return api()->obj_get_x(m_object); }
+bool Object::is_layout_positioned() const {
+  return api()->obj_is_layout_positioned(m_object);
+}
+bool Object::is_findable() const { return api()->obj_is_valid(m_object); }
+const lv_obj_class_t *Object::get_class() { return api()->obj_class; }
+
+Area Object::get_coordinates() const {
+  lv_area_t area;
+  api()->obj_get_coords(m_object, &area);
+  return Area(area);
+}
+
+Area Object::get_content_coordinates() const {
+  lv_area_t area;
+  api()->obj_get_content_coords(m_object, &area);
+  return Area(area);
 }

@@ -41,6 +41,7 @@ set(SOURCES
 	Types.cpp
 	Theme.cpp
 	TileView.cpp
+	UserData.cpp
 	Window.cpp
 	PARENT_SCOPE
 	)
