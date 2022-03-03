@@ -628,3 +628,12 @@ PropertyGroup Style::property_group_from_string(var::StringView value) {
   LVGL_PROPERTY_STRING_CASE(PropertyGroup, transform);
   return PropertyGroup::invalid;
 }
+
+PropertyDescription Style::get_property_description(Property property) {
+  for(const auto & description: property_list){
+    if( property == description.property ){
+      return description;
+    }
+  }
+  return {};
+}
