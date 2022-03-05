@@ -153,6 +153,13 @@ private:
   var::Vector<lv_color_t> m_display_frame0;
   var::Vector<lv_color_t> m_display_frame1;
   lv_color_t *m_active_frame_buffer = nullptr;
+#else
+
+  typedef struct {
+    void * renderer;
+    void * user_data;
+  } lv_draw_sdl_drv_param_t;
+  lv_draw_sdl_drv_param_t m_sdl_gpu_driver_parameters;
 #endif
   window::Size m_display_size;
   float m_dpi_scale = 1.0f;

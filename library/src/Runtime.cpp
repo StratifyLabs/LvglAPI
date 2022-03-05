@@ -135,9 +135,6 @@ Runtime::Runtime(
 
   m_texture.set_blend_mode(window::BlendMode::blend);
 
-#if !LV_USE_GPU_SDL
-  m_texture.update(m_active_frame_buffer, m_display_size.width() * sizeof(u32));
-#endif
   initialize_display();
   initialize_devices();
 }
@@ -157,6 +154,7 @@ void Runtime::initialize_display() {
   m_active_frame_buffer = m_display_frame0.data();
 #endif
 
+
   lv_disp_drv_init(&m_display_driver_container.display_driver);
 
   m_display_driver_container.display_driver.hor_res = m_display_size.width();
@@ -164,9 +162,11 @@ void Runtime::initialize_display() {
   m_display_driver_container.display_driver.draw_buf = &m_display_buffer;
   m_display_driver_container.display_driver.flush_cb = flush_callback;
 #if LV_USE_GPU_SDL
-  m_display_driver_container.display_driver.user_data = m_renderer.native_value();
+  m_sdl_gpu_driver_parameters.renderer = m_renderer.native_value();
+  m_sdl_gpu_driver_parameters.user_data = nullptr;
+  m_display_driver_container.display_driver.user_data = &m_sdl_gpu_driver_parameters;
 #else
-  m_display_driver_container.display_driver.user_data = this;
+  m_display_driver_container.display_driver.user_data = nullptr;
 #endif
   m_display_driver_container.display_driver.full_refresh = !LV_USE_GPU_SDL;
   m_display_driver_container.display_driver.antialiasing = 1;
@@ -211,6 +211,7 @@ void Runtime::update_window() {
   };
 
 #if LV_USE_GPU_SDL
+  printf("re-render using %p\n", m_renderer.native_value());
   m_renderer.clear_target().clear();
   update_transparency();
   m_texture.set_blend_mode(window::BlendMode::blend);
@@ -486,14 +487,14 @@ void Runtime::flush(
   }
 
 #if !LV_USE_GPU_SDL
-  //self is not available when using LV_USE_GPU_SDL
-  auto *self = reinterpret_cast<Runtime *>(display_driver->user_data);
-  self->m_active_frame_buffer = colors;
+  m_active_frame_buffer = colors;
 #endif
 
+  printf("Draw colors at %p\n", colors);
   /* TYPICALLY YOU DO NOT NEED THIS
    * If it was the last part to refresh update the texture of the window.*/
   if (lv_disp_flush_is_last(display_driver)) {
+    printf("update window\n");
     update_window();
   }
 
