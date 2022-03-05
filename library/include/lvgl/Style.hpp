@@ -27,9 +27,7 @@ public:
   PropertyValue(Color color) { m_value.color = color.get_color(); }
 
   API_NO_DISCARD s32 number() const { return m_value.num; }
-
   API_NO_DISCARD const void *pointer() const { return m_value.ptr; }
-
   API_NO_DISCARD Color color() const { return Color(m_value.color); }
 
   lv_style_value_t *style_value() { return &m_value; }
@@ -62,62 +60,6 @@ template <size_t count> struct PropertyList {
 class Style : public Api {
 public:
   Style() { api()->style_init(&m_style); }
-
-  static const char *to_cstring(Property property);
-  static Property property_from_string(var::StringView value);
-
-  static const char *to_cstring(TextDecoration value);
-  static TextDecoration text_decoration_from_string(var::StringView value);
-
-  static const char *to_cstring(TextAlignment value);
-  static TextAlignment text_alignment_from_string(var::StringView value);
-
-  static const char *to_cstring(BorderSide value);
-  static BorderSide border_side_from_string(var::StringView value);
-
-  static const char *to_cstring(GradientDirection value);
-  static GradientDirection gradient_direction_from_string(var::StringView value);
-
-  static const char *to_cstring(BaseDirection value);
-  static BaseDirection base_direction_from_string(var::StringView value);
-
-  static const char *to_cstring(Direction value);
-  static Direction direction_from_string(var::StringView value);
-
-  static const char *to_cstring(Alignment value);
-  static Alignment alignment_from_string(var::StringView value);
-
-  static const char *to_cstring(FlexFlow value);
-  static FlexFlow flex_flow_from_string(var::StringView value);
-
-  static const char *to_cstring(FlexAlign value);
-  static FlexAlign flex_align_from_string(var::StringView value);
-
-  static const char *to_cstring(State value);
-  static State state_from_string(var::StringView value);
-
-  static const char *to_cstring(ScrollBarMode value);
-  static ScrollBarMode scroll_bar_mode_from_string(var::StringView value);
-
-  static const char *to_cstring(ScrollSnap value);
-  static ScrollSnap scroll_snap_mode_from_string(var::StringView value);
-
-  static const char *to_cstring(IsAnimate value);
-  static IsAnimate is_animate_mode_from_string(var::StringView value);
-
-  static const char *to_cstring(Part value);
-  static Part part_from_string(var::StringView value);
-
-  static const char *to_cstring(BlendMode value);
-  static BlendMode blend_mode_from_string(var::StringView value);
-
-  static const char *to_cstring(Opacity value);
-  static Opacity opacity_from_string(var::StringView value);
-
-  static const char *to_cstring(PropertyGroup value);
-  static PropertyGroup property_group_from_string(var::StringView value);
-
-  static PropertyDescription get_property_description(Property property);
 
   API_NO_DISCARD PropertyValue get_property_value(Property property) const {
     PropertyValue result;

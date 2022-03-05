@@ -192,6 +192,8 @@ enum class TextAlignment {
   invalid
 };
 
+
+
 enum class BorderSide {
   none = LV_BORDER_SIDE_NONE,
   bottom = LV_BORDER_SIDE_BOTTOM,
@@ -203,12 +205,14 @@ enum class BorderSide {
   invalid
 };
 
+
 enum class GradientDirection {
   none = LV_GRAD_DIR_NONE,
   vertical = LV_GRAD_DIR_VER,
   horizontal = LV_GRAD_DIR_HOR,
   invalid
 };
+
 
 enum class BaseDirection {
   auto_ = LV_BASE_DIR_AUTO,
@@ -218,6 +222,7 @@ enum class BaseDirection {
   weak = LV_BASE_DIR_WEAK,
   invalid
 };
+
 
 enum class Direction {
   none = LV_DIR_NONE,
@@ -232,6 +237,7 @@ enum class Direction {
 };
 
 API_OR_ENUM_CLASS(Direction)
+
 
 enum class Alignment {
   default_ = LV_ALIGN_DEFAULT,
@@ -446,123 +452,6 @@ struct PropertyDescription {
   PropertyGroup group;
 };
 
-static constexpr auto property_group_list = std::initializer_list<PropertyGroup>{
-  PropertyGroup::invalid,
-  PropertyGroup::alignment,
-  PropertyGroup::animation,
-  PropertyGroup::arc,
-  PropertyGroup::background,
-  PropertyGroup::border,
-  PropertyGroup::image,
-  PropertyGroup::line,
-  PropertyGroup::miscellaneous,
-  PropertyGroup::outline,
-  PropertyGroup::padding,
-  PropertyGroup::shadow,
-  PropertyGroup::size,
-  PropertyGroup::text,
-  PropertyGroup::transform,
-};
-
-static constexpr auto property_list = std::initializer_list<PropertyDescription>{
-  {Property::invalid, PropertyType::invalid, PropertyGroup::invalid},
-  {Property::alignment, PropertyType::alignment, PropertyGroup::alignment},
-  {Property::animation_speed, PropertyType::invalid, PropertyGroup::animation},
-  {Property::animation_time, PropertyType::milliseconds, PropertyGroup::animation},
-  {Property::arc_color, PropertyType::color, PropertyGroup::arc},
-  {Property::arc_color_filtered, PropertyType::color, PropertyGroup::arc},
-  {Property::arc_image_source, PropertyType::image_source, PropertyGroup::arc},
-  {Property::arc_opacity, PropertyType::opacity, PropertyGroup::arc},
-  {Property::arc_rounded, PropertyType::coordinate, PropertyGroup::arc},
-  {Property::arc_width, PropertyType::coordinate, PropertyGroup::arc},
-  {Property::background_color, PropertyType::color, PropertyGroup::background},
-  {Property::background_color_filtered, PropertyType::color, PropertyGroup::background},
-  {Property::background_gradient_color, PropertyType::color, PropertyGroup::background},
-  {Property::background_gradient_color_filtered, PropertyType::color,
-   PropertyGroup::background},
-  {Property::background_gradient_direction, PropertyType::gradient_direction,
-   PropertyGroup::background},
-  {Property::background_gradient_stop, PropertyType::coordinate,
-   PropertyGroup::background},
-  {Property::background_image_opacity, PropertyType::opacity, PropertyGroup::background},
-  {Property::background_image_recolor, PropertyType::color, PropertyGroup::background},
-  {Property::background_image_recolor_filtered, PropertyType::color,
-   PropertyGroup::background},
-  {Property::background_image_recolor_opacity, PropertyType::opacity,
-   PropertyGroup::invalid},
-  {Property::background_image_source, PropertyType::image_source,
-   PropertyGroup::background},
-  {Property::background_image_tiled, PropertyType::boolean, PropertyGroup::background},
-  {Property::background_main_stop, PropertyType::coordinate, PropertyGroup::background},
-  {Property::background_opacity, PropertyType::opacity, PropertyGroup::background},
-  {Property::base_direction, PropertyType::base_direction, PropertyGroup::miscellaneous},
-  {Property::blend_mode, PropertyType::blend_mode, PropertyGroup::invalid},
-  {Property::border_color, PropertyType::color, PropertyGroup::border},
-  {Property::border_color_filtered, PropertyType::color, PropertyGroup::border},
-  {Property::border_opacity, PropertyType::opacity, PropertyGroup::border},
-  {Property::border_post, PropertyType::coordinate, PropertyGroup::border},
-  {Property::border_side, PropertyType::coordinate, PropertyGroup::border},
-  {Property::border_width, PropertyType::coordinate, PropertyGroup::border},
-  {Property::bottom_padding, PropertyType::coordinate, PropertyGroup::border},
-  {Property::clip_corner, PropertyType::coordinate, PropertyGroup::border},
-  {Property::color_filter_descriptor, PropertyType::color_filter_descriptor,
-   PropertyGroup::invalid},
-  {Property::color_filter_opacity, PropertyType::opacity, PropertyGroup::invalid},
-  {Property::column_padding, PropertyType::coordinate, PropertyGroup::padding},
-  {Property::height, PropertyType::coordinate, PropertyGroup::size},
-  {Property::image_opacity, PropertyType::opacity, PropertyGroup::image},
-  {Property::image_recolor, PropertyType::color, PropertyGroup::image},
-  {Property::image_recolor_filtered, PropertyType::color, PropertyGroup::image},
-  {Property::image_recolor_opacity, PropertyType::opacity, PropertyGroup::image},
-  {Property::layout, PropertyType::layout, PropertyGroup::alignment},
-  {Property::left_padding, PropertyType::coordinate, PropertyGroup::padding},
-  {Property::line_color, PropertyType::color, PropertyGroup::line},
-  {Property::line_color_filtered, PropertyType::color, PropertyGroup::line},
-  {Property::line_dash_gap, PropertyType::coordinate, PropertyGroup::line},
-  {Property::line_dash_width, PropertyType::coordinate, PropertyGroup::line},
-  {Property::line_opacity, PropertyType::opacity, PropertyGroup::line},
-  {Property::line_rounded, PropertyType::coordinate, PropertyGroup::line},
-  {Property::line_width, PropertyType::coordinate, PropertyGroup::line},
-  {Property::maximum_height, PropertyType::coordinate, PropertyGroup::size},
-  {Property::maximum_width, PropertyType::coordinate, PropertyGroup::size},
-  {Property::minimum_height, PropertyType::coordinate, PropertyGroup::size},
-  {Property::minimum_width, PropertyType::coordinate, PropertyGroup::size},
-  {Property::opacity, PropertyType::opacity, PropertyGroup::miscellaneous},
-  {Property::outline_color, PropertyType::color, PropertyGroup::outline},
-  {Property::outline_color_filtered, PropertyType::color, PropertyGroup::outline},
-  {Property::outline_opacity, PropertyType::opacity, PropertyGroup::outline},
-  {Property::outline_padding, PropertyType::coordinate, PropertyGroup::outline},
-  {Property::outline_width, PropertyType::coordinate, PropertyGroup::outline},
-  {Property::radius, PropertyType::coordinate, PropertyGroup::border},
-  {Property::right_padding, PropertyType::coordinate, PropertyGroup::padding},
-  {Property::row_padding, PropertyType::coordinate, PropertyGroup::padding},
-  {Property::shadow_color, PropertyType::color, PropertyGroup::shadow},
-  {Property::shadow_color_filtered, PropertyType::color, PropertyGroup::shadow},
-  {Property::shadow_opacity, PropertyType::opacity, PropertyGroup::shadow},
-  {Property::shadow_spread, PropertyType::coordinate, PropertyGroup::shadow},
-  {Property::shadow_width, PropertyType::coordinate, PropertyGroup::shadow},
-  {Property::shadow_x_offset, PropertyType::coordinate, PropertyGroup::shadow},
-  {Property::shadow_y_offset, PropertyType::coordinate, PropertyGroup::shadow},
-  {Property::text_alignment, PropertyType::text_alignment, PropertyGroup::text},
-  {Property::text_color, PropertyType::color, PropertyGroup::text},
-  {Property::text_color_filtered, PropertyType::color, PropertyGroup::text},
-  {Property::text_decoration, PropertyType::text_decoration, PropertyGroup::text},
-  {Property::text_font, PropertyType::font, PropertyGroup::text},
-  {Property::text_letter_spacing, PropertyType::coordinate, PropertyGroup::text},
-  {Property::text_line_spacing, PropertyType::coordinate, PropertyGroup::text},
-  {Property::text_opacity, PropertyType::opacity, PropertyGroup::text},
-  {Property::top_padding, PropertyType::coordinate, PropertyGroup::padding},
-  {Property::transform_angle, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::transform_height, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::transform_width, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::transform_zoom, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::transition, PropertyType::invalid, PropertyGroup::transform},
-  {Property::translate_x, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::translate_y, PropertyType::coordinate, PropertyGroup::transform},
-  {Property::width, PropertyType::coordinate, PropertyGroup::size},
-  {Property::x, PropertyType::coordinate, PropertyGroup::alignment},
-  {Property::y, PropertyType::coordinate, PropertyGroup::alignment},
-  {Property::any, PropertyType::invalid, PropertyGroup::invalid}};
 
 enum class FlexFlow {
   row = LV_FLEX_FLOW_ROW,
@@ -585,6 +474,7 @@ enum class FlexAlign {
   space_between = LV_FLEX_ALIGN_SPACE_BETWEEN,
   invalid
 };
+
 
 class SetFlexAlign {
   API_AF(SetFlexAlign, FlexAlign, main, FlexAlign::space_around);
@@ -690,6 +580,7 @@ enum class BlendMode {
   subtractive = LV_BLEND_MODE_SUBTRACTIVE,
   invalid
 };
+
 
 enum class Opacity {
   transparent = LV_OPA_TRANSP,
