@@ -211,7 +211,6 @@ void Runtime::update_window() {
   };
 
 #if LV_USE_GPU_SDL
-  printf("re-render using %p\n", m_renderer.native_value());
   m_renderer.clear_target().clear();
   update_transparency();
   m_texture.set_blend_mode(window::BlendMode::blend);
@@ -490,11 +489,9 @@ void Runtime::flush(
   m_active_frame_buffer = colors;
 #endif
 
-  printf("Draw colors at %p\n", colors);
   /* TYPICALLY YOU DO NOT NEED THIS
    * If it was the last part to refresh update the texture of the window.*/
   if (lv_disp_flush_is_last(display_driver)) {
-    printf("update window\n");
     update_window();
   }
 
