@@ -21,6 +21,7 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
     return static_cast<Derived &>(*this);
@@ -31,6 +32,19 @@ public:
     return static_cast<Derived &>(*this);
   }
 
+  Derived& set_flag(Flags flag, bool value = true ){
+    if( value ){
+      add_flag(flag);
+    } else {
+      clear_flag(flag);
+    }
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived & toggle_flag(Flags flag){
+    return set_flag(flag, !has_flag(flag));
+  }
+
   Derived &add_state(State state) {
     api()->obj_add_state(m_object, static_cast<lv_state_t>(state));
     return static_cast<Derived &>(*this);
@@ -39,6 +53,19 @@ public:
   Derived &clear_state(State state) {
     api()->obj_clear_state(m_object, static_cast<lv_state_t>(state));
     return static_cast<Derived &>(*this);
+  }
+
+  Derived& set_state(State state, bool value = true ){
+    if( value ){
+      add_state(state);
+    } else {
+      clear_state(state);
+    }
+    return static_cast<Derived &>(*this);
+  }
+
+  Derived & toggle_state(State state){
+    return set_flag(state, !has_state(state));
   }
 
   Derived &add_state(const var::StringViewList &name_list, State state) {

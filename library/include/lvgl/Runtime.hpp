@@ -47,6 +47,8 @@ public:
 #endif
 
 #if defined __link
+  using WindowEventCallback = void (*)(const window::Event & event, const Point & mouse_location);
+
   Runtime(
     const char *title,
     const window::Point &location,
@@ -140,6 +142,8 @@ private:
   lvgl::Group m_group;
   chrono::ClockTimer m_mouse_wheel_timer;
 
+  API_AF(Runtime, WindowEventCallback, window_event_callback, nullptr);
+
   lv_disp_t * m_display;
   lv_disp_draw_buf_t m_display_buffer{};
 
@@ -175,10 +179,14 @@ private:
   void handle_mouse_event(const window::Event &event);
   void handle_keyboard_event(const window::Event &event);
   void handle_window_event(const window::Event &event);
+  void handle_drop_event(const window::Event &event);
+  void handle_window_event_callback(const window::Event &event);
   void resize_display(const window::Size & size);
   void allocate_frames(const window::Size & size);
 
   lvgl::WheelEvent get_wheel_event();
+  lvgl::Point get_point_from_window_point(const window::Point & point) const;
+  lvgl::Point get_point_from_mouse_position() const;
 
   static void flush_callback(
     lv_disp_drv_t *display_driver,

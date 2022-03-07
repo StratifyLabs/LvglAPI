@@ -8,8 +8,6 @@ Event::Event(lv_event_t* event) : m_event(event){
   API_ASSERT(event != nullptr);
 }
 
-
-
 #define CODE_CASE(x) case EventCode::x: return MCU_STRINGIFY(x)
 
 const char *  Event::to_cstring(EventCode code){
@@ -56,6 +54,12 @@ const char *  Event::to_cstring(EventCode code){
     CODE_CASE(notified);
     CODE_CASE(entered);
     CODE_CASE(exited);
+#if defined __link
+    CODE_CASE(drop_begin);
+    CODE_CASE(drop_complete);
+    CODE_CASE(drop_file);
+    CODE_CASE(drop_text);
+#endif
   }
 
   return "unknown";

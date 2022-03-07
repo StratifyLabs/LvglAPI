@@ -5,9 +5,11 @@
 #include <chrono/ClockTimer.hpp>
 
 #if defined __link
-#include "lvgl/Generic.hpp"
 #include <window/Clipboard.hpp>
 #include <window/Event.hpp>
+
+#include "lvgl/Event.hpp"
+#include "lvgl/Generic.hpp"
 #endif
 
 #include "lvgl_api.h"
@@ -124,6 +126,8 @@ Runtime::Runtime(
       size),
     m_display_size(size) {
 
+  window::Window::enable_drop_file();
+
   if (flags & window::Window::Flags::highdpi) {
     m_dpi_scale = 2.0f;
     m_window.set_size(size.get_half());
@@ -153,7 +157,6 @@ void Runtime::initialize_display() {
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
   m_active_frame_buffer = m_display_frame0.data();
 #endif
-
 
   lv_disp_drv_init(&m_display_driver_container.display_driver);
 
@@ -232,6 +235,8 @@ void Runtime::update_events() {
       handle_keyboard_event(event);
       handle_mouse_event(event);
       handle_window_event(event);
+      handle_drop_event(event);
+      handle_window_event_callback(event);
 
       if (event.type() == window::EventType::window) {
         const auto is_update =
@@ -277,6 +282,45 @@ void Runtime::handle_window_event(const window::Event &event) {
   }
 }
 
+void Runtime::handle_drop_event(const window::Event &event) {
+  if (window::DropEvent::is_valid(event.type())) {
+    const auto drop = event.get_drop();
+    const auto event_code = [&]() {
+      if (drop.is_valid()) {
+        switch (drop.type()) {
+        case window::EventType::drop_file:
+          return EventCode::drop_file;
+        case window::EventType::drop_complete:
+          return EventCode::drop_complete;
+        case window::EventType::drop_begin:
+          return EventCode::drop_begin;
+        case window::EventType::drop_text:
+          return EventCode::drop_text;
+        default:
+          break;
+        }
+      }
+      return EventCode::cancel;
+    }();
+    if (event_code != EventCode::cancel) {
+      auto object = screen().find(get_point_from_mouse_position());
+      if (event_code == EventCode::drop_file) {
+        Event::send(object, event_code, new var::PathString(drop.path()));
+      } else if (event_code == EventCode::drop_text) {
+        //Event::send(object, event_code, new var::PathString(drop.path()));
+      } else {
+        Event::send(object, event_code);
+      }
+    }
+  }
+}
+
+void Runtime::handle_window_event_callback(const window::Event &event) {
+  if (window_event_callback()) {
+    window_event_callback()(event, get_point_from_mouse_position());
+  }
+}
+
 void Runtime::handle_mouse_event(const window::Event &event) {
   switch (event.type()) {
   case window::EventType::mouse_button_up:
@@ -301,8 +345,7 @@ void Runtime::handle_mouse_event(const window::Event &event) {
   case window::EventType::mouse_wheel: {
 
     const auto is_scrollable = [&]() {
-      auto object = screen().find(lvgl::Point(
-        m_mouse_position.x() * m_dpi_scale, m_mouse_position.y() * m_dpi_scale));
+      auto object = screen().find(get_point_from_mouse_position());
       while (object.object()) {
         if (!object.has_flag(Flags::scrollable)) {
           if (object.has_flag(Flags::scroll_chain)) {
@@ -460,7 +503,6 @@ void Runtime::resize_display(const window::Size &size) {
 #endif
 
   lv_disp_drv_update(m_display, &m_display_driver_container.display_driver);
-
 }
 
 void Runtime::allocate_frames(const window::Size &size) {
@@ -515,21 +557,29 @@ void Runtime::read_mouse_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t *da
 
   if (events.count()) {
     const auto &event = events.front();
-    const auto point = event.point;
-    data->point.x = point.x() * self->m_dpi_scale;
-    data->point.y = point.y() * self->m_dpi_scale;
+    const auto point = self->get_point_from_window_point(event.point);
+    data->point.x = point.x();
+    data->point.y = point.y();
     data->state = (event.is_pressed == IsPressed::yes) ? LV_INDEV_STATE_PRESSED
                                                        : LV_INDEV_STATE_RELEASED;
     events.pop();
   } else {
-    const auto mouse_point = self->m_mouse_position;
-    data->point.x = mouse_point.x() * self->m_dpi_scale;
-    data->point.y = mouse_point.y() * self->m_dpi_scale;
+    const auto mouse_point = self->get_point_from_mouse_position();
+    data->point.x = mouse_point.x();
+    data->point.y = mouse_point.y();
     data->state = self->m_mouse_state == window::Event::State::pressed
                     ? LV_INDEV_STATE_PRESSED
                     : LV_INDEV_STATE_RELEASED;
   }
   data->continue_reading = 0;
+}
+
+lvgl::Point Runtime::get_point_from_window_point(const window::Point &point) const {
+  return Point(point.x() * m_dpi_scale, point.y() * m_dpi_scale);
+}
+
+lvgl::Point Runtime::get_point_from_mouse_position() const {
+  return get_point_from_window_point(m_mouse_position);
 }
 
 void Runtime::read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
@@ -680,10 +730,8 @@ WheelEvent Runtime::get_wheel_event() {
   const auto wheel_event = event.event.get_mouse_wheel();
 
   WheelEvent result{
-    WheelEvent::Type::pixel,
-    lvgl::Point(
-      wheel_event.point().x() * m_dpi_scale, wheel_event.point().y() * m_dpi_scale),
-    lvgl::Point(event.position.x() * m_dpi_scale, event.position.y() * m_dpi_scale)};
+    WheelEvent::Type::pixel, get_point_from_window_point(wheel_event.point()),
+    get_point_from_window_point(event.position)};
 
   events.pop();
 

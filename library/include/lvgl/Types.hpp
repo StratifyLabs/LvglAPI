@@ -174,7 +174,13 @@ enum class EventCode {
   // These are user defined signals that are not part of LVGL
   notified,
   entered,
-  exited
+  exited,
+#if defined __link
+  drop_begin,
+  drop_complete,
+  drop_file,
+  drop_text
+#endif
 };
 
 enum class TextDecoration {

@@ -50,9 +50,9 @@ public:
     return reinterpret_cast<ResultType>(m_event->user_data);
   }
 
-  static void send(Object receiver, EventCode code, void *user_data = nullptr) {
+  static void send(Object receiver, EventCode code, void *parameter = nullptr) {
     Api::api()->event_send(
-      receiver.object(), static_cast<lv_event_code_t>(code), user_data);
+      receiver.object(), static_cast<lv_event_code_t>(code), parameter);
   }
 
 private:
