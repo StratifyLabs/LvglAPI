@@ -877,41 +877,104 @@ const lvgl_api_t lvgl_api = {
   // class resolution
   .obj_class = &lv_obj_class,
   .animation_image_class = &lv_animimg_class,
+#if LV_USE_CALENDAR
   .calendar_class = &lv_calendar_class,
   .calendar_header_arrow_class = &lv_calendar_header_arrow_class,
   .calendar_header_dropdown_class = &lv_calendar_header_dropdown_class,
+#endif
+#if LV_USE_CHART
   .chart_class = &lv_chart_class,
+#endif
+#if LV_USE_COLORWHEEL
   .colorwheel_class = &lv_colorwheel_class,
+#endif
+#if LV_USE_DROPDOWN
   .dropdown_class = &lv_dropdown_class,
+#endif
+#if LV_USE_IMGBTN
   .image_button_class = &lv_imgbtn_class,
+#endif
+#if LV_USE_KEYBOARD
   .keyboard_class = &lv_keyboard_class,
+#endif
+#if LV_USE_LED
   .led_class = &lv_led_class,
+#endif
+#if LV_USE_LIST
   .list_class = &lv_list_class,
+#endif
   .list_text_class = &lv_list_text_class,
+#if LV_USE_BTN
   .list_button_class = &lv_list_btn_class,
+#endif
+#if LV_USE_METER
   .meter_class = &lv_meter_class,
+#endif
+#if LV_USE_SPAN
   .spangroup_class = &lv_spangroup_class,
+#endif
+#if LV_USE_SPINBOX
   .spinbox_class = &lv_spinbox_class,
+#endif
+#if LV_USE_SPINNER
   .spinner_class = &lv_spinner_class,
+#endif
+#if LV_USE_TABVIEW
   .tabview_class = &lv_tabview_class,
+#endif
+#if LV_USE_TILEVIEW
   .tileview_class = &lv_tileview_class,
   .tileview_tile_class = &lv_tileview_tile_class,
+#endif
+#if LV_USE_WIN
   .window_class = &lv_win_class,
+#endif
+#if LV_USE_ARC
   .arc_class = &lv_arc_class,
+#endif
+#if LV_USE_BAR
   .bar_class = &lv_bar_class,
+#endif
+#if LV_USE_BTN
   .button_class = &lv_btn_class,
+#endif
+#if LV_USE_BTNMATRIX
   .button_matrix_class = &lv_btnmatrix_class,
+#endif
+#if LV_USE_CANVAS
   .canvas_class = &lv_canvas_class,
+#endif
+#if LV_USE_CHECKBOX
   .checkbox_class = &lv_checkbox_class,
+#endif
+#if LV_USE_IMG
   .image_class = &lv_img_class,
+#endif
+#if LV_USE_LINE
   .line_class = &lv_line_class,
+#endif
+#if LV_USE_LABEL
   .label_class = &lv_label_class,
+#endif
+#if LV_USE_MSGBOX
   .message_box_class = &lv_msgbox_class,
+#endif
+#if LV_USE_ROLLER
   .roller_class = &lv_roller_class,
+#endif
+#if LV_USE_SLIDER
   .slider_class = &lv_slider_class,
+#endif
+#if LV_USE_SWITCH
   .switch_class = &lv_switch_class,
+#endif
+#if LV_USE_TABLE
   .table_class = &lv_table_class,
-  .textarea_class = &lv_textarea_class};
+#endif
+#if LV_USE_TEXTAREA
+  .textarea_class = &lv_textarea_class
+#endif
+};
 
 #if defined __StratifyOS__
 #include <sos/sos.h>
