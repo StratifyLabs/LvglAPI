@@ -366,6 +366,7 @@ const lvgl_api_t lvgl_api = {
 
   // widgets
 
+#if LV_USE_ARC
   // arc
   .arc_create = lv_arc_create,
   .arc_set_start_angle = lv_arc_set_start_angle,
@@ -387,10 +388,14 @@ const lvgl_api_t lvgl_api = {
   .arc_get_min_value = lv_arc_get_min_value,
   .arc_get_max_value = lv_arc_get_max_value,
   .arc_get_mode = lv_arc_get_mode,
+#endif
 
+#if LV_USE_BTN
   // button
   .btn_create = lv_btn_create,
+#endif
 
+#if LV_USE_IMG
   // img
   .img_create = lv_img_create,
   .img_set_src = lv_img_set_src,
@@ -407,7 +412,9 @@ const lvgl_api_t lvgl_api = {
   .img_get_pivot = lv_img_get_pivot,
   .img_get_zoom = lv_img_get_zoom,
   .img_get_antialias = lv_img_get_antialias,
+#endif
 
+#if LV_USE_LABEL
   // label
   .label_create = lv_label_create,
   .label_set_text = lv_label_set_text,
@@ -427,13 +434,17 @@ const lvgl_api_t lvgl_api = {
   .label_get_text_selection_end = lv_label_get_text_selection_end,
   .label_ins_text = lv_label_ins_text,
   .label_cut_text = lv_label_cut_text,
+#endif
 
+#if LV_USE_LINE
   // line
   .line_create = lv_line_create,
   .line_set_points = lv_line_set_points,
   .line_set_y_invert = lv_line_set_y_invert,
   .line_get_y_invert = lv_line_get_y_invert,
+#endif
 
+#if LV_USE_TABLE
   // table
   .table_create = lv_table_create,
   .table_set_cell_value = lv_table_set_cell_value,
@@ -449,13 +460,17 @@ const lvgl_api_t lvgl_api = {
   .table_get_col_width = lv_table_get_col_width,
   .table_has_cell_ctrl = lv_table_has_cell_ctrl,
   .table_get_selected_cell = lv_table_get_selected_cell,
+#endif
 
+#if LV_USE_CHECKBOX
   // checkbox
   .checkbox_create = lv_checkbox_create,
   .checkbox_set_text = lv_checkbox_set_text,
   .checkbox_set_text_static = lv_checkbox_set_text_static,
   .checkbox_get_text = lv_checkbox_get_text,
+#endif
 
+#if LV_USE_BAR
   // bar
   .bar_create = lv_bar_create,
   .bar_set_value = lv_bar_set_value,
@@ -467,11 +482,15 @@ const lvgl_api_t lvgl_api = {
   .bar_get_min_value = lv_bar_get_min_value,
   .bar_get_max_value = lv_bar_get_max_value,
   .bar_get_mode = lv_bar_get_mode,
+#endif
 
+#if LV_USE_SLIDER
   // slider
   .slider_create = lv_slider_create,
   .slider_is_dragged = lv_slider_is_dragged,
+#endif
 
+#if LV_USE_BTNMATRIX
   // btnmatrix
   .btnmatrix_create = lv_btnmatrix_create,
   .btnmatrix_set_map = lv_btnmatrix_set_map,
@@ -488,7 +507,9 @@ const lvgl_api_t lvgl_api = {
   .btnmatrix_get_btn_text = lv_btnmatrix_get_btn_text,
   .btnmatrix_has_btn_ctrl = lv_btnmatrix_has_btn_ctrl,
   .btnmatrix_get_one_checked = lv_btnmatrix_get_one_checked,
+#endif
 
+#if LV_USE_DROPDOWN
   // dropdown
   .dropdown_create = lv_dropdown_create,
   .dropdown_set_text = lv_dropdown_set_text,
@@ -511,7 +532,9 @@ const lvgl_api_t lvgl_api = {
   .dropdown_get_dir = lv_dropdown_get_dir,
   .dropdown_open = lv_dropdown_open,
   .dropdown_close = lv_dropdown_close,
+#endif
 
+#if LV_USE_ROLLER
   .roller_create = lv_roller_create,
   .roller_set_options = lv_roller_set_options,
   .roller_set_selected = lv_roller_set_selected,
@@ -520,7 +543,9 @@ const lvgl_api_t lvgl_api = {
   .roller_get_selected_str = lv_roller_get_selected_str,
   .roller_get_options = lv_roller_get_options,
   .roller_get_option_cnt = lv_roller_get_option_cnt,
+#endif
 
+#if LV_USE_TEXTAREA
   // textarea
   .textarea_create = lv_textarea_create,
   .textarea_add_char = lv_textarea_add_char,
@@ -556,7 +581,9 @@ const lvgl_api_t lvgl_api = {
   .textarea_cursor_left = lv_textarea_cursor_left,
   .textarea_cursor_down = lv_textarea_cursor_down,
   .textarea_cursor_up = lv_textarea_cursor_up,
+#endif
 
+#if LV_USE_CANVAS
   // canvas
   .canvas_create = lv_canvas_create,
   .canvas_set_buffer = lv_canvas_set_buffer,
@@ -576,14 +603,19 @@ const lvgl_api_t lvgl_api = {
   .canvas_draw_line = lv_canvas_draw_line,
   .canvas_draw_polygon = lv_canvas_draw_polygon,
   .canvas_draw_arc = lv_canvas_draw_arc,
+#endif
 
+#if LV_USE_SWITCH
   // switch
   .switch_create = lv_switch_create,
+#endif
 
   // extra
   .extra_init = lv_extra_init,
 
   // extra widgets
+
+#if LV_USE_CALENDAR
   // calendar
   .calendar_create = lv_calendar_create,
   .calendar_set_today_date = lv_calendar_set_today_date,
@@ -597,7 +629,9 @@ const lvgl_api_t lvgl_api = {
   .calendar_get_pressed_date = lv_calendar_get_pressed_date,
   .calendar_header_arrow_create = lv_calendar_header_arrow_create,
   .calendar_header_dropdown_create = lv_calendar_header_dropdown_create,
+#endif
 
+#if LV_USE_CHART
   // chart
   .chart_create = lv_chart_create,
   .chart_set_type = lv_chart_set_type,
@@ -635,7 +669,9 @@ const lvgl_api_t lvgl_api = {
   .chart_get_y_array = lv_chart_get_y_array,
   .chart_get_x_array = lv_chart_get_x_array,
   .chart_get_pressed_point = lv_chart_get_pressed_point,
+#endif
 
+#if LV_USE_KEYBOARD
   // keyboard
   .keyboard_create = lv_keyboard_create,
   .keyboard_set_textarea = lv_keyboard_set_textarea,
@@ -644,22 +680,17 @@ const lvgl_api_t lvgl_api = {
   .keyboard_get_textarea = lv_keyboard_get_textarea,
   .keyboard_get_mode = lv_keyboard_get_mode,
   .keyboard_def_event_cb = lv_keyboard_def_event_cb,
+#endif
 
+#if LV_USE_LIST
   // list
   .list_create = lv_list_create,
   .list_add_text = lv_list_add_text,
   .list_add_btn = lv_list_add_btn,
   .list_get_btn_text = lv_list_get_btn_text,
+#endif
 
-  // messagebox
-  .msgbox_create = lv_msgbox_create,
-  .msgbox_get_title = lv_msgbox_get_title,
-  .msgbox_get_close_btn = lv_msgbox_get_close_btn,
-  .msgbox_get_text = lv_msgbox_get_text,
-  .msgbox_get_btns = lv_msgbox_get_btns,
-  .msgbox_get_active_btn_text = lv_msgbox_get_active_btn_text,
-  .msgbox_close = lv_msgbox_close,
-
+#if LV_USE_METER
   // meter
   .meter_create = lv_meter_create,
   .meter_add_scale = lv_meter_add_scale,
@@ -673,7 +704,20 @@ const lvgl_api_t lvgl_api = {
   .meter_set_indicator_value = lv_meter_set_indicator_value,
   .meter_set_indicator_start_value = lv_meter_set_indicator_start_value,
   .meter_set_indicator_end_value = lv_meter_set_indicator_end_value,
+#endif
 
+#if LV_USE_MSGBOX
+  // messagebox
+  .msgbox_create = lv_msgbox_create,
+  .msgbox_get_title = lv_msgbox_get_title,
+  .msgbox_get_close_btn = lv_msgbox_get_close_btn,
+  .msgbox_get_text = lv_msgbox_get_text,
+  .msgbox_get_btns = lv_msgbox_get_btns,
+  .msgbox_get_active_btn_text = lv_msgbox_get_active_btn_text,
+  .msgbox_close = lv_msgbox_close,
+#endif
+
+#if LV_USE_SPINBOX
   // spinbox
   .spinbox_create = lv_spinbox_create,
   .spinbox_set_value = lv_spinbox_set_value,
@@ -688,10 +732,14 @@ const lvgl_api_t lvgl_api = {
   .spinbox_step_prev = lv_spinbox_step_prev,
   .spinbox_increment = lv_spinbox_increment,
   .spinbox_decrement = lv_spinbox_decrement,
+#endif
 
+#if LV_USE_SPINNER
   // spinner
   .spinner_create = lv_spinner_create,
+#endif
 
+#if LV_USE_TABVIEW
   // tabview
   .tabview_create = lv_tabview_create,
   .tabview_add_tab = lv_tabview_add_tab,
@@ -699,21 +747,27 @@ const lvgl_api_t lvgl_api = {
   .tabview_get_tab_btns = lv_tabview_get_tab_btns,
   .tabview_set_act = lv_tabview_set_act,
   .tabview_get_tab_act = lv_tabview_get_tab_act,
+#endif
 
+#if LV_USE_TILEVIEW
   // tileview
   .tileview_create = lv_tileview_create,
   .tileview_add_tile = lv_tileview_add_tile,
   .obj_set_tile = lv_obj_set_tile,
   .obj_set_tile_id = lv_obj_set_tile_id,
   .tileview_get_tile_act = lv_tileview_get_tile_act,
+#endif
 
+#if LV_USE_WIN
   // win
   .win_create = lv_win_create,
   .win_add_title = lv_win_add_title,
   .win_add_btn = lv_win_add_btn,
   .win_get_header = lv_win_get_header,
   .win_get_content = lv_win_get_content,
+#endif
 
+#if LV_USE_COLORWHEEL
   // colorwheel
   .colorwheel_create = lv_colorwheel_create,
   .colorwheel_set_hsv = lv_colorwheel_set_hsv,
@@ -724,7 +778,9 @@ const lvgl_api_t lvgl_api = {
   .colorwheel_get_rgb = lv_colorwheel_get_rgb,
   .colorwheel_get_color_mode = lv_colorwheel_get_color_mode,
   .colorwheel_get_color_mode_fixed = lv_colorwheel_get_color_mode_fixed,
+#endif
 
+#if LV_USE_LED
   // led
   .led_create = lv_led_create,
   .led_set_color = lv_led_set_color,
@@ -733,14 +789,18 @@ const lvgl_api_t lvgl_api = {
   .led_off = lv_led_off,
   .led_toggle = lv_led_toggle,
   .led_get_brightness = lv_led_get_brightness,
+#endif
 
+#if LV_USE_IMGBTN
   // imgbtn
   .imgbtn_create = lv_imgbtn_create,
   .imgbtn_set_src = lv_imgbtn_set_src,
   .imgbtn_get_src_left = lv_imgbtn_get_src_left,
   .imgbtn_get_src_middle = lv_imgbtn_get_src_middle,
   .imgbtn_get_src_right = lv_imgbtn_get_src_right,
+#endif
 
+#if LV_USE_SPAN
   // span
   .spangroup_create = lv_spangroup_create,
   .spangroup_new_span = lv_spangroup_new_span,
@@ -759,7 +819,9 @@ const lvgl_api_t lvgl_api = {
   .spangroup_get_expand_width = lv_spangroup_get_expand_width,
   .spangroup_get_expand_height = lv_spangroup_get_expand_height,
   .spangroup_refr_mode = lv_spangroup_refr_mode,
+#endif
 
+#if LV_USE_FLEX
   // extra layouts
   // flex
   .flex_init = lv_flex_init,
@@ -776,6 +838,9 @@ const lvgl_api_t lvgl_api = {
   .obj_set_style_flex_cross_place = lv_obj_set_style_flex_cross_place,
   .obj_set_style_flex_track_place = lv_obj_set_style_flex_track_place,
   .obj_set_style_flex_grow = lv_obj_set_style_flex_grow,
+#endif
+
+#if LV_USE_GRID
   // grid
   .grid_init = lv_grid_init,
   .obj_set_grid_dsc_array = lv_obj_set_grid_dsc_array,
@@ -802,6 +867,7 @@ const lvgl_api_t lvgl_api = {
   .obj_set_style_grid_cell_row_span = lv_obj_set_style_grid_cell_row_span,
   .obj_set_style_grid_cell_x_align = lv_obj_set_style_grid_cell_x_align,
   .obj_set_style_grid_cell_y_align = lv_obj_set_style_grid_cell_y_align,
+#endif
 
   // system
   .get_font = lvgl_api_get_font,
