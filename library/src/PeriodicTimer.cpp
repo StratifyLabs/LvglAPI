@@ -8,8 +8,9 @@ PeriodicTimer::PeriodicTimer(lv_timer_t * timer) : m_timer(timer){}
 PeriodicTimer::PeriodicTimer(
   const char *name,
   const chrono::MicroTime &period,
-  Callback callback) : m_needs_free(true) {
+  Callback callback, void * user_data) : m_needs_free(true) {
   m_timer = api()->timer_create(callback, period.milliseconds(), (void *)name);
+  set_user_data(user_data);
 }
 
 PeriodicTimer::~PeriodicTimer() {
@@ -17,3 +18,4 @@ PeriodicTimer::~PeriodicTimer() {
     api()->timer_del(m_timer);
   }
 }
+

@@ -15,7 +15,7 @@ public:
   PeriodicTimer() = default;
   explicit PeriodicTimer(lv_timer_t * timer);
 
-  PeriodicTimer(const char* name, const chrono::MicroTime & period, Callback callback);
+  PeriodicTimer(const char* name, const chrono::MicroTime & period, Callback callback, void * user_data = nullptr);
 
   PeriodicTimer(const PeriodicTimer & a) = delete;
   PeriodicTimer& operator=(const PeriodicTimer & a) = delete;
@@ -85,6 +85,11 @@ public:
 
   template<class Type> Type * user_data() const {
     return reinterpret_cast<Type*>(m_timer->user_data);
+  }
+
+  PeriodicTimer& set_user_data(void * user_data){
+    m_timer->user_data = user_data;
+    return *this;
   }
 
 private:
