@@ -158,7 +158,7 @@ Font::~Font() {
 #endif
 
 Font::Info::Info(const char *path) {
-  const auto parts = var::StringView(path).split("-");
+  const auto parts = var::StringView(path).split("-_");
 
   if (parts.count() != 3) {
     m_point_size = 0;
