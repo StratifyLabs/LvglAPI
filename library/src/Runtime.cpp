@@ -337,13 +337,16 @@ void Runtime::handle_touch_finger_event(const window::Event &event) {
                       ? window::Event::State::released
                       : window::Event::State::pressed;
   } break;
-  case window::EventType::finger_motion:
+  case window::EventType::finger_motion: {
     // may need to scale this
+    const auto touch_event = event.get_touch_finger();
+    const auto point = touch_event.point().get_point(m_display_size);
+
     if (m_mouse_wheel_timer.is_running() == false) {
-      m_mouse_position = event.get_mouse_motion().point();
+      m_mouse_position = point;
     }
-    m_mouse_restore_position = event.get_mouse_motion().point();
-    break;
+    m_mouse_restore_position = point;
+  } break;
   default:
     break;
   }
