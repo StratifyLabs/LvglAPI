@@ -99,15 +99,11 @@ Runtime &Runtime::refresh() {
   api()->timer_handler();
 
   const auto elapsed = timer.micro_time();
-  if (period() > timer) {
+  if (timer < period()) {
     const auto remaining = period() - elapsed;
     chrono::wait(remaining);
   }
-  timer.stop();
-
-  printf("elapsed %d\n", timer.milliseconds());
   api()->tick_inc(timer.milliseconds());
-
   return *this;
 }
 
