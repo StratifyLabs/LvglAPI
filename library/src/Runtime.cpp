@@ -96,17 +96,18 @@ Runtime &Runtime::refresh() {
   }
 #endif
 
-  timer.stop();
+  api()->timer_handler();
+
   const auto elapsed = timer.micro_time();
   if (period() > timer) {
     const auto remaining = period() - elapsed;
     chrono::wait(remaining);
   }
+  timer.stop();
 
-  api()->timer_handler();
-  api()->tick_inc(
-    elapsed > period() ? elapsed.milliseconds()
-                       : period().milliseconds() * increment_scale());
+  printf("elapsed %d\n", timer.milliseconds());
+  api()->tick_inc(timer.milliseconds());
+
   return *this;
 }
 
@@ -141,6 +142,11 @@ Runtime::Runtime(
 
   initialize_display();
   initialize_devices();
+
+#if defined __link
+  resize_display(
+    window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
+#endif
 }
 
 void Runtime::initialize_display() {

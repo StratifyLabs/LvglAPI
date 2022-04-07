@@ -81,7 +81,7 @@ public:
 #endif
 
 private:
-  API_AF(Runtime, chrono::MicroTime, period, 5_milliseconds);
+  API_AF(Runtime, chrono::MicroTime, period, 20_milliseconds);
   API_AF(Runtime, float, increment_scale, 1.0f);
   API_AB(Runtime, stopped, false);
 
