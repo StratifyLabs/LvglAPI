@@ -140,8 +140,7 @@ Runtime::Runtime(
   initialize_devices();
 
 #if defined __link
-  resize_display(
-    window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
+  resize_display(window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
 #endif
 }
 
@@ -310,7 +309,7 @@ void Runtime::handle_drop_event(const window::Event &event) {
       if (event_code == EventCode::drop_file) {
         Event::send(object, event_code, new var::PathString(drop.path()));
       } else if (event_code == EventCode::drop_text) {
-        //Event::send(object, event_code, new var::PathString(drop.path()));
+        // Event::send(object, event_code, new var::PathString(drop.path()));
       } else {
         Event::send(object, event_code);
       }
@@ -327,17 +326,17 @@ void Runtime::handle_window_event_callback(const window::Event &event) {
 void Runtime::handle_touch_finger_event(const window::Event &event) {
   switch (event.type()) {
   case window::EventType::finger_up:
-  case window::EventType::finger_down:
+  case window::EventType::finger_down: {
+    const auto point = event.get_touch_finger().point().get_point(m_display_size);
     m_mouse_event_queue.push(
-      {event.get_mouse_button().point(),
-       event.type() == window::EventType::finger_up ? IsPressed::no
-                                                          : IsPressed::yes});
+      {point,
+       event.type() == window::EventType::finger_up ? IsPressed::no : IsPressed::yes});
 
-    m_mouse_position = event.get_mouse_button().point();
+    m_mouse_position = point;
     m_mouse_state = event.type() == window::EventType::finger_up
                       ? window::Event::State::released
                       : window::Event::State::pressed;
-    break;
+  } break;
   case window::EventType::finger_motion:
     // may need to scale this
     if (m_mouse_wheel_timer.is_running() == false) {
@@ -345,10 +344,10 @@ void Runtime::handle_touch_finger_event(const window::Event &event) {
     }
     m_mouse_restore_position = event.get_mouse_motion().point();
     break;
-  default: break;
+  default:
+    break;
   }
 }
-
 
 void Runtime::handle_mouse_event(const window::Event &event) {
   switch (event.type()) {
