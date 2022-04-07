@@ -235,6 +235,7 @@ void Runtime::update_events() {
     const auto event = window::Event::poll();
     if (event.is_valid()) {
       handle_keyboard_event(event);
+      handle_touch_finger_event(event);
       handle_mouse_event(event);
       handle_window_event(event);
       handle_drop_event(event);
@@ -322,6 +323,32 @@ void Runtime::handle_window_event_callback(const window::Event &event) {
     window_event_callback()(event, get_point_from_mouse_position());
   }
 }
+
+void Runtime::handle_touch_finger_event(const window::Event &event) {
+  switch (event.type()) {
+  case window::EventType::finger_up:
+  case window::EventType::finger_down:
+    m_mouse_event_queue.push(
+      {event.get_mouse_button().point(),
+       event.type() == window::EventType::finger_up ? IsPressed::no
+                                                          : IsPressed::yes});
+
+    m_mouse_position = event.get_mouse_button().point();
+    m_mouse_state = event.type() == window::EventType::finger_up
+                      ? window::Event::State::released
+                      : window::Event::State::pressed;
+    break;
+  case window::EventType::finger_motion:
+    // may need to scale this
+    if (m_mouse_wheel_timer.is_running() == false) {
+      m_mouse_position = event.get_mouse_motion().point();
+    }
+    m_mouse_restore_position = event.get_mouse_motion().point();
+    break;
+  default: break;
+  }
+}
+
 
 void Runtime::handle_mouse_event(const window::Event &event) {
   switch (event.type()) {

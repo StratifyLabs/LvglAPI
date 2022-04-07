@@ -178,6 +178,7 @@ private:
 
   void handle_mouse_event(const window::Event &event);
   void handle_keyboard_event(const window::Event &event);
+  void handle_touch_finger_event(const window::Event &event);
   void handle_window_event(const window::Event &event);
   void handle_drop_event(const window::Event &event);
   void handle_window_event_callback(const window::Event &event);
