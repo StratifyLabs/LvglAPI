@@ -17,6 +17,15 @@ public:
 
   List &add_button(const char *symbol, const char *text);
 
+  /*! \details Add a button to the list.
+   *
+   *
+   * @param name Name for button to find it in the tree
+   * @param symbol Use `nullptr` for no symbol
+   * @param text Button text
+   * @param setup Callback to update the button after it has been created
+   * @return self
+   */
   List &add_button(
     const char *name,
     const char *symbol,

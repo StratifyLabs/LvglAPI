@@ -4,8 +4,7 @@
 using namespace lvgl;
 
 List::List(const char *name) {
-  m_object = api()->list_create(screen_object());
-  set_user_data(m_object, name);
+  construct_list(name);
 }
 
 List &List::add_button(
@@ -13,12 +12,17 @@ List &List::add_button(
   const char *symbol,
   const char *text,
   void (*setup)(Button)) {
+
+  if( symbol != nullptr ) {
+    API_ASSERT(!var::StringView(symbol).is_empty());
+  }
+
   auto object = api()->list_add_btn(m_object, symbol, text);
   api()->obj_add_flag(object, LV_OBJ_FLAG_EVENT_BUBBLE);
   set_user_data(object, name);
 
+  auto button = Button(object);
   if (setup) {
-    Button button(object);
     setup(button);
   }
 
@@ -27,7 +31,7 @@ List &List::add_button(
   }
 
   // last item has no border
-  Button(object).set_border_side(BorderSide::none);
+  button.set_border_side(BorderSide::none);
 
   return *this;
 }
