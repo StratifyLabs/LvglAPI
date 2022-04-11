@@ -139,7 +139,7 @@ Runtime::Runtime(
   initialize_display();
   initialize_devices();
 
-#if defined __link
+#if defined __link && 0
   resize_display(window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
 #endif
 }
@@ -196,7 +196,7 @@ void Runtime::initialize_devices() {
   m_mouse_driver.type = LV_INDEV_TYPE_POINTER;
   m_mouse_driver.user_data = this;
   m_mouse_driver.read_cb = read_mouse_callback;
-  m_mouse_driver.scroll_throw = 1;
+  m_mouse_driver.scroll_throw = 10;
   m_mouse_driver.long_press_time = 800;
   m_mouse_device = lv_indev_drv_register(&m_mouse_driver);
 }
