@@ -114,34 +114,31 @@ Runtime::Runtime(
   const window::Point &location,
   const window::Size &size,
   window::Window::Flags flags)
-  : m_window(title, location, size, flags),
-    m_renderer(m_window, -1, window::Renderer::Flags::accelerated),
+  : m_dpi_scale(flags & window::Window::Flags::highdpi ? 2.0f : 1.0f),
+    m_display_size(size),
+    m_window(
+      title,
+      location,
+      window::Size(size.width() / m_dpi_scale, size.height() / m_dpi_scale),
+      flags),
+    m_renderer(
+      m_window,
+      window::Renderer::default_index,
+      window::Renderer::Flags::accelerated),
     m_texture(
       m_renderer,
       window::PixelFormat::argb8888,
       window::Texture::Access::target,
-      size),
-    m_display_size(size) {
+      size) {
 
   window::Window::enable_drop_file();
 
-  if (flags & window::Window::Flags::highdpi) {
-    m_dpi_scale = 2.0f;
-    m_window.set_size(size.get_half());
-  }
-
-  for (auto &task : m_task_list) {
-    task = {};
-  }
-
+  m_task_list.fill({});
   m_texture.set_blend_mode(window::BlendMode::blend);
 
   initialize_display();
   initialize_devices();
 
-#if defined __link && 0
-  resize_display(window::Size(size.width() * m_dpi_scale, size.height() * m_dpi_scale));
-#endif
 }
 
 void Runtime::initialize_display() {
@@ -515,20 +512,18 @@ void Runtime::resize_display(const window::Size &size) {
 #endif
 
   m_display_size = size;
-  m_display_driver_container.display_driver.hor_res = size.width();
-  m_display_driver_container.display_driver.ver_res = size.height();
+  m_display_driver_container.display_driver.hor_res = m_display_size.width();
+  m_display_driver_container.display_driver.ver_res = m_display_size.height();
+
 
   m_texture = window::Texture(
     m_renderer, window::PixelFormat::argb8888, window::Texture::Access::target, size);
-
-#if !LV_USE_GPU_SDL
-  active_frame.resize(pixel_count).fill(lv_color_white());
-#endif
 
 #if LV_USE_GPU_SDL
   lv_disp_draw_buf_init(
     &m_display_buffer, m_texture.native_value(), nullptr, pixel_count);
 #else
+  active_frame.resize(pixel_count).fill(lv_color_white());
   lv_disp_draw_buf_init(
     &m_display_buffer, m_display_frame0.data(), m_display_frame1.data(), pixel_count);
 #endif

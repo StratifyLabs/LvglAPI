@@ -126,6 +126,8 @@ private:
     IsPressed is_pressed;
   };
 
+  float m_dpi_scale = 1.0f;
+  window::Size m_display_size;
   window::Window m_window;
   window::Renderer m_renderer;
   window::Texture m_texture;
@@ -165,8 +167,6 @@ private:
   } lv_draw_sdl_drv_param_t;
   lv_draw_sdl_drv_param_t m_sdl_gpu_driver_parameters;
 #endif
-  window::Size m_display_size;
-  float m_dpi_scale = 1.0f;
 
   API_AF(Runtime,u32,scroll_wheel_multiplier,5);
 
@@ -184,6 +184,10 @@ private:
   void handle_window_event_callback(const window::Event &event);
   void resize_display(const window::Size & size);
   void allocate_frames(const window::Size & size);
+
+  static window::Size get_initial_size(window::Window::Flags flags, window::Size size){
+    return (flags & window::Window::Flags::highdpi) ? size.get_half() : size;
+  }
 
   lvgl::WheelEvent get_wheel_event();
   lvgl::Point get_point_from_window_point(const window::Point & point) const;
