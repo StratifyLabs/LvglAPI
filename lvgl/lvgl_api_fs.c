@@ -111,8 +111,18 @@ lvgl_api_fs_dir_read_cb(struct _lv_fs_drv_t *drv, void *rddir_p, char *fn) {
   MCU_UNUSED_ARGUMENT(drv);
   struct dirent entry;
   struct dirent *result;
+#if __link
+  result = readdir(rddir_p);
+  if( result ){
+    entry = *result;
+  } else {
+    return LV_FS_RES_FS_ERR;
+  }
+#else
   readdir_r(rddir_p, &entry, &result);
-  strncpy(fn, entry.d_name, 256);
+#endif
+  const size_t entry_size = sizeof(entry.d_name);
+  strncpy(fn, entry.d_name, entry_size);
   return LV_FS_RES_OK;
 }
 
