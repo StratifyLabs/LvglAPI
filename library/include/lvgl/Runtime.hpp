@@ -67,18 +67,14 @@ public:
     return m_group;
   }
 
-  lv_disp_t * display() {
-    return m_display;
-  }
-
-  const lv_disp_t * display() const {
-    return m_display;
-  }
-
   static lvgl::WheelEvent get_wheel_event_callback(void * context){
     return reinterpret_cast<Runtime*>(context)->get_wheel_event();
   }
 #endif
+
+  lv_disp_t * display();
+
+  const lv_disp_t * display() const;
 
 private:
   API_AF(Runtime, chrono::MicroTime, period, 20_milliseconds);

@@ -107,7 +107,16 @@ Runtime &Runtime::refresh() {
   return *this;
 }
 
+
 #if defined __link
+
+lv_disp_t *Runtime::display() {
+  return m_display;
+}
+
+const lv_disp_t *Runtime::display() const {
+  return m_display;
+}
 
 Runtime::Runtime(
   const char *title,
@@ -762,6 +771,16 @@ WheelEvent Runtime::get_wheel_event() {
   events.pop();
 
   return result;
+}
+
+#else
+
+lv_disp_t *Runtime::display() {
+  return api()->disp_get_default();
+}
+
+const lv_disp_t *Runtime::display() const {
+  return api()->disp_get_default();
 }
 
 #endif
