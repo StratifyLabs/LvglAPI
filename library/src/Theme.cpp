@@ -31,6 +31,7 @@ Theme Theme::find(var::StringView name) {
         return Theme((lv_theme_t *)(descriptor->theme));
       }
     }
+    ++offset;
   } while( descriptor );
 
   return Theme();
