@@ -21,6 +21,9 @@ public:
     fade_on = LV_SCR_LOAD_ANIM_FADE_ON
   };
 
+  static const char * to_cstring(LoadAnimation value);
+  static LoadAnimation get_load_animation(var::StringView value);
+
   Screen(const char *name);
 
   explicit Screen(lv_obj_t *value) { m_object = value; }

@@ -930,6 +930,7 @@ void lvgl_api_mount_asset_filesystem(const void * assetfs, lv_fs_drv_t* drv, cha
 #if defined __link
 #define LVGL_API_REQUEST (&lvgl_api)
 void lvgl_api_set_font_callback(const lvgl_api_font_descriptor_t * (*callback)(int));
+void lvgl_api_set_theme_callback(const lvgl_api_theme_descriptor_t * (*callback)(int));
 #else
 #define LVGL_API_REQUEST MCU_API_REQUEST_CODE('l', 'v', 'g', 'l')
 #define LVGL_REQUEST_START MCU_API_REQUEST_CODE('l', 'v', 'g', 'o')

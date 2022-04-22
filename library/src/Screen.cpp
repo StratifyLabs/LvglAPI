@@ -1,4 +1,5 @@
 #include "lvgl/Screen.hpp"
+#include "lvgl/macros.hpp"
 
 using namespace lvgl;
 
@@ -47,4 +48,34 @@ Screen Screen::find_screen(const char *name) {
     }
   }
   return Screen((lv_obj_t*)nullptr);
+}
+
+
+const char * Screen::to_cstring(LoadAnimation value){
+  switch (value) {
+    LVGL_PROPERTY_CASE(LoadAnimation, none);
+    LVGL_PROPERTY_CASE(LoadAnimation, over_left);
+    LVGL_PROPERTY_CASE(LoadAnimation, over_right);
+    LVGL_PROPERTY_CASE(LoadAnimation, over_top);
+    LVGL_PROPERTY_CASE(LoadAnimation, over_bottom);
+    LVGL_PROPERTY_CASE(LoadAnimation, move_left);
+    LVGL_PROPERTY_CASE(LoadAnimation, move_right);
+    LVGL_PROPERTY_CASE(LoadAnimation, move_top);
+    LVGL_PROPERTY_CASE(LoadAnimation, move_bottom);
+    LVGL_PROPERTY_CASE(LoadAnimation, fade_on);
+  }
+  return "unknown";
+}
+
+Screen::LoadAnimation Screen::get_load_animation(var::StringView value){
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_left);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_right);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_top);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_bottom);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_left);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_right);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_top);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_bottom);
+  LVGL_PROPERTY_STRING_CASE(LoadAnimation, fade_on);
+  return LoadAnimation::none;
 }
