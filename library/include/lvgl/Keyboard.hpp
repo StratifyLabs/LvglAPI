@@ -43,7 +43,6 @@ public:
   API_NO_DISCARD Mode get_mode() const;
   API_NO_DISCARD const char ** get_map_array() const;
   API_NO_DISCARD ButtonMatrix get_button_matrix() const;
-
 };
 
 }
