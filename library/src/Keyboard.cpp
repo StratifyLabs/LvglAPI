@@ -35,7 +35,7 @@ Keyboard::Mode Keyboard::get_mode(var::StringView value) {
 Keyboard &Keyboard::set_mode(Keyboard::Mode value) {
   if (value == Mode::hex) {
 
-    static constexpr char *hex_keyboard_map[] = {
+    static constexpr const char *hex_keyboard_map[] = {
       "1",  "2", "3",  LV_SYMBOL_KEYBOARD,  "\n",
       "4",  "5", "6",  LV_SYMBOL_OK,        "\n",
       "7",  "8", "9",  LV_SYMBOL_BACKSPACE, "\n",
