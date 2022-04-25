@@ -225,18 +225,18 @@ public:
     if (m_object->user_data == nullptr) {
       return "unnamed";
     }
-    if (auto *user_data = UserData::get_user_data(m_object->user_data);
-        user_data != nullptr) {
-      return user_data->name();
+    if (auto *user_data = UserData::get_user_data(m_object->user_data); user_data) {
+      return reinterpret_cast<UserData*>(user_data)->m_name;
     }
-    return reinterpret_cast<const char *>(m_object->user_data);
+    return static_cast<const char *>(m_object->user_data);
   }
 
   template <class UserDataClass> UserDataClass *user_data() const {
     static_assert(std::is_base_of<UserData, UserDataClass>::value);
-    if (auto *user_data = UserData::get_user_data(m_object->user_data);
-        user_data != nullptr) {
-      return reinterpret_cast<UserDataClass *>(user_data);
+    if (auto *user_data =
+          UserData::get_user_data_derived<UserDataClass>(m_object->user_data);
+        user_data) {
+      return static_cast<UserDataClass *>(user_data);
     }
     return nullptr;
   }
@@ -290,9 +290,6 @@ protected:
   get_local_style_as_coord(Property property, Selector selector) const;
   API_NO_DISCARD Color
   get_local_style_as_color(Property property, Selector selector) const;
-  API_NO_DISCARD UserData *get_user_data() const {
-    return UserData::get_user_data(m_object->user_data);
-  }
 
 private:
   friend class Tree;

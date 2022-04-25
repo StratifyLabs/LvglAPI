@@ -10,64 +10,70 @@
 namespace lvgl {
 
 class UserData {
-  void *operator new(size_t size) { return ::operator new(size); }
-
-public:
-  explicit UserData(const char *name = "");
-  virtual ~UserData() = default;
-
-  API_NO_DISCARD const char *name() const;
-
-  template <typename Type> Type *cast() const {
-    return reinterpret_cast<Type *>(const_cast<UserData *>(this));
-  }
-
-  API_NO_DISCARD const char *cast_as_name() const;
-  API_NO_DISCARD void *cast_as_void() const;
-  API_NO_DISCARD bool needs_free() const { return m_needs_free; }
-  API_NO_DISCARD lv_obj_t *associated_object() const { return m_associated_object; }
+  static constexpr u16 magic_identifier_value = '~' << 8 | '.';
 
 protected:
-  // dynamically allocate the UserData and have it live with the created object
-  // this will be freed when the associated object is removed
-  template <class Derived, typename... Args> static Derived &create(Args... args) {
-    auto *result = new Derived(args...);
-    result->m_needs_free = true;
-    return *result;
-  }
+  // this MUST be the first non-static data member
+  u16 m_magic_identifier = magic_identifier_value;
 
-private:
+  // limit the access to new to derived items only
+  void *operator new(size_t size) { return ::operator new(size); }
+  using Deleter = void (*)(UserData *);
+  Deleter m_deleter = nullptr;
+
+  explicit UserData(const char *name);
+
   friend class Object;
+  const char *m_name = nullptr;
+  lv_obj_t *m_associated_object = nullptr;
 
   // This returns a pointer to the user data object if it is
   // a user data object. If it is a plain name (`const char*`)
-  // it returns null
-  static UserData *get_user_data(void *user_data);
+  // it returns nullptr
+  static void *get_user_data(void *user_data);
 
-  // the magic function is used to determine if the user data points
-  // to a UserData compatible object or to a `const char *`
-  // and is just a plain old name
-  static void magic_function();
-  const void *m_magic = reinterpret_cast<void *>(magic_function);
-  const char *m_name = nullptr;
-  lv_obj_t *m_associated_object = nullptr;
-  bool m_needs_free = false;
+  template<typename Derived> static Derived * get_user_data_derived(void * user_data){
+    return static_cast<Derived*>(get_user_data(user_data));
+  }
 };
 
-template <class Derived> class UserDataAccess : public UserData {
+template <class Derived> class UserDataAccess : private UserData {
 public:
-  explicit UserDataAccess(const char *name = "") : UserData(name) {}
-  virtual ~UserDataAccess() = default;
+  explicit UserDataAccess(const char *name = "") : UserData(name) {
+    // we need to guarantee this is organized in memory like
+    // a plain old data to ensure m_magic_identifier
+    // is in the expected location
+    API_ASSERT(
+      reinterpret_cast<std::uintptr_t>(this)
+      == reinterpret_cast<std::uintptr_t>(&m_magic_identifier));
+  }
+
+  API_NO_DISCARD bool needs_free() const { return m_deleter; }
+  API_NO_DISCARD const char *name() const { return m_name ? m_name : "unnamed"; }
+  API_NO_DISCARD const char *cast_as_name() const {
+    return reinterpret_cast<const char *>(this);
+  }
+  API_NO_DISCARD lv_obj_t *associated_object() const { return m_associated_object; }
 
   template <typename... Args> static Derived &create(Args... args) {
-    return UserData::create<Derived>(args...);
+    auto *result = new Derived(args...);
+    result->m_deleter = derived_deleter;
+    return *result;
   }
 
 protected:
   using UserDataBase = UserDataAccess<Derived>;
+  static void derived_deleter(UserData *user_data) {
+    static_assert(
+      std::is_base_of<UserData, Derived>::value,
+      "Use `struct Derived : public UserDataAccess<Derived>`");
+    auto *derived = static_cast<Derived *>(user_data);
+    if (derived && derived->needs_free()) {
+      delete (static_cast<Derived *>(derived));
+    }
+  }
 };
 
-}
-
+} // namespace lvgl
 
 #endif // LVGL_API_LVGL_USER_DATA_HPP

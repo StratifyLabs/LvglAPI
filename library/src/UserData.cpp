@@ -8,20 +8,17 @@ using namespace lvgl;
 
 UserData::UserData(const char *name) : m_name(name) {}
 
-const char *UserData::name() const { return m_name ? m_name : "unnamed"; }
+void *UserData::get_user_data(void *user_data) {
+  auto name = reinterpret_cast<const char *>(user_data);
+  if (!name || name[0] == 0) {
+    return nullptr;
+  }
 
-const char *UserData::cast_as_name() const {
-  return reinterpret_cast<const char *>(this);
+  //If name is not empty, we can read at least 2 bytes
+  //without triggering the address sanitizer
+  auto identifier = reinterpret_cast<const u16 *>(user_data);
+  if (*identifier == magic_identifier_value) {
+    return user_data;
+  }
+  return nullptr;
 }
-
-void UserData::magic_function() {}
-
-UserData *UserData::get_user_data(void *user_data) {
-  auto *context = reinterpret_cast<UserData *>(user_data);
-  return context->m_magic == reinterpret_cast<void *>(magic_function) ? context : nullptr;
-}
-
-void *UserData::cast_as_void() const {
-  return reinterpret_cast<void *>(const_cast<UserData *>(this));
-}
-
