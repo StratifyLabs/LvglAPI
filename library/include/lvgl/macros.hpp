@@ -22,5 +22,8 @@
 #define LVGL_OBJECT_ACCESS_GET_CLASS(CLASS_NAME)                                         \
   static const lv_obj_class_t *get_class() { return api()->CLASS_NAME; }
 
-
+#define LVGL_OBJECT_ASSERT_SIZE(CLASS_NAME)                                              \
+  static_assert(                                                                         \
+    sizeof(CLASS_NAME) == sizeof(lvgl::ObjectAccessSizeCheck),                           \
+    "Objects derived from ObjectAccess<> cannot have non-static data members")
 #endif // LVGLAPI_LVGL_MACROS_HPP

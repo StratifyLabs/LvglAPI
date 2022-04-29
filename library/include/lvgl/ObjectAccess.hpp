@@ -831,6 +831,8 @@ private:
   Callback m_setup = nullptr;
 };
 
+class ObjectAccessSizeCheck : public ObjectAccess<ObjectAccessSizeCheck> {};
+
 } // namespace lvgl
 
 #include "macros.hpp"

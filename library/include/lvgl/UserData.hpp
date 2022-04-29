@@ -24,6 +24,7 @@ protected:
   explicit UserData(const char *name);
 
   friend class Object;
+  friend class PeriodicTimer;
   const char *m_name = nullptr;
   lv_obj_t *m_associated_object = nullptr;
 
@@ -31,6 +32,8 @@ protected:
   // a user data object. If it is a plain name (`const char*`)
   // it returns nullptr
   static void *get_user_data(void *user_data);
+
+  static void do_manual_cleanup(void * user_data);
 
   template<typename Derived> static Derived * get_user_data_derived(void * user_data){
     return static_cast<Derived*>(get_user_data(user_data));

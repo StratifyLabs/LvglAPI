@@ -22,3 +22,10 @@ void *UserData::get_user_data(void *user_data) {
   }
   return nullptr;
 }
+
+void UserData::do_manual_cleanup(void *user_data) {
+  UserData * user_data_object = reinterpret_cast<UserData*>(get_user_data(user_data));
+  if( user_data_object && user_data_object->m_deleter ){
+    user_data_object->m_deleter(user_data_object);
+  }
+}

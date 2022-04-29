@@ -145,7 +145,7 @@ public:
     return TargetClass(api()->obj_get_child(m_object, id));
   }
 
-  template <class TargetClass> API_NO_DISCARD TargetClass get() {
+  template <class TargetClass> API_NO_DISCARD TargetClass get() const {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return TargetClass(object());
   }
@@ -202,6 +202,12 @@ public:
   API_NO_DISCARD TargetClass find_parent(const char *name) const {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return find_parent_by_name(name).get<TargetClass>();
+  }
+
+  template <class TargetClass>
+  API_NO_DISCARD TargetClass find_parent_using_partial_name(const char *name) const {
+    static_assert(std::is_base_of<Object, TargetClass>::value);
+    return find_parent_by_partial_name(name).get<TargetClass>();
   }
 
   API_NO_DISCARD Object find_child(const char *name) const;
@@ -301,6 +307,7 @@ private:
   Object find_object_worker(const char *name) const;
 
   Object find_parent_by_name(const char *name) const;
+  Object find_parent_by_partial_name(var::StringView name) const;
 };
 
 API_OR_NAMED_FLAGS_OPERATOR(Object, Flags)

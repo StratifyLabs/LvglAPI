@@ -1,5 +1,7 @@
-#ifndef LVGLAPI_LVGL_DWAW_HPP
-#define LVGLAPI_LVGL_DWAW_HPP
+#ifndef LVGL_API_LVGL_DRAW_HPP
+#define LVGL_API_LVGL_DRAW_HPP
+
+#include <var/View.hpp>
 
 #include "Types.hpp"
 #include "Color.hpp"
@@ -9,6 +11,7 @@ namespace lvgl {
 
 class Draw {
 public:
+
   explicit Draw(lv_obj_draw_part_dsc_t * value) : m_draw(value){}
 
   class Rectangle {
@@ -177,6 +180,10 @@ public:
     return m_draw->value;
   }
 
+  API_NO_DISCARD var::View text_view() const {
+    return var::View(m_draw->text, m_draw->text_length);
+  }
+
 private:
   lv_obj_draw_part_dsc_t * m_draw = nullptr;
 };
@@ -185,4 +192,4 @@ private:
 
 } // namespace lvgl
 
-#endif // LVGLAPI_LVGL_DWAW_HPP
+#endif // LVGL_API_LVGL_DRAW_HPP

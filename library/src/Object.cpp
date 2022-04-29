@@ -9,6 +9,7 @@
 lvgl::LvglApi lvgl::Api::m_api;
 
 using namespace lvgl;
+using namespace var;
 
 void Object::construct_object(const char *name) {
   m_object = api()->obj_create(screen_object());
@@ -91,6 +92,18 @@ Object Object::find_parent_by_name(const char *name) const {
   }
   return Object();
 }
+
+Object Object::find_parent_by_partial_name(var::StringView name) const {
+  auto current = get_parent();
+  while (current.object()) {
+    if( StringView(current.name()).find(name) != StringView::npos ){
+      return current;
+    }
+    current = current.get_parent();
+  }
+  return Object();
+}
+
 
 void Object::find_names_add_state(const var::StringViewList &name_list, State state) {
   for (const auto &name : name_list) {

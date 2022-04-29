@@ -13,7 +13,7 @@ using LvglApi = api::Api<lvgl_api_t, LVGL_API_REQUEST>;
 
 enum class IsAssertOnFail { no, yes };
 
-class Api : public api::ExecutionContext {
+class Api {
 public:
   static LvglApi &api() { return m_api; }
 
@@ -116,6 +116,7 @@ enum class Flags {
   advance_hittest = LV_OBJ_FLAG_ADV_HITTEST,
   ignore_layout = LV_OBJ_FLAG_IGNORE_LAYOUT,
   floating = LV_OBJ_FLAG_FLOATING,
+  overflow_visible = LV_OBJ_FLAG_OVERFLOW_VISIBLE,
   layout_1 = LV_OBJ_FLAG_LAYOUT_1,
   layout_2 = LV_OBJ_FLAG_LAYOUT_2,
   widget_1 = LV_OBJ_FLAG_WIDGET_1,
