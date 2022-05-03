@@ -22,3 +22,13 @@ Bar &Bar::set_mode(Bar::Mode value) {
   api()->bar_set_mode(m_object, static_cast<lv_bar_mode_t>(value));
   return *this;
 }
+
+Range &Range::expand_to_include(s16 value) {
+  if( value < m_minimum ){
+    m_minimum = value;
+  }
+  if( value > m_maximum ){
+    m_maximum = value;
+  }
+  return *this;
+}

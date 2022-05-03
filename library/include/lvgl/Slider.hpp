@@ -15,8 +15,7 @@ public:
     range = LV_SLIDER_MODE_RANGE
   };
 
-  explicit Slider(const char * name = "");
-  explicit Slider(lv_obj_t * object){ m_object = object; }
+  LVGL_OBJECT_ACCESS_DECLARE_CONSTRUCTOR(Slider);
 
   static const lv_obj_class_t * get_class(){
     return api()->slider_class;

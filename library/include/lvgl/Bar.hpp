@@ -18,6 +18,8 @@ public:
       .set_maximum(tokens.count() > 1 ? tokens.at(1).to_integer() : 100);
   }
 
+  Range & expand_to_include(s16 value);
+
 private:
   API_AF(Range, s16, minimum, 0);
   API_AF(Range, s16, maximum, 100);

@@ -118,6 +118,14 @@ public:
       return result;
     }
 
+    API_NO_DISCARD bool is_x_axis_secondary() const {
+      return m_value->x_axis_sec;
+    }
+
+    API_NO_DISCARD bool is_y_axis_secondary() const {
+      return m_value->y_axis_sec;
+    }
+
     Series &remove_series() {
       API_ASSERT(is_valid());
       api()->chart_remove_series(m_chart, m_value);
@@ -256,7 +264,6 @@ public:
   }
 
   API_NO_DISCARD Type get_type() const { return Type(api()->chart_get_type(object())); }
-
   API_NO_DISCARD u16 get_point_count() const { return api()->chart_get_point_count(object()); }
 
   Chart &refresh() {
@@ -270,6 +277,10 @@ public:
                   object(), color.get_color(), static_cast<lv_chart_axis_t>(axis))};
   }
 
+  Series get_series() const {
+    return Series(m_object, api()->chart_get_series_next(m_object, nullptr));
+  }
+
   API_NO_DISCARD u32 get_pressed_point() const { return api()->chart_get_pressed_point(object()); }
 
   Chart &add_cursor(Color color, Direction direction) {
@@ -278,6 +289,8 @@ public:
     return *this;
   }
 };
+
+API_OR_NAMED_FLAGS_OPERATOR(Chart,Axis)
 
 } // namespace lvgl
 
