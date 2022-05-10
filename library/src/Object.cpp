@@ -88,6 +88,9 @@ Object Object::find_parent_by_name(const char *name) const {
     if (current.name() == name) {
       return current;
     }
+    if( StringView(current.name()) == name ){
+      return current;
+    }
     current = current.get_parent();
   }
   return Object();

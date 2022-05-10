@@ -484,7 +484,7 @@ enum class FlexAlign {
 
 
 class SetFlexAlign {
-  API_AF(SetFlexAlign, FlexAlign, main, FlexAlign::space_around);
+  API_AF(SetFlexAlign, FlexAlign, align_main, FlexAlign::space_around);
   API_AF(SetFlexAlign, FlexAlign, cross, FlexAlign::center);
   API_AF(SetFlexAlign, FlexAlign, track_cross, FlexAlign::space_around);
 };

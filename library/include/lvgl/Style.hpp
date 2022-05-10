@@ -210,7 +210,7 @@ public:
   }
 
   Style &set_flex_align(const SetFlexAlign &value) {
-    const lv_style_value_t main = {.num = static_cast<int32_t>(value.main())};
+    const lv_style_value_t main = {.num = static_cast<int32_t>(value.align_main())};
     const lv_style_value_t cross = {.num = static_cast<int32_t>(value.cross())};
     const lv_style_value_t track_cross = {
       .num = static_cast<int32_t>(value.track_cross())};

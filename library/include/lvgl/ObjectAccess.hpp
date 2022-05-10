@@ -360,7 +360,7 @@ public:
 
   Derived &set_flex_align(const SetFlexAlign &options) {
     api()->obj_set_flex_align(
-      m_object, static_cast<lv_flex_align_t>(options.main()),
+      m_object, static_cast<lv_flex_align_t>(options.align_main()),
       static_cast<lv_flex_align_t>(options.cross()),
       static_cast<lv_flex_align_t>(options.track_cross()));
     return static_cast<Derived &>(*this);
