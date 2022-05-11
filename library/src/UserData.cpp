@@ -29,3 +29,15 @@ void UserData::do_manual_cleanup(void *user_data) {
     user_data_object->m_deleter(user_data_object);
   }
 }
+
+bool UserData::is_valid(const char * name) {
+  if (!name || name[0] == 0) {
+    return false;
+  }
+
+  auto identifier = reinterpret_cast<const u16 *>(name);
+  if (*identifier == magic_identifier_value) {
+    return true;
+  }
+  return false;
+}

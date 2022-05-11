@@ -2,6 +2,9 @@
 
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(Canvas);
+
+
 Canvas::Canvas(const char * name){
   m_object =
     lv_canvas_create(screen_object());

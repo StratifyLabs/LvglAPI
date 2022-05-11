@@ -38,6 +38,9 @@ protected:
   template<typename Derived> static Derived * get_user_data_derived(void * user_data){
     return static_cast<Derived*>(get_user_data(user_data));
   }
+
+public:
+  static bool is_valid(const char * name);
 };
 
 template <class Derived> class UserDataAccess : private UserData {
@@ -62,6 +65,15 @@ public:
     auto *result = new Derived(args...);
     result->m_deleter = derived_deleter;
     return *result;
+  }
+
+  static const char * create_from_name(const char * name) {
+    if( !is_valid(name) ){
+      auto *result = new Derived(name);
+      result->m_deleter = derived_deleter;
+      return result->cast_as_name();
+    }
+    return name;
   }
 
 protected:

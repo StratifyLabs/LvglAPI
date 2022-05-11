@@ -2,7 +2,10 @@
 
 using namespace lvgl;
 
-ImageButton::ImageButton(const char * name) {
-  set_user_data(m_object,name);
+LVGL_OBJECT_ASSERT_SIZE(ImageButton);
 
+
+ImageButton::ImageButton(const char * name) {
+  m_object = api()->imgbtn_create(screen_object());
+  set_user_data(m_object,name);
 }

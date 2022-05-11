@@ -2,6 +2,8 @@
 
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(Slider);
+
 
 Slider::Slider(const char * name){
   m_object = api()->slider_create(screen_object());

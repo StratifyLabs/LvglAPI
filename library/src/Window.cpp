@@ -3,8 +3,9 @@
 
 #include "lvgl/Window.hpp"
 
-
 using namespace lvgl;
+
+LVGL_OBJECT_ASSERT_SIZE(Window);
 
 Window::Window(const char *name, lv_coord_t header_height) {
   m_object = api()->win_create(screen_object(), header_height);

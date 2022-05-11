@@ -3,6 +3,9 @@
 
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(List);
+
+
 List::List(const char *name) {
   construct_list(name);
 }

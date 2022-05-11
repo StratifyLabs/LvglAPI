@@ -3,6 +3,8 @@
 
 using namespace lvgl;
 
+LVGL_OBJECT_ASSERT_SIZE(MessageBox);
+
 MessageBox::MessageBox(const Construct & options) {
   m_object = api()->msgbox_create(
     options.is_modal ? nullptr : screen_object(),
