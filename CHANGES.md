@@ -1,3 +1,3 @@
-# Pre-Release
+# Version 0.0.0
 
-No releases yet.
+First Release. Stable build and execution using LVGL 8.2
