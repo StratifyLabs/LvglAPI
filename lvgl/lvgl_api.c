@@ -10,7 +10,7 @@ const lvgl_api_t lvgl_api = {
     {
       .name = "lvgl",
       .version = LVGL_API_VERSION,
-      .git_hash = SOS_GIT_HASH,
+      .git_hash = CMSDK_GIT_HASH,
     },
 
   .timer_handler = lv_timer_handler,
