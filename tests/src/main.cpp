@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   test::Test::initialize(test::Test::Initialize()
                            .set_name(cli.get_name())
                            .set_version(VERSION)
-                           .set_git_hash(SOS_GIT_HASH)
+                           .set_git_hash(CMSDK_GIT_HASH)
                            .set_printer(&printer));
 
   { UnitTest(cli.get_name()).execute(cli); }

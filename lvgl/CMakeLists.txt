@@ -331,16 +331,16 @@ set(DRAW_SOURCELIST
   )
 
 
-if(SOS_IS_ARM)
+if(CMSDK_IS_ARM)
   set(LIB_OPTION kernel)
   set(DRAW_INCLUDE_DIRECTORY "")
 endif()
 
-if(SOS_IS_LINK)
+if(CMSDK_IS_LINK)
   set(DRAW_INCLUDE_DIRECTORY ${SOURCES_PREFIX}/gpu/sdl)
 endif()
 
-sos_sdk_library_target(RELEASE ${PROJECT_NAME} "${LIB_OPTION}" release ${SOS_ARCH})
+cmsdk_library_target(RELEASE ${PROJECT_NAME} "${LIB_OPTION}" release ${CMSDK_ARCH})
 
 add_library(${RELEASE_TARGET} STATIC)
 
@@ -376,11 +376,11 @@ target_include_directories(${RELEASE_TARGET}
   PRIVATE
   )
 
-sos_sdk_library_target(DEBUG ${PROJECT_NAME} "${LIB_OPTION}" debug ${SOS_ARCH})
+cmsdk_library_target(DEBUG ${PROJECT_NAME} "${LIB_OPTION}" debug ${CMSDK_ARCH})
 add_library(${DEBUG_TARGET} STATIC)
-sos_sdk_copy_target(${RELEASE_TARGET} ${DEBUG_TARGET})
+cmsdk_copy_target(${RELEASE_TARGET} ${DEBUG_TARGET})
 
-if(SOS_IS_LINK)
+if(CMSDK_IS_LINK)
   if(NOT LVGL_NO_STRATIFY_OS)
     set(DEPENDENCIES StratifyOS)
     target_compile_definitions(${RELEASE_TARGET} PUBLIC _LVGL_HAS_STRATIFY_OS=1)
@@ -388,11 +388,11 @@ if(SOS_IS_LINK)
   else()
     set(DEPENDENCIES "")
   endif()
-  sos_sdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${SOS_ARCH} "${DEPENDENCIES}")
-  sos_sdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${SOS_ARCH} "${DEPENDENCIES}")
+  cmsdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${CMSDK_ARCH} "${DEPENDENCIES}")
+  cmsdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${CMSDK_ARCH} "${DEPENDENCIES}")
 else()
-  sos_sdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${SOS_ARCH} "StratifyOS_mcu")
-  sos_sdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${SOS_ARCH} "StratifyOS_mcu")
+  cmsdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${CMSDK_ARCH} "StratifyOS_mcu")
+  cmsdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${CMSDK_ARCH} "StratifyOS_mcu")
 endif()
 
 install(FILES
@@ -545,6 +545,6 @@ install(FILES
   DESTINATION include/lvgl)
 
 install(FILES ${PROJECT_NAME}.cmake
-  DESTINATION ${SOS_SDK_PATH}/cmake/targets)
+  DESTINATION ${CMSDK_LOCAL_PATH}/cmake/targets)
 
 

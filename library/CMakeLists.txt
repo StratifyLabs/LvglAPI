@@ -1,13 +1,13 @@
 
 set(LIBRARIES ThreadAPI FsAPI ChronoAPI VarAPI)
-if(SOS_IS_LINK)
+if(CMSDK_IS_LINK)
 	list(APPEND LIBRARIES WindowAPI)
 	list(APPEND LIBRARIES lvgl)
 endif()
 
 api_add_api_library(LvglAPI "${LIBRARIES}")
 
-if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
+if((CMSDK_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 	macro(add_lvgl_include ARCH)
 		target_include_directories(LvglAPI_debug_${ARCH}
 			PUBLIC
@@ -36,8 +36,8 @@ if((SOS_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 			)
 	endmacro()
 
-	add_lvgl_include(${SOS_ARCH})
-	foreach(ARCH ${SOS_ARCH_LIST})
+	add_lvgl_include(${CMSDK_ARCH})
+	foreach(ARCH ${CMSDK_ARCH_LIST})
 		add_lvgl_include(${ARCH})
 	endforeach()
 endif()
