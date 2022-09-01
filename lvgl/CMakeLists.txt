@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 set(GIT_REPOSITORY "https://github.com/lvgl/lvgl.git")
-set(GIT_BRANCH "release/v8.2")
+set(GIT_BRANCH "release/v8.3")
 if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
   message(STATUS "Need to clone for the first call to cmake")
   execute_process(
