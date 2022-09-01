@@ -332,28 +332,23 @@ enum class Property {
   row_padding = LV_STYLE_PAD_ROW,
   column_padding = LV_STYLE_PAD_COLUMN,
   background_color = LV_STYLE_BG_COLOR,
-  background_color_filtered = LV_STYLE_BG_COLOR_FILTERED,
   background_opacity = LV_STYLE_BG_OPA,
   background_gradient_color = LV_STYLE_BG_GRAD_COLOR,
-  background_gradient_color_filtered = LV_STYLE_BG_GRAD_COLOR_FILTERED,
   background_gradient_direction = LV_STYLE_BG_GRAD_DIR,
   background_main_stop = LV_STYLE_BG_MAIN_STOP,
   background_gradient_stop = LV_STYLE_BG_GRAD_STOP,
   background_image_source = LV_STYLE_BG_IMG_SRC,
   background_image_opacity = LV_STYLE_BG_IMG_OPA,
   background_image_recolor = LV_STYLE_BG_IMG_RECOLOR,
-  background_image_recolor_filtered = LV_STYLE_BG_IMG_RECOLOR_FILTERED,
   background_image_recolor_opacity = LV_STYLE_BG_IMG_RECOLOR_OPA,
   background_image_tiled = LV_STYLE_BG_IMG_TILED,
   border_color = LV_STYLE_BORDER_COLOR,
-  border_color_filtered = LV_STYLE_BORDER_COLOR_FILTERED,
   border_opacity = LV_STYLE_BORDER_OPA,
   border_width = LV_STYLE_BORDER_WIDTH,
   border_side = LV_STYLE_BORDER_SIDE,
   border_post = LV_STYLE_BORDER_POST,
   outline_width = LV_STYLE_OUTLINE_WIDTH,
   outline_color = LV_STYLE_OUTLINE_COLOR,
-  outline_color_filtered = LV_STYLE_OUTLINE_COLOR_FILTERED,
   outline_opacity = LV_STYLE_OUTLINE_OPA,
   outline_padding = LV_STYLE_OUTLINE_PAD,
 
@@ -362,12 +357,10 @@ enum class Property {
   shadow_y_offset = LV_STYLE_SHADOW_OFS_Y,
   shadow_spread = LV_STYLE_SHADOW_SPREAD,
   shadow_color = LV_STYLE_SHADOW_COLOR,
-  shadow_color_filtered = LV_STYLE_SHADOW_COLOR_FILTERED,
   shadow_opacity = LV_STYLE_SHADOW_OPA,
 
   image_opacity = LV_STYLE_IMG_OPA,
   image_recolor = LV_STYLE_IMG_RECOLOR,
-  image_recolor_filtered = LV_STYLE_IMG_RECOLOR_FILTERED,
   image_recolor_opacity = LV_STYLE_IMG_RECOLOR_OPA,
 
   line_width = LV_STYLE_LINE_WIDTH,
@@ -375,18 +368,15 @@ enum class Property {
   line_dash_gap = LV_STYLE_LINE_DASH_GAP,
   line_rounded = LV_STYLE_LINE_ROUNDED,
   line_color = LV_STYLE_LINE_COLOR,
-  line_color_filtered = LV_STYLE_LINE_COLOR_FILTERED,
   line_opacity = LV_STYLE_LINE_OPA,
 
   arc_width = LV_STYLE_ARC_WIDTH,
   arc_rounded = LV_STYLE_ARC_ROUNDED,
   arc_color = LV_STYLE_ARC_COLOR,
-  arc_color_filtered = LV_STYLE_ARC_COLOR_FILTERED,
   arc_opacity = LV_STYLE_ARC_OPA,
   arc_image_source = LV_STYLE_ARC_IMG_SRC,
 
   text_color = LV_STYLE_TEXT_COLOR,
-  text_color_filtered = LV_STYLE_TEXT_COLOR_FILTERED,
   text_opacity = LV_STYLE_TEXT_OPA,
   text_font = LV_STYLE_TEXT_FONT,
   text_letter_spacing = LV_STYLE_TEXT_LETTER_SPACE,
@@ -405,6 +395,7 @@ enum class Property {
   blend_mode = LV_STYLE_BLEND_MODE,
   layout = LV_STYLE_LAYOUT,
   base_direction = LV_STYLE_BASE_DIR,
+
 
   any = LV_STYLE_PROP_ANY
 

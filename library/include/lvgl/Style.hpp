@@ -228,20 +228,12 @@ public:
     return set_property(Property::background_color, value);
   }
 
-  Style &set_background_color_filtered(Color value) {
-    return set_property(Property::background_color_filtered, value);
-  }
-
   Style &set_background_opacity(Opacity value) {
     return set_property(Property::background_opacity, lv_opa_t(value));
   }
 
   Style &set_background_gradient_color(Color value) {
     return set_property(Property::background_gradient_color, value);
-  }
-
-  Style &set_background_gradient_color_filtered(Color value) {
-    return set_property(Property::background_gradient_color_filtered, value);
   }
 
   Style &set_background_gradient_direction(GradientDirection value) {
@@ -268,10 +260,6 @@ public:
     return set_property(Property::background_image_recolor, value);
   }
 
-  Style &set_background_image_recolor_filtered(Color value) {
-    return set_property(Property::background_image_recolor_filtered, value);
-  }
-
   Style &set_background_image_recolor_opacity(Opacity value) {
     return set_property(Property::background_image_opacity, lv_opa_t(value));
   }
@@ -282,10 +270,6 @@ public:
 
   Style &set_border_color(Color value) {
     return set_property(Property::border_color, value);
-  }
-
-  Style &set_border_color_filtered(Color value) {
-    return set_property(Property::border_color_filtered, value);
   }
 
   Style &set_border_opacity(Opacity value) {
@@ -305,10 +289,6 @@ public:
   }
 
   Style &set_text_color(Color value) { return set_property(Property::text_color, value); }
-
-  Style &set_text_color_filtered(Color value) {
-    return set_property(Property::text_color_filtered, value);
-  }
 
   Style &set_text_opacity(Opacity value) {
     return set_property(Property::text_opacity, lv_opa_t(value));
@@ -340,10 +320,6 @@ public:
     return set_property(Property::image_recolor, value);
   }
 
-  Style &set_image_recolor_filtered(Color value) {
-    return set_property(Property::image_recolor_filtered, value);
-  }
-
   Style &set_image_recolor_opacity(Opacity value) {
     return set_property(Property::image_recolor_opacity, lv_opa_t(value));
   }
@@ -354,10 +330,6 @@ public:
 
   Style &set_outline_color(Color value) {
     return set_property(Property::outline_color, value);
-  }
-
-  Style &set_outline_color_filtered(Color value) {
-    return set_property(Property::outline_color_filtered, value);
   }
 
   Style &set_outline_opacity(Opacity value) {
@@ -388,10 +360,6 @@ public:
     return set_property(Property::shadow_color, value);
   }
 
-  Style &set_shadow_color_filtered(Color value) {
-    return set_property(Property::shadow_color_filtered, value);
-  }
-
   Style &set_shadow_opacity(Opacity value) {
     return set_property(Property::shadow_opacity, lv_opa_t(value));
   }
@@ -414,10 +382,6 @@ public:
 
   Style &set_line_color(Color value) { return set_property(Property::line_color, value); }
 
-  Style &set_line_color_filtered(Color value) {
-    return set_property(Property::line_color_filtered, value);
-  }
-
   Style &set_line_opacity(Opacity value) {
     return set_property(Property::line_opacity, lv_opa_t(value));
   }
@@ -431,10 +395,6 @@ public:
   }
 
   Style &set_arc_color(Color value) { return set_property(Property::arc_color, value); }
-
-  Style &set_arc_color_filtered(Color value) {
-    return set_property(Property::arc_color_filtered, value);
-  }
 
   Style &set_arc_opacity(Opacity value) {
     return set_property(Property::arc_opacity, lv_opa_t(value));

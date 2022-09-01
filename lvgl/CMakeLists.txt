@@ -214,12 +214,18 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/draw/lv_draw_img.h
   ${SOURCES_PREFIX}/draw/lv_draw_label.c
   ${SOURCES_PREFIX}/draw/lv_draw_label.h
+  ${SOURCES_PREFIX}/draw/lv_draw_layer.c
+  ${SOURCES_PREFIX}/draw/lv_draw_layer.h
   ${SOURCES_PREFIX}/draw/lv_draw_line.c
   ${SOURCES_PREFIX}/draw/lv_draw_line.h
   ${SOURCES_PREFIX}/draw/lv_draw_mask.c
   ${SOURCES_PREFIX}/draw/lv_draw_mask.h
   ${SOURCES_PREFIX}/draw/lv_draw_rect.c
   ${SOURCES_PREFIX}/draw/lv_draw_rect.h
+  ${SOURCES_PREFIX}/draw/lv_draw_triangle.c
+  ${SOURCES_PREFIX}/draw/lv_draw_triangle.h
+  ${SOURCES_PREFIX}/draw/lv_draw_transform.c
+  ${SOURCES_PREFIX}/draw/lv_draw_transform.h
   ${SOURCES_PREFIX}/draw/lv_draw_triangle.c
   ${SOURCES_PREFIX}/draw/lv_draw_triangle.h
   ${SOURCES_PREFIX}/draw/lv_img_buf.c
@@ -274,10 +280,12 @@ set(SW_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_gradient.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_gradient.h
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_img.c
+  ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_layer.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_letter.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_line.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_polygon.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_rect.c
+  ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_transform.c
   )
 
 set(SDL_DRAW_SOURCELIST
@@ -290,6 +298,8 @@ set(SDL_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_img.c
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_img.h
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_label.c
+  ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_layer.c
+  ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_layer.h
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_line.c
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_mask.c
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_mask.h
@@ -311,15 +321,15 @@ set(STM32_DMA2D_DRAW_SOURCELIST
   )
 
 set(NXP_PXP_DRAW_SOURCELIST
-  ${SOURCES_PREFIX}/draw/nxp_pxp/lv_gpu_nxp_pxp.c
-  ${SOURCES_PREFIX}/draw/nxp_pxp/lv_gpu_nxp_pxp.h
-  ${SOURCES_PREFIX}/draw/nxp_pxp/lv_gpu_nxp_pxp_osa.c
-  ${SOURCES_PREFIX}/draw/nxp_pxp/lv_gpu_nxp_pxp_osa.h
+  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp.c
+  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp.h
+  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp_osa.c
+  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp_osa.h
   )
 
 set(NXP_PXP_DRAW_SOURCELIST
-  ${SOURCES_PREFIX}/draw/nxp_vglite/lv_gpu_nxp_vglite.c
-  ${SOURCES_PREFIX}/draw/nxp_vglite/lv_gpu_nxp_vglite.h
+  ${SOURCES_PREFIX}/draw/nxp/vglite/lv_gpu_nxp_vglite.c
+  ${SOURCES_PREFIX}/draw/nxp/vglite/lv_gpu_nxp_vglite.h
   )
 
 set(DRAW_SOURCELIST
