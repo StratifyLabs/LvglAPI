@@ -21,7 +21,6 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-
   Derived &add_flag(Flags flags) {
     api()->obj_add_flag(m_object, static_cast<lv_obj_flag_t>(flags));
     return static_cast<Derived &>(*this);

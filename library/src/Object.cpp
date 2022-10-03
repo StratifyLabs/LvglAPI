@@ -418,3 +418,4 @@ Area Object::get_content_coordinates() const {
   api()->obj_get_content_coords(m_object, &area);
   return Area(area);
 }
+

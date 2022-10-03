@@ -14,89 +14,67 @@ public:
   class Iterator {
   public:
     Iterator() = default;
-
     Iterator(lv_obj_t *value, size_t index) {
       m_object_value = value;
       m_index = index;
     }
-
     bool operator!=(Iterator const &a) const noexcept { return m_index != a.m_index; }
-
     Object operator*() const noexcept {
       return Object(m_object_value).get_child(m_index);
     }
-
     Iterator &operator++() {
       m_index++;
       return *this;
     }
-
   private:
     lv_obj_t *m_object_value = nullptr;
     size_t m_index = 0;
   };
 
   Iterator begin() const noexcept { return Iterator(m_object, 0); }
-
   Iterator end() const noexcept { return Iterator(m_object, get_child_count()); }
-
   Iterator cbegin() const noexcept { return Iterator(m_object, 0); }
-
   Iterator cend() const noexcept { return Iterator(m_object, get_child_count()); }
-
   static constexpr lv_coord_t content_size = LV_SIZE_CONTENT;
   static constexpr lv_coord_t size_from_content = LV_SIZE_CONTENT;
   static constexpr lv_coord_t radius_circle = LV_RADIUS_CIRCLE;
-
   using Flags = ::lvgl::Flags;
-
   enum class Editable {
     inherit = LV_OBJ_CLASS_EDITABLE_INHERIT,
     yes = LV_OBJ_CLASS_EDITABLE_TRUE,
     no = LV_OBJ_CLASS_EDITABLE_FALSE
   };
-
   static void initialize() { lv_init(); }
   static void finalize() {
 #if LV_ENABLE_GC || !LV_MEM_CUSTOM
     lv_deinit();
 #endif
   }
-
   enum class IsRecursive { no, yes };
-
   API_NO_DISCARD bool has_flag(Flags flag) const {
     return api()->obj_has_flag(m_object, lv_obj_flag_t(flag));
   }
-
   API_NO_DISCARD bool has_any_flag(Flags flag) const {
     return api()->obj_has_flag_any(m_object, lv_obj_flag_t(flag));
   }
-
   API_NO_DISCARD State get_state() const { return State(api()->obj_get_state(m_object)); }
-
   API_NO_DISCARD bool has_state(State value) const {
     return api()->obj_has_state(m_object, lv_state_t(value));
   }
-
   template <class TargetClass> API_NO_DISCARD bool check_type() const {
     return api()->obj_check_type(m_object, TargetClass::get_class());
   }
-
   template <class TargetClass> API_NO_DISCARD bool is_class() const {
     static_assert(std::is_base_of<Object, TargetClass>::value);
     return api()->obj_get_class(m_object) == TargetClass::get_class();
   }
-
   template <class TargetClass> API_NO_DISCARD bool has_class() const {
     return api()->obj_has_class(m_object, TargetClass::get_class());
   }
-
   static const lv_obj_class_t *get_class();
   API_NO_DISCARD bool is_findable() const;
   API_NO_DISCARD bool is_valid() const { return m_object != nullptr; }
   API_NO_DISCARD bool is_layout_positioned() const;
-
   API_NO_DISCARD lv_coord_t get_x() const;
   API_NO_DISCARD lv_coord_t get_x2() const;
   API_NO_DISCARD lv_coord_t get_y() const;
