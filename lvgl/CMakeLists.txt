@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.12)
-
 set(GIT_REPOSITORY "https://github.com/lvgl/lvgl.git")
 set(GIT_BRANCH "release/v8.3")
 if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
@@ -9,17 +8,12 @@ if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lvgl)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
-
 if(NOT LVGL_CONFIG_PATH)
   message(FATAL_ERROR "LVGL_CONFIG_PATH must be defined")
 endif()
-
 option(LVGL_API_USE_SDL_GPU "Use the GPU Code for SDL applications" OFF)
-
 project(lvgl C)
-
 set(SOURCES_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/src)
-
 set(PRIVATE_SOURCELIST
   ${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
   ${CMAKE_CURRENT_SOURCE_DIR}/lvgl_api.c
@@ -204,7 +198,6 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/misc/lv_types.h
   ${SOURCES_PREFIX}/misc/lv_utils.c
   ${SOURCES_PREFIX}/misc/lv_utils.h
-
   ${SOURCES_PREFIX}/draw/lv_draw.c
   ${SOURCES_PREFIX}/draw/lv_draw.h
   ${SOURCES_PREFIX}/draw/lv_draw.mk
@@ -234,7 +227,6 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/draw/lv_img_cache.h
   ${SOURCES_PREFIX}/draw/lv_img_decoder.c
   ${SOURCES_PREFIX}/draw/lv_img_decoder.h
-
   ${SOURCES_PREFIX}/widgets/lv_slider.h
   ${SOURCES_PREFIX}/widgets/lv_img.h
   ${SOURCES_PREFIX}/widgets/lv_label.c
@@ -266,9 +258,7 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/widgets/lv_textarea.h
   ${SOURCES_PREFIX}/widgets/lv_canvas.c
   ${SOURCES_PREFIX}/widgets/lv_objx_templ.c
-  ${SOURCES_PREFIX}/widgets/lv_btnmatrix.h
-  )
-
+  ${SOURCES_PREFIX}/widgets/lv_btnmatrix.h)
 set(SW_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw.h
@@ -285,9 +275,7 @@ set(SW_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_line.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_polygon.c
   ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_rect.c
-  ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_transform.c
-  )
-
+  ${SOURCES_PREFIX}/draw/sw/lv_draw_sw_transform.c)
 set(SDL_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl.c
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl.h
@@ -312,66 +300,47 @@ set(SDL_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_texture_cache.c
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_texture_cache.h
   ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_utils.c
-  ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_utils.h
-  )
-
+  ${SOURCES_PREFIX}/draw/sdl/lv_draw_sdl_utils.h)
 set(STM32_DMA2D_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/stm32_dma2d/lv_gpu_stm32_dma2d.c
-  ${SOURCES_PREFIX}/draw/stm32_dma2d/lv_gpu_stm32_dma2d.h
-  )
-
+  ${SOURCES_PREFIX}/draw/stm32_dma2d/lv_gpu_stm32_dma2d.h)
 set(NXP_PXP_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp.c
   ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp.h
   ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp_osa.c
-  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp_osa.h
-  )
-
+  ${SOURCES_PREFIX}/draw/nxp/pxp/lv_gpu_nxp_pxp_osa.h)
 set(NXP_PXP_DRAW_SOURCELIST
   ${SOURCES_PREFIX}/draw/nxp/vglite/lv_gpu_nxp_vglite.c
-  ${SOURCES_PREFIX}/draw/nxp/vglite/lv_gpu_nxp_vglite.h
-  )
-
+  ${SOURCES_PREFIX}/draw/nxp/vglite/lv_gpu_nxp_vglite.h)
 set(DRAW_SOURCELIST
   ${SW_DRAW_SOURCELIST}
   ${SDL_DRAW_SOURCELIST}
   ${STM32_DMA2D_DRAW_SOURCELIST}
   ${NXP_PXP_DRAW_SOURCELIST}
-  ${NXP_PXP_DRAW_SOURCELIST}
-  )
-
-
+  ${NXP_PXP_DRAW_SOURCELIST})
 if(CMSDK_IS_ARM)
   set(LIB_OPTION kernel)
   set(DRAW_INCLUDE_DIRECTORY "")
 endif()
-
 if(CMSDK_IS_LINK)
   set(DRAW_INCLUDE_DIRECTORY ${SOURCES_PREFIX}/gpu/sdl)
 endif()
-
-cmsdk_library_target(RELEASE ${PROJECT_NAME} "${LIB_OPTION}" release ${CMSDK_ARCH})
-
-add_library(${RELEASE_TARGET} STATIC)
-
+cmsdk2_add_library(
+  NAME ${PROJECT_NAME}
+  CONFIG release
+  OPTION "${LIB_OPTION}"
+  ARCH ${CMSDK_ARCH}
+  TARGET RELEASE_TARGET)
 target_sources(${RELEASE_TARGET}
   PUBLIC
   PRIVATE
   ${PRIVATE_SOURCELIST}
-  ${DRAW_SOURCELIST}
-  )
-
+  ${DRAW_SOURCELIST})
 target_compile_definitions(${RELEASE_TARGET}
   PUBLIC
   LV_CONF_INCLUDE_SIMPLE=1
-  PRIVATE
-  )
-
-target_compile_options(${RELEASE_TARGET}
-  PUBLIC
-  -Os
-  )
-
+  PRIVATE)
+target_compile_options(${RELEASE_TARGET} PUBLIC ${API_PUBLIC_COMPILE_OPTIONS})
 target_include_directories(${RELEASE_TARGET}
   PUBLIC
   $<INSTALL_INTERFACE:include/lvgl>
@@ -383,13 +352,16 @@ target_include_directories(${RELEASE_TARGET}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${LVGL_CONFIG_PATH}>
   $<BUILD_INTERFACE:${DRAW_INCLUDE_DIRECTORY}>
-  PRIVATE
-  )
-
-cmsdk_library_target(DEBUG ${PROJECT_NAME} "${LIB_OPTION}" debug ${CMSDK_ARCH})
-add_library(${DEBUG_TARGET} STATIC)
-cmsdk_copy_target(${RELEASE_TARGET} ${DEBUG_TARGET})
-
+  PRIVATE)
+cmsdk2_add_library(
+  NAME ${PROJECT_NAME}
+  CONFIG debug
+  OPTION "${LIB_OPTION}"
+  ARCH ${CMSDK_ARCH}
+  TARGET DEBUG_TARGET)
+cmsdk2_copy_target(
+  SOURCE ${RELEASE_TARGET}
+  DESTINATION ${DEBUG_TARGET})
 if(CMSDK_IS_LINK)
   if(NOT LVGL_NO_STRATIFY_OS)
     set(DEPENDENCIES StratifyOS)
@@ -398,13 +370,20 @@ if(CMSDK_IS_LINK)
   else()
     set(DEPENDENCIES "")
   endif()
-  cmsdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${CMSDK_ARCH} "${DEPENDENCIES}")
-  cmsdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${CMSDK_ARCH} "${DEPENDENCIES}")
+  cmsdk2_library_add_dependencies(
+    TARGET ${RELEASE_TARGET}
+    DEPENDENCIES ${DEPENDENCIES})
+  cmsdk2_library_add_dependencies(
+    TARGET ${DEBUG_TARGET}
+    DEPENDENCIES ${DEPENDENCIES})
 else()
-  cmsdk_library_add_arch_targets("${DEBUG_OPTIONS}" ${CMSDK_ARCH} "StratifyOS_mcu")
-  cmsdk_library_add_arch_targets("${RELEASE_OPTIONS}" ${CMSDK_ARCH} "StratifyOS_mcu")
+  cmsdk2_library_add_dependencies(
+    TARGET ${RELEASE_TARGET}
+    DEPENDENCIES StratifyOS_mcu)
+  cmsdk2_library_add_dependencies(
+    TARGET ${DEBUG_TARGET}
+    DEPENDENCIES StratifyOS_mcu)
 endif()
-
 install(FILES
   ${SOURCES_PREFIX}/core/lv_disp.h
   ${SOURCES_PREFIX}/core/lv_event.h
@@ -421,9 +400,7 @@ install(FILES
   ${SOURCES_PREFIX}/core/lv_obj_tree.h
   ${SOURCES_PREFIX}/core/lv_refr.h
   ${SOURCES_PREFIX}/core/lv_theme.h
-  DESTINATION include/lvgl/src/core
-  )
-
+  DESTINATION include/lvgl/src/core)
 install(FILES
   ${SOURCES_PREFIX}/draw/lv_draw_line.h
   ${SOURCES_PREFIX}/draw/lv_draw_mask.h
@@ -437,9 +414,7 @@ install(FILES
   ${SOURCES_PREFIX}/draw/lv_draw_blend.h
   ${SOURCES_PREFIX}/draw/lv_draw_img.h
   ${SOURCES_PREFIX}/draw/lv_draw_label.h
-  DESTINATION include/lvgl/src/draw
-  )
-
+  DESTINATION include/lvgl/src/draw)
 install(FILES
   ${SOURCES_PREFIX}/misc/lv_anim.h
   ${SOURCES_PREFIX}/misc/lv_types.h
@@ -484,34 +459,26 @@ install(FILES
   ${SOURCES_PREFIX}/widgets/lv_switch.h
   ${SOURCES_PREFIX}/widgets/lv_table.h
   ${SOURCES_PREFIX}/widgets/lv_textarea.h
-  DESTINATION include/lvgl/src/widgets
-  )
-
+  DESTINATION include/lvgl/src/widgets)
 install(FILES
   ${SOURCES_PREFIX}/font/lv_font.h
   ${SOURCES_PREFIX}/font/lv_font_fmt_txt.h
   ${SOURCES_PREFIX}/font/lv_font_loader.h
   ${SOURCES_PREFIX}/font/lv_symbol_def.h
-  DESTINATION include/lvgl/src/font
-  )
+  DESTINATION include/lvgl/src/font)
 install(FILES
   ${SOURCES_PREFIX}/gpu/lv_gpu_nxp_pxp.h
   ${SOURCES_PREFIX}/gpu/lv_gpu_nxp_pxp_osa.h
   ${SOURCES_PREFIX}/gpu/lv_gpu_nxp_vglite.h
   ${SOURCES_PREFIX}/gpu/lv_gpu_stm32_dma2d.h
-  DESTINATION include/lvgl/src/gpu
-  )
-
+  DESTINATION include/lvgl/src/gpu)
 install(FILES
   ${SOURCES_PREFIX}/hal/lv_hal.h
   ${SOURCES_PREFIX}/hal/lv_hal_disp.h
   ${SOURCES_PREFIX}/hal/lv_hal_indev.h
   ${SOURCES_PREFIX}/hal/lv_hal_tick.h
-  DESTINATION include/lvgl/src/hal
-  )
-
+  DESTINATION include/lvgl/src/hal)
 install(FILES ${SOURCES_PREFIX}/extra/lv_extra.h DESTINATION include/lvgl/src/extra)
-
 install(FILES ${SOURCES_PREFIX}/extra/widgets/lv_widgets.h DESTINATION include/lvgl/src/extra/widgets)
 install(FILES ${SOURCES_PREFIX}/extra/widgets/animimg/lv_animimg.h DESTINATION include/lvgl/src/extra/widgets/animimg)
 install(FILES ${SOURCES_PREFIX}/extra/widgets/imgbtn/lv_imgbtn.h DESTINATION include/lvgl/src/extra/widgets/imgbtn)
@@ -531,29 +498,24 @@ install(FILES ${SOURCES_PREFIX}/extra/widgets/msgbox/lv_msgbox.h DESTINATION inc
 install(FILES ${SOURCES_PREFIX}/extra/widgets/tileview/lv_tileview.h DESTINATION include/lvgl/src/extra/widgets/tileview)
 install(FILES ${SOURCES_PREFIX}/extra/widgets/meter/lv_meter.h DESTINATION include/lvgl/src/extra/widgets/meter)
 install(FILES ${SOURCES_PREFIX}/extra/widgets/win/lv_win.h DESTINATION include/lvgl/src/extra/widgets/win)
-
 install(FILES ${SOURCES_PREFIX}/extra/themes/lv_themes.h DESTINATION include/lvgl/src/extra/themes)
 install(FILES ${SOURCES_PREFIX}/extra/themes/basic/lv_theme_basic.h DESTINATION include/lvgl/src/extra/themes/basic)
 install(FILES ${SOURCES_PREFIX}/extra/themes/default/lv_theme_default.h DESTINATION include/lvgl/src/extra/themes/default)
 install(FILES ${SOURCES_PREFIX}/extra/themes/mono/lv_theme_mono.h DESTINATION include/lvgl/src/extra/themes/mono)
-
 install(FILES ${SOURCES_PREFIX}/extra/layouts/lv_layouts.h DESTINATION include/lvgl/src/extra/layouts)
 install(FILES ${SOURCES_PREFIX}/extra/layouts/flex/lv_flex.h DESTINATION include/lvgl/src/extra/layouts/flex)
 install(FILES ${SOURCES_PREFIX}/extra/layouts/grid/lv_grid.h DESTINATION include/lvgl/src/extra/layouts/grid)
-
 install(FILES
   ${SOURCES_PREFIX}/lvgl.h
   ${SOURCES_PREFIX}/lv_api_map.h
   ${SOURCES_PREFIX}/lv_conf_internal.h
   ${SOURCES_PREFIX}/lv_conf_kconfig.h
   DESTINATION include/lvgl/src)
-
 install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lvgl_api.h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/lvgl/lv_conf.h
   ${CMAKE_CURRENT_SOURCE_DIR}/lvgl/lvgl.h
   DESTINATION include/lvgl)
-
 install(FILES ${PROJECT_NAME}.cmake
   DESTINATION ${CMSDK_LOCAL_PATH}/cmake/targets)
 

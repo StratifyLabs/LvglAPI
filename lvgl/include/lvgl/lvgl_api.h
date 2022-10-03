@@ -149,7 +149,7 @@ typedef struct {
   lv_coord_t (*clamp_height)(lv_coord_t height, lv_coord_t min_height, lv_coord_t max_height, lv_coord_t ref_height);
 
   //built-in layouts
-  uint32_t *layout_flex;
+  uint16_t *layout_flex;
   lv_style_prop_t *style_flex_flow;
   lv_style_prop_t *style_flex_main_place;
   lv_style_prop_t *style_flex_cross_place;
@@ -340,7 +340,7 @@ typedef struct {
   //misc/style
   void (*style_init)(lv_style_t * style);
   void (*style_reset)(lv_style_t * style);
-  lv_style_prop_t (*style_register_prop)();
+  lv_style_prop_t (*style_register_prop)(uint8_t);
   bool (*style_remove_prop)(lv_style_t * style, lv_style_prop_t prop);
   void (*style_set_prop)(lv_style_t * style, lv_style_prop_t prop, lv_style_value_t value);
   lv_res_t (*style_get_prop)(const lv_style_t * style, lv_style_prop_t prop, lv_style_value_t * value);
@@ -710,7 +710,7 @@ typedef struct {
   //list
   lv_obj_t * (*list_create)(lv_obj_t * parent);
   lv_obj_t * (*list_add_text)(lv_obj_t * list, const char * txt);
-  lv_obj_t * (*list_add_btn)(lv_obj_t * list, const char * icon, const char * txt);
+  lv_obj_t * (*list_add_btn)(lv_obj_t * list, const void * icon, const char * txt);
   const char * (*list_get_btn_text)(lv_obj_t * list, lv_obj_t * btn);
 
   //messagebox

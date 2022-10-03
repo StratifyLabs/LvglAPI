@@ -5,7 +5,9 @@ if(CMSDK_IS_LINK)
 	list(APPEND LIBRARIES lvgl)
 endif()
 
-api_add_api_library(LvglAPI "${LIBRARIES}")
+api2_add_library(
+	NAME LvglAPI
+	DEPENDENCIES ${LIBRARIES})
 
 if((CMSDK_IS_ARM AND API_IS_SDK) OR IS_BOOTSTRAP)
 	macro(add_lvgl_include ARCH)
