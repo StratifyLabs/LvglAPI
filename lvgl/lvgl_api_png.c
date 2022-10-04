@@ -195,7 +195,6 @@ lv_res_t decoder_read_line(
   lv_coord_t y,
   lv_coord_t len,
   uint8_t *buf) {
-  printf("%s():%d\n", __FUNCTION__, __LINE__);
   return LV_RES_OK; /*Return with its pointer*/
 }
 
