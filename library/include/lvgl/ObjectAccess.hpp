@@ -316,8 +316,8 @@ public:
     return static_cast<Derived &>(*this);
   }
 
-  Derived &move_to_index(s32 index) {
-    api()->obj_move_to_index(m_object, index);
+  Derived &move_to_index(u32 index) {
+    api()->obj_move_to_index(m_object, s32(index));
     return static_cast<Derived &>(*this);
   }
 

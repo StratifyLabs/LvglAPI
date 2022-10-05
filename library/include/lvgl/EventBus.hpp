@@ -2,14 +2,16 @@
 // Created by Tyler Gilbert on 10/4/22.
 //
 
-#ifndef DESIGNLAB_EVENTBUS_HPP
-#define DESIGNLAB_EVENTBUS_HPP
+#ifndef LVGLAPI_LVGL_EVENTBUS_HPP
+#define LVGLAPI_LVGL_EVENTBUS_HPP
 
 #include "UserData.hpp"
 
+#if LV_USE_MSG
 namespace lvgl {
 
 template <typename IdentifierType> class EventBus : public Api {
+  EventBus() = default;
 public:
   static void send(IdentifierType id) { api()->msg_send(uint32_t(id), nullptr); }
 
@@ -37,4 +39,6 @@ public:
 };
 
 } // namespace lvgl
-#endif // DESIGNLAB_EVENTBUS_HPP
+#endif
+
+#endif // LVGLAPI_LVGL_EVENTBUS_HPP
