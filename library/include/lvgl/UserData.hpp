@@ -33,14 +33,14 @@ protected:
   // it returns nullptr
   static void *get_user_data(void *user_data);
 
-  static void do_manual_cleanup(void * user_data);
+  static void do_manual_cleanup(void *user_data);
 
-  template<typename Derived> static Derived * get_user_data_derived(void * user_data){
-    return static_cast<Derived*>(get_user_data(user_data));
+  template <typename Derived> static Derived *get_user_data_derived(void *user_data) {
+    return static_cast<Derived *>(get_user_data(user_data));
   }
 
 public:
-  static bool is_valid(const char * name);
+  static bool is_valid(const char *name);
 };
 
 template <class Derived> class UserDataAccess : private UserData {
@@ -67,15 +67,15 @@ public:
     return *result;
   }
 
-  static const char * create_from_name(const char * name) {
-    if( !is_valid(name) ){
+  static const char *create_from_name(const char *name) {
+    if (!is_valid(name)) {
       auto *result = new Derived(name);
       result->m_deleter = derived_deleter;
       return result->cast_as_name();
     }
     return name;
   }
-
+  
 protected:
   using UserDataBase = UserDataAccess<Derived>;
   static void derived_deleter(UserData *user_data) {
@@ -87,6 +87,10 @@ protected:
       delete (static_cast<Derived *>(derived));
     }
   }
+
+private:
+  UserDataAccess(const UserDataAccess &) = default;
+  UserDataAccess &operator=(const UserDataAccess &) = default;
 };
 
 } // namespace lvgl

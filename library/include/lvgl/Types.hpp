@@ -445,9 +445,9 @@ enum class PropertyGroup {
 };
 
 struct PropertyDescription {
-  Property property;
-  PropertyType type;
-  PropertyGroup group;
+  Property property = Property::invalid;
+  PropertyType type = PropertyType::invalid;
+  PropertyGroup group = PropertyGroup::invalid;
 };
 
 
