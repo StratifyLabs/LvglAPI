@@ -867,6 +867,17 @@ typedef struct {
   void (*obj_set_style_grid_cell_x_align)(lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
   void (*obj_set_style_grid_cell_y_align)(lv_obj_t * obj, lv_coord_t value, lv_style_selector_t selector);
 
+#if LV_USE_MSG
+  //msg
+  void (*msg_init)();
+  void * (*msg_subsribe)(uint32_t, lv_msg_subscribe_cb_t, void *);
+  void * (*msg_subsribe_obj)(uint32_t, lv_obj_t *, void *);
+  void (*msg_unsubscribe)(void *);
+  void (*msg_send)(uint32_t, const void *);
+  uint32_t (*msg_get_id)(lv_msg_t *);
+  const void * (*msg_get_payload)(lv_msg_t *);
+  void * (*msg_get_user_data)(lv_msg_t * m);
+#endif
   //system
   const lvgl_api_font_descriptor_t * (*get_font)(int offset);
   const lvgl_api_image_descriptor_t * (*get_image)(int offset);

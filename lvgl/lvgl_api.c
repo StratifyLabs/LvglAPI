@@ -869,6 +869,18 @@ const lvgl_api_t lvgl_api = {
   .obj_set_style_grid_cell_y_align = lv_obj_set_style_grid_cell_y_align,
 #endif
 
+#if LV_USE_MSG
+  // msg
+  .msg_init = lv_msg_init,
+  .msg_subsribe = lv_msg_subsribe,
+  .msg_subsribe_obj = lv_msg_subsribe_obj,
+  .msg_unsubscribe = lv_msg_unsubscribe,
+  .msg_send = lv_msg_send,
+  .msg_get_id = lv_msg_get_id,
+  .msg_get_payload = lv_msg_get_payload,
+  .msg_get_user_data = lv_msg_get_user_data,
+#endif
+
   // system
   .get_font = lvgl_api_get_font,
   .get_image = lvgl_api_get_image,

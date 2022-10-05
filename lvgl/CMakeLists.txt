@@ -51,6 +51,8 @@ set(PRIVATE_SOURCELIST
   ${SOURCES_PREFIX}/core/lv_refr.h
   ${SOURCES_PREFIX}/core/lv_theme.c
   ${SOURCES_PREFIX}/core/lv_theme.h
+  ${SOURCES_PREFIX}/extra/others/msg/lv_msg.c
+  ${SOURCES_PREFIX}/extra/others/msg/lv_msg.h
   ${SOURCES_PREFIX}/extra/layouts/flex/lv_flex.c
   ${SOURCES_PREFIX}/extra/layouts/flex/lv_flex.h
   ${SOURCES_PREFIX}/extra/layouts/grid/lv_grid.c

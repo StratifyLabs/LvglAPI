@@ -15,6 +15,7 @@ set(SOURCES
   ColorWheel.cpp
   Dropdown.cpp
 	Event.cpp
+	EventBus.cpp
 	Font.cpp
 	Group.cpp
 	Image.cpp

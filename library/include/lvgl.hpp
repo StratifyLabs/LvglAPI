@@ -19,6 +19,7 @@ namespace lvgl {}
 #include "lvgl/Draw.hpp"
 #include "lvgl/Dropdown.hpp"
 #include "lvgl/Event.hpp"
+#include "lvgl/EventBus.hpp"
 #include "lvgl/Font.hpp"
 #include "lvgl/Generic.hpp"
 #include "lvgl/Group.hpp"

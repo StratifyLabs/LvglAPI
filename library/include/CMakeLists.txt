@@ -16,6 +16,7 @@ set(SOURCES
 	lvgl/Generic.hpp
 	lvgl/Draw.hpp
   lvgl/Dropdown.hpp
+	lvgl/EventBus.hpp
 	lvgl/Event.hpp
 	lvgl/Font.hpp
 	lvgl/Generic.hpp
