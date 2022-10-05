@@ -12,6 +12,7 @@ namespace lvgl {
 
 template <typename IdentifierType> class EventBus : public Api {
   EventBus() = default;
+
 public:
   static void send(IdentifierType id) { api()->msg_send(uint32_t(id), nullptr); }
 
@@ -27,12 +28,12 @@ public:
     UniquePointer m_unique_pointer = UniquePointer(nullptr, nullptr);
 
     static void subscriber_callback(void *s, lv_msg_t *msg) {
-      reinterpret_cast<UserDataType *>(msg->user_data)
-        ->handle_event(IdentifierType(msg->id));
+      if (auto *user_data = reinterpret_cast<UserDataType *>(msg->user_data); user_data) {
+        user_data->handle_event(IdentifierType(msg->id));
+      }
     }
 
-    static void *
-    subscribe(IdentifierType id, UserDataType *user_data) {
+    static void *subscribe(IdentifierType id, UserDataType *user_data) {
       return api()->msg_subsribe(uint32_t(id), subscriber_callback, user_data);
     }
   };
