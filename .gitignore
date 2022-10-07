@@ -1,5 +1,6 @@
 
 lvgl/lvgl/
+lvgl/lv_lib_freetype/
 lodepng/lodepng/
 cmake_arm/
 cmake_link/

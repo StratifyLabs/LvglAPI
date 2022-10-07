@@ -334,10 +334,24 @@ cmsdk2_add_library(
   ARCH ${CMSDK_ARCH}
   TARGET RELEASE_TARGET)
 target_sources(${RELEASE_TARGET}
-  PUBLIC
   PRIVATE
   ${PRIVATE_SOURCELIST}
   ${DRAW_SOURCELIST})
+if(LVGL_API_USE_FREETYPE)
+  include(FindFreeType)
+  target_sources(${RELEASE_TARGET}
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/lv_lib_freetype/lv_freetype.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/lv_lib_freetype/lv_freetype.h)
+  target_include_directories(${RELEASE_TARGET}
+    PUBLIC
+    ${FREETYPE_INCLUDE_DIRS}
+    $<INSTALL_INTERFACE:include/lv_lib_freetype>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lv_lib_freetype/>)
+  target_link_libraries(${RELEASE_TARGET}
+    PUBLIC
+    ${FREETYPE_LIBRARIES})
+endif()
 target_compile_definitions(${RELEASE_TARGET}
   PUBLIC
   LV_CONF_INCLUDE_SIMPLE=1
@@ -441,9 +455,7 @@ install(FILES
   ${SOURCES_PREFIX}/misc/lv_tlsf.h
   ${SOURCES_PREFIX}/misc/lv_txt.h
   ${SOURCES_PREFIX}/misc/lv_txt_ap.h
-  DESTINATION include/lvgl/src/misc
-  )
-
+  DESTINATION include/lvgl/src/misc)
 install(FILES
   ${SOURCES_PREFIX}/widgets/lv_arc.h
   ${SOURCES_PREFIX}/widgets/lv_bar.h
