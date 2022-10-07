@@ -672,6 +672,19 @@ struct WheelEvent {
   using Callback = WheelEvent (*)(void *);
 };
 
+enum class LoadAnimation {
+  none = LV_SCR_LOAD_ANIM_NONE,
+  over_left = LV_SCR_LOAD_ANIM_OVER_LEFT,
+  over_right = LV_SCR_LOAD_ANIM_OVER_RIGHT,
+  over_top = LV_SCR_LOAD_ANIM_OVER_TOP,
+  over_bottom = LV_SCR_LOAD_ANIM_OVER_BOTTOM,
+  move_left = LV_SCR_LOAD_ANIM_MOVE_LEFT,
+  move_right = LV_SCR_LOAD_ANIM_MOVE_RIGHT,
+  move_top = LV_SCR_LOAD_ANIM_MOVE_TOP,
+  move_bottom = LV_SCR_LOAD_ANIM_MOVE_BOTTOM,
+  fade_on = LV_SCR_LOAD_ANIM_FADE_ON
+};
+
 inline constexpr lv_coord_t operator"" _percent(unsigned long long value) {
   return LV_PCT(value);
 }

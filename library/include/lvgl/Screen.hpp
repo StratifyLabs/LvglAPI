@@ -8,21 +8,6 @@ namespace lvgl {
 
 class Screen : public Object {
 public:
-  enum class LoadAnimation {
-    none = LV_SCR_LOAD_ANIM_NONE,
-    over_left = LV_SCR_LOAD_ANIM_OVER_LEFT,
-    over_right = LV_SCR_LOAD_ANIM_OVER_RIGHT,
-    over_top = LV_SCR_LOAD_ANIM_OVER_TOP,
-    over_bottom = LV_SCR_LOAD_ANIM_OVER_BOTTOM,
-    move_left = LV_SCR_LOAD_ANIM_MOVE_LEFT,
-    move_right = LV_SCR_LOAD_ANIM_MOVE_RIGHT,
-    move_top = LV_SCR_LOAD_ANIM_MOVE_TOP,
-    move_bottom = LV_SCR_LOAD_ANIM_MOVE_BOTTOM,
-    fade_on = LV_SCR_LOAD_ANIM_FADE_ON
-  };
-
-  static const char * to_cstring(LoadAnimation value);
-  static LoadAnimation get_load_animation(var::StringView value);
 
   Screen(const char *name);
 
@@ -62,6 +47,8 @@ public:
 
   static var::Vector<lv_obj_t *> &screen_list() { return m_screen_list; }
 
+  static constexpr auto default_name = "default";
+
 private:
   static var::Vector<lv_obj_t *> m_screen_list;
 
@@ -80,7 +67,6 @@ private:
 
 class Display : public Api {
 public:
-  using LoadAnimation = Screen::LoadAnimation;
   explicit Display(lv_disp_t *value) : m_display(value) {}
 
   Screen get_active_screen() { return Screen(api()->disp_get_scr_act(m_display)); }

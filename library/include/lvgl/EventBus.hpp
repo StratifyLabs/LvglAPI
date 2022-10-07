@@ -16,10 +16,34 @@ template <typename IdentifierType> class EventBus : public Api {
 public:
   static void send(IdentifierType id) { api()->msg_send(uint32_t(id), nullptr); }
 
-  template <typename UserDataType> class Subscription {
+  class Subscription {
   public:
+    using Callback = void (*)(IdentifierType id);
     Subscription() = default;
-    Subscription(IdentifierType id, UserDataType *user_data)
+    Subscription(IdentifierType id, Callback callback)
+      : m_unique_pointer(subscribe(id, callback), &deleter) {}
+
+  private:
+    static void deleter(void *context) { api()->msg_unsubscribe(context); }
+    using UniquePointer = api::UniquePointer<void, decltype(&deleter)>;
+    UniquePointer m_unique_pointer = UniquePointer(nullptr, nullptr);
+
+    static void subscriber_callback(void *s, lv_msg_t *msg) {
+      if (auto *callback = reinterpret_cast<Callback>(msg->user_data); callback) {
+        callback(IdentifierType(msg->id));
+      }
+    }
+
+    static void *subscribe(IdentifierType id, Callback callback) {
+      return api()->msg_subsribe(
+        uint32_t(id), subscriber_callback, reinterpret_cast<void *>(callback));
+    }
+  };
+
+  template <typename UserDataType> class UserDataSubscription {
+  public:
+    UserDataSubscription() = default;
+    UserDataSubscription(IdentifierType id, UserDataType *user_data)
       : m_unique_pointer(subscribe(id, user_data), &deleter) {}
 
   private:

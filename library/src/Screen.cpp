@@ -10,7 +10,7 @@ Screen::Screen(const char * name) {
     //add the default screen
     auto active_screen = api()->disp_get_scr_act(nullptr);
     m_screen_list.push_back(active_screen);
-    set_user_data(active_screen, "default");
+    set_user_data(active_screen, default_name);
   }
 
   m_object = api()->obj_create(nullptr);
@@ -29,7 +29,7 @@ void Screen::remove_screen(const char *name) {
     if( entry != nullptr ){
       auto s = Screen(entry);
       const var::StringView s_name = s.name();
-      if( s_name == name && s_name != "default"){
+      if( s_name == name && s_name != default_name){
         s.async_remove();
         entry = nullptr;
         return;
@@ -48,34 +48,4 @@ Screen Screen::find_screen(const char *name) {
     }
   }
   return Screen((lv_obj_t*)nullptr);
-}
-
-
-const char * Screen::to_cstring(LoadAnimation value){
-  switch (value) {
-    LVGL_PROPERTY_CASE(LoadAnimation, none);
-    LVGL_PROPERTY_CASE(LoadAnimation, over_left);
-    LVGL_PROPERTY_CASE(LoadAnimation, over_right);
-    LVGL_PROPERTY_CASE(LoadAnimation, over_top);
-    LVGL_PROPERTY_CASE(LoadAnimation, over_bottom);
-    LVGL_PROPERTY_CASE(LoadAnimation, move_left);
-    LVGL_PROPERTY_CASE(LoadAnimation, move_right);
-    LVGL_PROPERTY_CASE(LoadAnimation, move_top);
-    LVGL_PROPERTY_CASE(LoadAnimation, move_bottom);
-    LVGL_PROPERTY_CASE(LoadAnimation, fade_on);
-  }
-  return "unknown";
-}
-
-Screen::LoadAnimation Screen::get_load_animation(var::StringView value){
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_left);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_right);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_top);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, over_bottom);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_left);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_right);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_top);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, move_bottom);
-  LVGL_PROPERTY_STRING_CASE(LoadAnimation, fade_on);
-  return LoadAnimation::none;
 }
