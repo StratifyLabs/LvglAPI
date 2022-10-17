@@ -69,7 +69,6 @@ public:
      */
 
     Info() = default;
-    ;
     explicit Info(const char *path);
     API_NO_DISCARD Font get_font() const { return Font(font()); }
 
