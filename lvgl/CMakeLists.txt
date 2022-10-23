@@ -374,7 +374,8 @@ cmsdk2_add_library(
   CONFIG debug
   OPTION "${LIB_OPTION}"
   ARCH ${CMSDK_ARCH}
-  TARGET DEBUG_TARGET)
+  TARGET DEBUG_TARGET
+  TARGETS DEBUG_TARGET_LIST)
 cmsdk2_copy_target(
   SOURCE ${RELEASE_TARGET}
   DESTINATION ${DEBUG_TARGET})
@@ -386,20 +387,29 @@ if(CMSDK_IS_LINK)
   else()
     set(DEPENDENCIES "")
   endif()
-  cmsdk2_library_add_dependencies(
-    TARGET ${RELEASE_TARGET}
-    DEPENDENCIES ${DEPENDENCIES})
-  cmsdk2_library_add_dependencies(
-    TARGET ${DEBUG_TARGET}
-    DEPENDENCIES ${DEPENDENCIES})
 else()
-  cmsdk2_library_add_dependencies(
-    TARGET ${RELEASE_TARGET}
-    DEPENDENCIES StratifyOS_mcu)
-  cmsdk2_library_add_dependencies(
-    TARGET ${DEBUG_TARGET}
-    DEPENDENCIES StratifyOS_mcu)
+  set(DEPENDENCIES StratifyOS_mcu)
 endif()
+
+cmsdk2_library_add_dependencies(
+  TARGET ${RELEASE_TARGET}
+  DEPENDENCIES ${DEPENDENCIES}
+  TARGETS RELEASE_TARGET_LIST)
+cmsdk2_library_add_dependencies(
+  TARGET ${DEBUG_TARGET}
+  DEPENDENCIES ${DEPENDENCIES}
+  TARGETS DEBUG_TARGET_LIST)
+
+foreach(TARGET ${DEBUG_TARGET_LIST})
+  get_target_property(ARCH ${TARGET} CMSDK_PROPERTY_ARCH)
+  target_compile_definitions(${TARGET} PUBLIC __${ARCH})
+endforeach()
+
+foreach(TARGET ${RELEASE_TARGET_LIST})
+  get_target_property(ARCH ${TARGET} CMSDK_PROPERTY_ARCH)
+  target_compile_definitions(${TARGET} PUBLIC __${ARCH})
+endforeach()
+
 install(FILES
   ${SOURCES_PREFIX}/core/lv_disp.h
   ${SOURCES_PREFIX}/core/lv_event.h
