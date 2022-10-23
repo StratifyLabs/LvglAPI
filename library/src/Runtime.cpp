@@ -18,6 +18,7 @@
 #include "lvgl/Style.hpp"
 
 using namespace lvgl;
+using namespace chrono;
 
 #if __StratifyOS__
 Runtime::Runtime() {
@@ -41,6 +42,13 @@ Runtime::Runtime() {
 }
 #endif
 
+namespace {
+window::Size get_initial_size(window::Window::Flags flags, window::Size size) {
+  return (flags & window::Window::Flags::highdpi) ? size.get_half() : size;
+}
+
+} // namespace
+
 Runtime &Runtime::loop() {
   while (!is_stopped()) {
     refresh();
@@ -53,16 +61,20 @@ Runtime &Runtime::loop() {
 }
 
 #if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
-Runtime &Runtime::push(TaskCallback callback, void *context) {
+Runtime &Runtime::push(TaskCallback callback, chrono::MicroTime deferred) {
   thread::Mutex::Scope ms(m_task_mutex);
-#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
-  m_task_list.push_back(task);
-#else
+  auto is_slot_available = false;
+  const auto now = chrono::ClockTime::get_system_time();
   for (auto &entry : m_task_list) {
-    if (entry.callback == nullptr) {
-      entry = {callback, context};
+    if (!entry.callback) {
+      entry = {std::move(callback), now + ClockTime(deferred)};
+      is_slot_available = true;
       break;
     }
+  }
+#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
+  if( !is_slot_available ) {
+    m_task_list.push_back({callback});
   }
 #endif
   return *this;
@@ -78,21 +90,16 @@ Runtime &Runtime::refresh() {
 #if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
   {
     thread::Mutex::Scope ms(m_task_mutex);
-#if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
-    m_task_list.push_back(task);
-    while (m_task_list.count()) {
-      auto &task = m_task_list.back();
-      task.callback(task.context);
-      m_task_list.pop_back();
-    }
-#else
+    const auto now = ClockTime::get_system_time();
+    auto is_task_executed = [&now](Task & task){
+
+    };
     for (auto &task : m_task_list) {
-      if (task.callback != nullptr) {
-        task.callback(task.context);
-        task.callback = nullptr;
+      if(task.callback && now > task.wait_until ){
+        task.callback();
+        task = {};
       }
     }
-#endif
   }
 #endif
 
@@ -107,16 +114,11 @@ Runtime &Runtime::refresh() {
   return *this;
 }
 
-
 #if defined __link
 
-lv_disp_t *Runtime::display() {
-  return m_display;
-}
+lv_disp_t *Runtime::display() { return m_display; }
 
-const lv_disp_t *Runtime::display() const {
-  return m_display;
-}
+const lv_disp_t *Runtime::display() const { return m_display; }
 
 Runtime::Runtime(
   const char *title,
@@ -147,7 +149,6 @@ Runtime::Runtime(
 
   initialize_display();
   initialize_devices();
-
 }
 
 void Runtime::initialize_display() {
@@ -524,7 +525,6 @@ void Runtime::resize_display(const window::Size &size) {
   m_display_driver_container.display_driver.hor_res = m_display_size.width();
   m_display_driver_container.display_driver.ver_res = m_display_size.height();
 
-
   m_texture = window::Texture(
     m_renderer, window::PixelFormat::argb8888, window::Texture::Access::target, size);
 
@@ -775,12 +775,8 @@ WheelEvent Runtime::get_wheel_event() {
 
 #else
 
-lv_disp_t *Runtime::display() {
-  return api()->disp_get_default();
-}
+lv_disp_t *Runtime::display() { return api()->disp_get_default(); }
 
-const lv_disp_t *Runtime::display() const {
-  return api()->disp_get_default();
-}
+const lv_disp_t *Runtime::display() const { return api()->disp_get_default(); }
 
 #endif

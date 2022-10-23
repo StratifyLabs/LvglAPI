@@ -20,7 +20,7 @@ namespace lvgl {
 
 class Runtime : public Api {
 public:
-  using TaskCallback = void (*)(void *);
+  using TaskCallback = api::Function<void(void)>;
 
 #if defined __StratifyOS__
   Runtime();
@@ -31,18 +31,13 @@ public:
   Runtime &operator=(const Runtime &) = delete;
   Runtime &operator=(Runtime &&) = delete;
 
-  static void *thread_loop(void *args) {
-    reinterpret_cast<Runtime *>(args)->loop();
-    return nullptr;
-  }
-
   Runtime &loop();
   Runtime &refresh();
 
 #if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
-  Runtime &push(TaskCallback callback, void *context = nullptr);
-  Runtime &push(void *context, TaskCallback callback){
-    return push(callback, context);
+  Runtime &push(TaskCallback callback, chrono::MicroTime deferred = chrono::MicroTime());
+  Runtime &push(chrono::MicroTime deferred, TaskCallback callback){
+    return push(callback, deferred);
   }
 #endif
 
@@ -81,11 +76,12 @@ private:
   API_AF(Runtime, float, increment_scale, 1.0f);
   API_AB(Runtime, stopped, false);
 
-#if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
   struct Task {
     TaskCallback callback;
-    void *context;
+    chrono::ClockTime wait_until;
   };
+
+#if defined LVGL_RUNTIME_TASK_ARRAY_SIZE
   thread::Mutex m_task_mutex;
 #if LVGL_RUNTIME_TASK_ARRAY_SIZE == 0
   var::Vector<Task> m_task_list;
@@ -142,7 +138,7 @@ private:
 
   API_AF(Runtime, WindowEventCallback, window_event_callback, nullptr);
 
-  lv_disp_t * m_display;
+  lv_disp_t * m_display = nullptr;
   lv_disp_draw_buf_t m_display_buffer{};
 
   typedef struct {
@@ -156,12 +152,11 @@ private:
   var::Vector<lv_color_t> m_display_frame1;
   lv_color_t *m_active_frame_buffer = nullptr;
 #else
-
   typedef struct {
     void * renderer;
     void * user_data;
   } lv_draw_sdl_drv_param_t;
-  lv_draw_sdl_drv_param_t m_sdl_gpu_driver_parameters;
+  lv_draw_sdl_drv_param_t m_sdl_gpu_driver_parameters{};
 #endif
 
   API_AF(Runtime,u32,scroll_wheel_multiplier,5);
@@ -181,23 +176,19 @@ private:
   void resize_display(const window::Size & size);
   void allocate_frames(const window::Size & size);
 
-  static window::Size get_initial_size(window::Window::Flags flags, window::Size size){
-    return (flags & window::Window::Flags::highdpi) ? size.get_half() : size;
-  }
-
   lvgl::WheelEvent get_wheel_event();
   lvgl::Point get_point_from_window_point(const window::Point & point) const;
   lvgl::Point get_point_from_mouse_position() const;
-
-  static void flush_callback(
-    lv_disp_drv_t *display_driver,
-    const lv_area_t *area,
-    lv_color_t *colors);
 
   void flush(
     lv_disp_drv_t *display_driver,
     const lv_area_t *area,
     lv_color_t *colors) noexcept;
+
+  static void flush_callback(
+    lv_disp_drv_t *display_driver,
+    const lv_area_t *area,
+    lv_color_t *colors);
 
   static void read_mouse_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
   static void read_keyboard_callback(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
