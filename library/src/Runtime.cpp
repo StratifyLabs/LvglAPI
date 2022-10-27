@@ -31,22 +31,19 @@ Runtime::Runtime() {
   m_task_list.reserve(32);
 #else
   for (auto &task : m_task_list) {
-    task = {nullptr, nullptr};
+    task = {};
   }
 #endif
-#endif
-
-#if defined __link
-
 #endif
 }
 #endif
 
 namespace {
+#if defined __link
 window::Size get_initial_size(window::Window::Flags flags, window::Size size) {
   return (flags & window::Window::Flags::highdpi) ? size.get_half() : size;
 }
-
+#endif
 } // namespace
 
 Runtime &Runtime::loop() {

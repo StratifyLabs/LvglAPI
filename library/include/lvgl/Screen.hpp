@@ -45,13 +45,11 @@ public:
   static void remove_screen(const char *name);
   static Screen find_screen(const char *name);
 
-  static var::Vector<lv_obj_t *> &screen_list() { return m_screen_list; }
+  static var::Vector<lv_obj_t *> &screen_list();
 
   static constexpr auto default_name = "default";
 
 private:
-  static var::Vector<lv_obj_t *> m_screen_list;
-
   void execute_load(
     LoadAnimation animation,
     chrono::MicroTime period,
