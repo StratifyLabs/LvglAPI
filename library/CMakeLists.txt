@@ -3,6 +3,11 @@ set(LIBRARIES ThreadAPI FsAPI ChronoAPI VarAPI)
 if(CMSDK_IS_LINK)
 	list(APPEND LIBRARIES WindowAPI)
 	list(APPEND LIBRARIES lvgl)
+
+	cmsdk2_check_version(
+		NAME WindowAPI
+		VERSION ${WindowAPI_VERSION}
+		MINIMUM_VERSION 1.0.1)
 endif()
 
 api2_add_library(
