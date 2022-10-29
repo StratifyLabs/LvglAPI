@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.12)
+cmsdk2_minimum_required(2.1.2)
 
-project(LvglAPI CXX)
+project(LvglAPI
+	LANGUAGES CXX
+	VERSION 1.0.1)
 include(CTest)
 
 option(LVGL_API_USE_FREETYPE "Use Freetype font loader" OFF)
