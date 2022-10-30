@@ -1,4 +1,4 @@
-# v1.0.1 (unreleased)
+# v1.0.1
 
 ## Bug Fixes
 
